@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<script>currentpage = "inventory"</script>
+  <table>
+    <tr>
+      <th>#</th>
+      <th>CAS</th>
+      <th>Substance</th>
+      <th>Type</th>
+      <th>Class</th>
+      <th>Qty (tonnes)</th>
+      <th>EDIT</th>
+      <th>X</th>
+    </tr>
+    {% for item in inventory %}
+    <tr>
+      <td>{{ loop.index }}</td>
+      <td>{{ item.CAS }}</td>
+      <td>{{ item.name }}</td>
+      <td>{{ item.type }}</td>
+      <td>{{ item.class }}</td>
+      <td>{{ item.qty }}</td>
+      <td><button onclick="edit('{{ item.id }}')">EDIT</button></td>
+      <td><button onclick="del('{{ item.id }}')">X</button></td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <div id="addnew_div_on_list_page">
+    {% include 'addnew.html' %}
+  </div>
+{% endblock %}
+

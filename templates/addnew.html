@@ -1,0 +1,86 @@
+
+<script src="/static/addnew_scripts.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<div class="rectangle flexdc" id="addnewbox">
+
+  <div class="flexdr">
+    <!-- TABS ROW-->
+    <div id="tab_1" class="tab jcc h45perc active_tab">
+      <h2 onclick="tabtoggle(1)">Search our Database</h2>
+    </div>
+    <div id="tab_2" class="tab jcc h45perc">
+      <h2 onclick="tabtoggle(2)">Custom Substance addition</h2>
+    </div>
+    <div id="top_right_cross" class="tab h10perc">
+    <button onclick="hideaddnew()"><img src="/static/exitcross.png" class="h100perc"></button>      
+    </div>
+  </div> <!-- TABS ROW-->
+
+  <!-- TAB 1 -->
+  <div class="flexdr nowrap jcse pad15px padbotnone aifa" id="tab_1_row_1">
+    <!-- tab1 row1-->
+    <div class="flexdc h30perc">
+      <label for="substance_name">Substance name or CAS number</label>
+      <div id="substance_1_autocomplete_div">
+        <input onkeyup="AutusCumpletus()" class="h100perc" type="text" id="substance_1">
+        <ul id="autocompletelist">
+          {% for item in chemlist %}
+          <li class="acli" onclick="populate('{{ item }}')">{{ item }}</li>
+          {% endfor %}
+        </ul>
+        <!-- autocompletelist goes here -->
+      </div>
+    </div>
+
+    <div class="flexdc h30perc">
+      <label for="substance_qty">Quantity in tonnes</label>
+      <input class="h100perc" type="number" id="qty_1">
+    </div>
+
+    <div class="flexdc v100perc h30perc aic">
+      <button onclick="addtoinv('1')">Add to Inventory</button>
+    </div>
+  </div>
+  <!-- tab1 row2-->
+  <div class="flexdr nowrap pad15px" id="tab_1_row_2">
+    <div class="h40perc v100perc nowrap flexdr jcsb">
+      <label class="h30perc" for="Type">Type: </label>
+      <input class="h70perc whitebackground noborder" disabled type="text" id="type_1" value="testvalue">
+    </div>
+    <div class="h40perc v100perc nowrap flexdr jcsb">
+      <label class="h30perc" for="Type">Class: </label>
+      <input class="h70perc whitebackground noborder" disabled type="text" id="class_1" value="testvalue">
+    </div>
+    <div class="h20perc v100perc nowrap">
+      <button onclick="clear('1')">Clear</button>
+    </div>
+  </div>
+  <!-- END TAB 1 -->
+  <!-- TAB2 -->
+  <div id="tab_2_row_1" class="flexdr jcsa aifa pad15px">
+    <div class="flexdc h25perc">
+      <label for="substance_2">Substance</label>
+      <input type="text" id="substance_2">
+    </div>
+    <div class="flexdc h20perc">
+      <label for="substance_2">Type</label>
+      <input type="text" id="type_2">
+    </div>
+    <div class="flexdc h20perc">
+      <label for="substance_2">Class</label>
+      <input type="text" id="class_2">
+    </div>
+    <div class="flexdc h20perc">
+      <label for="substance_2">Qty</label>
+      <input type="text" id="qty_2">
+    </div>
+    <div class="flexdcr v100perc h15perc aic">
+      <button class="martop10px h60perc v60perc" onclick="addtoinv('2')">Add to Inventory</button>
+      <button class="mar10px h30perc v30perc" onclick="clear('2')">Clear</button>
+    </div>
+
+  </div>
+  <!-- END TAB2 -->
+
+</div>

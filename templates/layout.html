@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="/static/scripts.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/styles.css">
+<link rel="stylesheet" type="text/css" href="/static/layout_styles.css">
+</head>
+<body>
+
+<div class="sidenav">
+  <a id="navbar_welcome" href="{{ url_for('welcome')}}">Welcome</a>
+  <a id="navbar_help" href="#">Help</a>
+  <a id="navbar_inventory" href="{{ url_for('inventory')}}">Add</a>
+  <a id="navbar_process" class="disabled_link" href="#">Process</a>
+  <a id="navbar_results" href="#">Results</a>
+  <a id="navbar_contact" href="#">Contact</a>
+</div>
+
+<div class="main">
+  {% block body %}
+  {% endblock %}
+</div>  
+
+</body>
+<script>
+  window.onload = function() {
+    $("#navbar_"+currentpage).addClass("current_page")
+    if (currentpage == "inventory"){
+      tabtoggle(1)
+      $(".acli").hide()
+    } 
+  }
+</script>
+</html> 

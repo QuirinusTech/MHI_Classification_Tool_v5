@@ -1,0 +1,140 @@
+/************************* Layout Styling ********************************/
+.flexdr {
+  display: flex;
+  flex-direction: row !important;/*
+  border-top: 1px solid greenyellow;
+  border-bottom: 1px solid greenyellow;*/
+}
+
+.flexdc {
+/*  border-left: 1px solid blue;
+  border-right: 1px solid blue;
+*/
+  display: flex;
+  flex-direction: column !important;
+}
+
+.flexdcr {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.whitebackground {
+  background-color: white;
+}
+
+.h10perc {
+  width: 10% !important;
+}
+
+.h15perc {
+  width: 15% !important;
+}
+
+.h20perc {
+  width: 20% !important;
+}
+
+.h30perc {
+  width: 30% !important;
+}
+
+.h40perc {
+  width: 40% !important;
+}
+
+.h45perc {
+  width: 45% !important;
+}
+
+.h50perc {
+  width: 50% !important;
+}
+
+.h60perc {
+  width: 60% !important;
+}
+
+.h70perc {
+  width: 70% !important;
+}
+
+.h80perc {
+  width: 80% !important;
+}
+
+.h90perc {
+  width: 90% !important;
+}
+
+.h100perc {
+  width: 100% !important;
+}
+
+.v100perc {
+  height: 100% !important;
+}
+
+.v30perc {
+  height: 30%;
+}
+
+.v60perc {
+  height: 60%;
+}
+
+.jcsa {
+  justify-content: space-around !important;
+}
+
+.jcsb {
+  justify-content: space-between !important;
+}
+
+.jcse {
+  justify-content: space-evenly !important;
+}
+
+.jcc {
+  justify-content: center !important;
+}
+
+.aic {
+  align-items: center;
+}
+
+.aifa {
+  align-items: flex-end;
+}
+
+.nowrap {
+  flex-wrap: nowrap !important;
+}
+
+.wrap {
+  flex-wrap: wrap !important;
+}
+
+.pad15px {
+  padding: 15px;
+}
+
+.padbotnone {
+  padding-bottom: 0px;
+}
+
+.mar10px {
+  margin: 10px;
+}
+
+.martop10px {
+  margin-top: 10px;
+}
+
+.noborder {
+  border: none;
+}
+
+.test {
+  border: 1px dotted blueviolet !important;
+}
