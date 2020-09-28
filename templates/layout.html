@@ -3,19 +3,24 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="/static/scripts.js"></script>
-<link rel="stylesheet" type="text/css" href="/static/styles.css">
-<link rel="stylesheet" type="text/css" href="/static/layout_styles.css">
+<script src="/static/js/scripts.js"></script>
+<script>inventoryexists=false</script>
+<link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+<link rel="stylesheet" type="text/css" href="/static/css/layout_styles.css">
 </head>
 <body>
 
 <div class="sidenav">
   <a id="navbar_welcome" href="{{ url_for('welcome')}}">Welcome</a>
-  <a id="navbar_help" href="#">Help</a>
-  <a id="navbar_inventory" href="{{ url_for('inventory')}}">Add</a>
-  <a id="navbar_process" class="disabled_link" href="#">Process</a>
+  <a id="navbar_help" href="{{ url_for('help') }}">Help</a>
+  <a id="navbar_inventory" href="{{ url_for('inventory') }}">Add</a>
+  <a id="navbar_process" href="#">Process</a>
   <a id="navbar_results" href="#">Results</a>
   <a id="navbar_contact" href="#">Contact</a>
+</div>
+
+<div id="pre_loader">
+  <img src="/static/img/loading.gif" alt="">
 </div>
 
 <div class="main">
@@ -30,7 +35,13 @@
     if (currentpage == "inventory"){
       tabtoggle(1)
       $(".acli").hide()
-    } 
+    }
+    if (inventoryexists===true){
+      $("#navbar_process").removeClass('disabled_link')
+    } else {
+      $("#navbar_process").addClass('disabled_link')
+    }
+    loading(0)
   }
 </script>
 </html> 

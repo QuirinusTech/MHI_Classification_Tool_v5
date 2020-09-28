@@ -3,6 +3,10 @@ body {
 }
 
 /************************* Layout Styling ********************************/
+#pre_loader {
+  z-index: 2;
+}
+
 .flexdr {
   display: flex;
   flex-direction: row !important;

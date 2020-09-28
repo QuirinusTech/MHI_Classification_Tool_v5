@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<script>
+  currentpage = "inventory"
+  inventoryexists = false
+</script>
+  <div id="list_div" class="marg30px">
+    <table>
+      <tr>
+        <th>#</th>
+        <th>CAS</th>
+        <th>Substance</th>
+        <th>Type</th>
+        <th>Class</th>
+        <th>Qty (tonnes)</th>
+        <th>EDIT</th>
+        <th>X</th>
+      </tr>
+      {% if inventory %}
+      <script>
+        inventoryexists = true
+      </script>
+      {% for item in inventory %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ item.CAS }}</td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.type }}</td>
+        <td>{{ item.class }}</td>
+        <td>{{ item.qty }}</td>
+        <td><button onclick="edit('{{ item.id }}')">EDIT</button></td>
+        <td><button onclick="del('{{ item.id }}')">X</button></td>
+      </tr>
+      {% endfor %}
+      {% else %}
+      <script>
+        inventoryexists = false
+      </script>
+      <tr>
+        <td colspan="8">You haven't added anything to your inventory yet. Click the "Add new" button to start.</td>
+      </tr>
+      {% endif %}
+    </table>
+  </div>
+
+<div id="addnew_div" class="marg30px">
+  {% include 'addnew.html' %}
+</div>
+{% endblock %}

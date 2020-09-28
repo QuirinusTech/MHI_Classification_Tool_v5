@@ -1,5 +1,5 @@
 
-<script src="/static/addnew_scripts.js"></script>
+<script src="/static/js/addnew_scripts.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <div class="rectangle flexdc" id="addnewbox">
@@ -13,7 +13,7 @@
       <h2 onclick="tabtoggle(2)">Custom Substance addition</h2>
     </div>
     <div id="top_right_cross" class="tab h10perc">
-    <button onclick="hideaddnew()"><img src="/static/exitcross.png" class="h100perc"></button>      
+    <button onclick="hideaddnew()"><img src="/static/img/exitcross.png" class="h100perc"></button>      
     </div>
   </div> <!-- TABS ROW-->
 
@@ -26,7 +26,7 @@
         <input onkeyup="AutusCumpletus()" class="h100perc" type="text" id="substance_1">
         <ul id="autocompletelist">
           {% for item in chemlist %}
-          <li class="acli" onclick="populate('{{ item }}')">{{ item }}</li>
+          <li class="acli" id="li_{{ item['id'] }}" chemclass="{{item['class']}}" chemtype="{{item['type']}}" data-toggle="tooltip" title="{{item['tooltip']}}" onclick="populate('{{ item.id }}')">{% if item["CAS"] %}{{ item.CAS }} - {% endif %}{{ item.name }}</li>
           {% endfor %}
         </ul>
         <!-- autocompletelist goes here -->
@@ -53,7 +53,7 @@
       <input class="h70perc whitebackground noborder" disabled type="text" id="class_1" value="testvalue">
     </div>
     <div class="h20perc v100perc nowrap">
-      <button onclick="clear('1')">Clear</button>
+      <button onclick="clear(1)" data-toggle="tooltip" title="Clear the current fields." >&times;</button>
     </div>
   </div>
   <!-- END TAB 1 -->
@@ -77,7 +77,7 @@
     </div>
     <div class="flexdcr v100perc h15perc aic">
       <button class="martop10px h60perc v60perc" onclick="addtoinv('2')">Add to Inventory</button>
-      <button class="mar10px h30perc v30perc" onclick="clear('2')">Clear</button>
+      <button class="mar10px h30perc v30perc" onclick="clear('2')">&times;</button>
     </div>
 
   </div>
