@@ -2,10 +2,15 @@
 
 {% block body %}
 <script>currentpage = "welcome"</script>
-<h3>Welcome to the</h3>
 <h1>MHI Classification Tool</h1>
-<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente, debitis est exercitationem consequatur minima id fugit dolor numquam accusantium perspiciatis rem tenetur. Assumenda dolore harum voluptatem eligendi non blanditiis facilis.</p>
-<a href="{{ url_for('help')}}">How it works</a>
-<a href="{{ url_for('inventory')}}">Get Started!</a>
+<div class="blueblock block flexdc" id="get_started_message_div">
+  <p>
+    The MHI Classification Tool provides an estimation of your establishment's MHI classification and associated hazard level.
+  </p>
+<div class="flexdr jcse h100perc">
+  <button onclick="Redirect('/help')">How it works</button>
+  <button onclick="Redirect('/inventory')">Get Started!</button>
+</div>
+</div>
 
 {% endblock %}

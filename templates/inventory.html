@@ -5,7 +5,7 @@
   currentpage = "inventory"
   inventoryexists = false
 </script>
-  <div id="list_div" class="marg30px">
+  <div id="list_div" class="mar30px martopnone">
     <table>
       <tr>
         <th>#</th>
@@ -28,7 +28,7 @@
         <td>{{ item.name }}</td>
         <td>{{ item.type }}</td>
         <td>{{ item.class }}</td>
-        <td>{{ item.qty }}</td>
+        <td id="{{ item.id }}_qty_td">{{ item.qty }}</td>
         <td><button onclick="edit('{{ item.id }}')">EDIT</button></td>
         <td><button onclick="del('{{ item.id }}')">X</button></td>
       </tr>
@@ -37,14 +37,19 @@
       <script>
         inventoryexists = false
       </script>
-      <tr>
+      <tr id="noinv_tr">
         <td colspan="8">You haven't added anything to your inventory yet. Click the "Add new" button to start.</td>
       </tr>
       {% endif %}
     </table>
   </div>
 
-<div id="addnew_div" class="marg30px">
+
+<div id="addnew_div" class="mar30px">
   {% include 'addnew.html' %}
+</div>
+
+<div id="calc_div" class="flexdr jcfe">
+  <button id="calc_button" onclick="Process()">CALCULATE</button>
 </div>
 {% endblock %}

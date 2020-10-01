@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<script>currentpage="results"</script>
+<div id="results_div" class="flexdc nowrap whiteblock">
+  <div id="final_tier_row">
+    <h3>Final tier:</h3>
+    <h2>{{ results.finaltier }}</h2>
+  </div>
+  <div id="resultspage_grid" class="flexdr wrap">
+    <div id="grid_1" class="h50perc grid">
+      <h3>Detailed View</h3>
+      <h4>Individual Tier</h4>
+      <p>{{ results.indtier }}</p>
+      <h4>Cumulative Tier</h4>
+      <p>{{ results.cumultier }}</p>
+      <p>Click <a onclick="show('detailed_view_div')">here</a> for a detailed analysis.</p>
+    </div>
+    <div id="grid_2" class="h50perc grid">
+      <h3>Recommended Action</h3>
+      {% include 'recommendation.html' %}
+    </div>
+    <div id="grid_3" class="h50perc grid">
+      <h3 onclick="NewStart()">Start Again</h3>
+      <p>or</p>
+      <h3 onclick="Redirect('/inventory')">Edit Inventory</h3>
+    </div>
+    <div id="grid_4" class="h50perc grid">
+      <h3>Get in touch</h3>
+      <img src="/static/img/envelope.jfif">
+    </div>
+  </div>
+  <div id="detailed_view_div" style="display: none;">
+    {% include 'detailed.html' %}
+  </div>
+</div>
+
+{% endblock %}

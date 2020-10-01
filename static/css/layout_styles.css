@@ -20,7 +20,7 @@
 }
 
 .whitebackground {
-  background-color: white;
+  background-color: aliceblue;
 }
 
 .h10perc {
@@ -53,6 +53,10 @@
 
 .h60perc {
   width: 60% !important;
+}
+
+.h65perc {
+  width: 65% !important;
 }
 
 .h70perc {
@@ -95,6 +99,10 @@
   justify-content: space-evenly !important;
 }
 
+.jcfe {
+  justify-content: flex-end;
+}
+
 .jcc {
   justify-content: center !important;
 }
@@ -103,8 +111,20 @@
   align-items: center;
 }
 
-.aifa {
+.aife {
   align-items: flex-end;
+}
+
+.asfe {
+  align-self: flex-end;
+}
+
+.asfs {
+  align-self: flex-start;
+}
+
+.floatr {
+  float: right;
 }
 
 .nowrap {
@@ -115,12 +135,24 @@
   flex-wrap: wrap !important;
 }
 
+.mh250px {
+  min-height: 250px;
+}
+
 .pad15px {
   padding: 15px;
 }
 
-.marg30px {
+.padnone {
+  padding: 0px !important;
+}
+
+.mar30px {
   margin: 30px;
+}
+
+.martopnone {
+  margin-top: 0px !important;
 }
 
 .padbotnone {
@@ -129,6 +161,10 @@
 
 .mar10px {
   margin: 10px;
+}
+
+.mbm10px {
+  margin-bottom: -10px;
 }
 
 .martop10px {
