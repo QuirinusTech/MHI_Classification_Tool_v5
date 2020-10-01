@@ -1,15 +1,68 @@
 from flask import Flask, jsonify, request, flash, redirect, render_template, url_for, send_from_directory, session, g, abort
+import json
+import hyginus
 
 app = Flask(__name__)
+
+inv = []
 
 @app.route('/')
 def welcome():
   return render_template("welcome.html")
 
-inv = [{'CAS': "1234", 'name': "banana", "type": "type2", "class": "class4", "id": "42", "qty": '300'}, {'CAS': "122234", 'name': "ban23ana", "type": "t23ype2", "class": "clas23s4", "id": "4232", "qty": '32300'}, {'CAS': "6969", 'name': "name6969", "type": "type6969", "class": "6969class", "id": "69id", "qty": '6900'}]
-
 @app.route('/inventory')
 def inventory():
-  return render_template("list.html", inventory=inv, chemlist=chemlist)
+  return render_template("inventory.html", inventory=inv, chemlist=hyginus.chemlist, listedSubstances=hyginus.listedSubstances)
 
-chemlist = ["Ammonia anhydrous","Ammonium nitrate-1","Ammonium nitrate-2","Ammonium nitrate-3","Ammonium nitrate-4","Potassium nitrate-1","Potassium nitrate-2","Arsenic pentoxide", "arsenic (V) acid and/or salts","Arsenic trioxide", "Arsenious (III) acid and/or salts", "Bromine", "Chlorine", "Nickel compounds", "Ethyleneimine", "Fluorine", "Formaldehyde", "Hydrogen", "Hydrogen chloride", "Hydrogen fluoride", "Lead alkyls", "LPG", "Acetylene", "Ethylene oxide", "Propylene oxide", "Methanol", "Methylenebis", "Methyl isocyanate", "Oxygen", "Toluene diisocyanate", "Carbonyl dichloride", "Arsenic trihydride", "Phosphorus trihydride", "Sulphur dichloride", "Sulphur dioxide", "Sulphur trioxide"]
+"""@app.route('/list')
+def listey():
+  return render_template("list.html", inventory=inv)"""
+
+@app.route('/addtoinv', methods=["Post"])
+def addtoinv():
+  try:
+    newEntry = json.loads(request.form['newEntry'])
+    print(newEntry)
+    for chem in inv:
+      if newEntry["id"] == str(chem["id"]):
+        if int(newEntry["qty"]) > 0:
+          chem["qty"] = newEntry["qty"]
+        elif int(newEntry["qty"]) == 0:
+          inv.remove(chem)
+        return "updated"
+    if newEntry["type"] == "named":
+      for chem in hyginus.chemlist:
+        if newEntry["id"] == str(chem["id"]):
+          result = chem
+          result["qty"] = newEntry["qty"]
+          result["indexpos"] = len(inv)+1
+          inv.append(result)
+    else:
+      newEntry["indexpos"] = len(inv)+1
+      inv.append(newEntry)
+    print(inv)
+    return render_template("list_item_template.html", item=result)
+  except Exception as e:
+    print(e)
+    return f"An Error Occured: {e}"
+  
+@app.route('/results')
+def results():
+  if len(inv) > 0:
+    results = hyginus.assessment(inv)
+    return render_template('results.html', results=results, inv=inv)
+  else:
+    return redirect(url_for("inventory"))
+
+@app.route('/help')
+def help():
+  return render_template("help.html")
+
+@app.route('/contact')
+def contact():
+  return render_template('contact.html')
+
+@app.route('/clearinv', methods=["Post"])
+def clearinv():
+  inv.clear()
+  return "Cleared"

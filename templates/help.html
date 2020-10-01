@@ -1,15 +1,27 @@
 {% extends "layout.html" %}
 
 {% block body %}
-<div id="instructions-1i" class="instructions">
-  <h3>How to use this site:</h3>
-  <ol>
-      <li>Click on "Edit Inventory" to start adding substances.</li>
-      <li>In the field labelled start typing the substance name or CAS number. <br> You will be given suggestions that match what you've typed. <br> (You can use the arrow buttons to navigate the list.)</li>
-      <li>Add the inventory in tonnes.</li>
-      <li>Click on "Add to Inventory".</li>
-      <li>Repeat the previous 3 steps until you've added all the substances in your inventory.</li>
-      <li>Click on "Done Editing". A new button will appear labelled "Calculate MHI Classification". Click on it.</li>
-  </ol>
+<script>currentpage = "help"</script>
+
+<h2>How it works</h2>
+<div class="whiteblock flexdc" id="howitworksdiv">
+<p>
+  Quantities of all hazardous materials stored or handled at the site are provided by the establishment. The tool will calculate the total quantity per hazard class and estimate the site's MHI classification and Hazard Level.
+</p>
+  <p>
+  The classification tool can assist in estimating:
+</p>
+<ol>
+  <li>
+    Whether the establishment is likely to be classified as a Mahor Hazard Establishment.
+  </li>
+  <li>
+    Whether the establishment is klikely to be classified as a High Hazard, a Medium Hazard or a Low Hazard establishment.
+  </li>
+</ol>
+<quote>
+  Note - any classification provided is for information purposes only and should not be interpreted as a formal classification study.
+</quote>
+<button class="greenbutton asfe h10perc martop10px" onclick="Redirect('/inventory')">NEXT</button>
 </div>
 {% endblock %}

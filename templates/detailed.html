@@ -1,0 +1,68 @@
+<div class="flexdr wrap martop10px">
+  <div class="h100perc flexdr jcsb">
+    <h2>Detailed View</h2>
+    <button class="red_button" onclick="hide('detailed_view_div')">&times;</button>
+  </div>
+  <div class="flexdc mar10px">
+    <h3>
+      Individual Rating
+    </h3>
+    <span>
+      {{ results.indtier }}
+    </span>
+    <table>
+      <tr>
+        <th>
+          Substance
+        </th>
+        <th>
+          Tier
+        </th>
+      </tr>
+      {% for item in inv %}
+      <tr>
+        <td>
+          {{ item.name}}
+        </td>
+        <td>
+          {{ item.tier}}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+    <div id="ind_tier_explain">
+      <p>Individual tier rating explanation message goes here.</p>
+    </div>
+  </div>
+  <div class="flexdc mar10px">
+    <h3>
+      Cumulative Rating
+    </h3>
+    <span>
+      {{ results.cumultier }}
+    </span>
+    <table>
+      <tr>
+        <th>
+          Substance
+        </th>
+        <th>
+          Tier
+        </th>
+      </tr>
+      {% for class in results.usedlistedsubs %}
+      <tr id="listed_{{class.id}}_tr">
+        <td>
+          {{ class.class }}
+        </td>
+        <td>
+          {{ class.tier }}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+    <div id="cumul_tier_explain">
+      <p>Cumulative tier rating explanation message goes here.</p>
+    </div>
+  </div>
+</div>
