@@ -542,6 +542,13 @@ tbody tr td:nth-child(6){
   border-color: red;
 }
 
+#calc_button {
+  background-color: #262878;
+}
+
+
+
+
 /* scrollbar*/
 
 /* width */
@@ -818,13 +825,6 @@ tbody tr td:nth-child(6){
     100% { background-color: transparent; }
 }
 
-#calc_button {
-  padding: 15px;
-  color: white;
-  background-color: coral;
-  border: white 2px solid;
-  font-weight: bold;
-}
 
 
 /**************** BLOCKS **************************/

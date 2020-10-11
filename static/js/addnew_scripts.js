@@ -170,7 +170,7 @@ function addtoinv(x) {
         "type": "listed"
       }
       loading(1)
-      addtoinvPOST(newEntryObj)
+      addtoinvPOST(newEntryObj, x)
     } else if (x==1) {
       id = $("#substance_1").attr("chemid")
       qty = $("#qty_1").val()
@@ -180,7 +180,7 @@ function addtoinv(x) {
         "type": "named"
       }
       loading(1)
-      addtoinvPOST(newEntryObj)
+      addtoinvPOST(newEntryObj, x)
     }
 
   }
@@ -226,7 +226,8 @@ function del(x) {
 }
 
 /** submits a post request to add a substance to the inventory */
-function addtoinvPOST(newEntryObj) {
+function addtoinvPOST(newEntryObj, x) {
+  console.log(newEntryObj)
   $.post("/addtoinv", {
     "newEntry": JSON.stringify(newEntryObj)
   },
