@@ -1,3 +1,49 @@
+// On page load run the init function
+window.addEventListener('load', function() {
+  init();
+})
+
+// Add event listners etc
+function init (){
+  var burger = document.querySelector('.sidenav_burger');
+  var addNewButton = document.getElementById('button_addnew');
+  burger && burger.addEventListener('click', ()=>{toggleMenuHandler()});
+  addNewButton && addNewButton.addEventListener('click', ()=>{showAddNewHandler()})
+}
+
+function toggleMenuHandler(){
+  var burger = document.querySelector('.sidenav_burger');
+  var main = document.querySelector('.main');
+  var sideBar = burger.parentElement
+  main.addEventListener('click', () =>{toggleMenuClickAwayHandler()})
+  sideBar.classList.toggle('isOpen');
+  main.classList.toggle('isOpen');
+}
+
+function toggleMenuClickAwayHandler() {
+  var main = document.querySelector('.main');
+  if (main.classList.contains('isOpen')) {
+    var burger = document.querySelector('.sidenav_burger');
+    var sideBar = burger.parentElement
+    sideBar.classList.remove('isOpen');
+    main.classList.remove('isOpen');
+  }
+}
+
+function showAddNewHandler () {
+  document.getElementById('button_addnew').style.display = 'none'
+  document.getElementById('addnewbox').style.display = 'flex'
+}
+
+
+
+
+
+
+
+
+
+
 function loading(x, t=1500) {
   if (x==1) {
     $("#main").hide()

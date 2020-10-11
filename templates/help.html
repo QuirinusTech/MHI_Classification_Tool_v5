@@ -4,24 +4,30 @@
 <script>currentpage = "help"</script>
 
 <h2>How it works</h2>
-<div class="whiteblock flexdc" id="howitworksdiv">
-<p>
-  Quantities of all hazardous materials stored or handled at the site are provided by the establishment. The tool will calculate the total quantity per hazard class and estimate the site's MHI classification and Hazard Level.
-</p>
-  <p>
-  The classification tool can assist in estimating:
-</p>
-<ol>
-  <li>
-    Whether the establishment is likely to be classified as a Mahor Hazard Establishment.
-  </li>
-  <li>
-    Whether the establishment is klikely to be classified as a High Hazard, a Medium Hazard or a Low Hazard establishment.
-  </li>
-</ol>
-<quote>
-  Note - any classification provided is for information purposes only and should not be interpreted as a formal classification study.
-</quote>
-<button class="greenbutton asfe h10perc martop10px" onclick="Redirect('/inventory')">NEXT</button>
+<div class='main_content'>
+  <div class="block" id="howitworksdiv">
+    <p>
+      Quantities of all hazardous materials stored or handled at the site are provided by the establishment. The tool will calculate the total quantity per hazard class and estimate the site's MHI classification and Hazard Level.
+    </p>
+    <div class="martop15px marbottom15px">
+      <p class="bold">
+        The classification tool can assist in estimating:
+      </p>
+      <ol>
+        <li>
+          Whether the establishment is likely to be classified as a Mahor Hazard Establishment.
+        </li>
+        <li>
+          Whether the establishment is klikely to be classified as a High Hazard, a Medium Hazard or a Low Hazard establishment.
+        </li>
+      </ol>
+    </div>
+    <quote>
+      Note - any classification provided is for information purposes only and should not be interpreted as a formal classification study.
+    </quote>
+    <div class="button_bar">
+      <button class="button button--primary asfe" onclick="Redirect('/inventory')">Next</button>
+    </div>
+  </div>
 </div>
 {% endblock %}

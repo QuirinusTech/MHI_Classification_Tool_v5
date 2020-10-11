@@ -8,41 +8,41 @@
 <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
 <link rel="stylesheet" type="text/css" href="/static/css/layout_styles.css">
 </head>
-<body class="flexdc">
-  <div id="ishecon_nav" style="height: 200px;">
-
-  </div>
-  <div class="flexdr">
-    <div class="sidenav h15perc">
-      <a id="navbar_welcome" href="{{ url_for('welcome')}}">Welcome</a>
-      <a id="navbar_help" href="{{ url_for('help') }}">Help</a>
-      <a id="navbar_inventory" href="{{ url_for('inventory') }}">Add</a>
-      <a id="navbar_process" onclick="Process()"">Process</a>
-      <a id="navbar_results" href="{{ url_for('results') }}">Results</a>
-      <a id="navbar_contact" href="{{ url_for('contact') }}">Contact</a>
-    </div>
-    
-    
-    
-    <div id="main" class="main h70perc">
-      {% block body %}
-      {% endblock %}
-    </div>  
-    <div class="main h70perc" id="pre_loader">
-      <p>loading...</p>
-      <img src="/static/img/loading.gif" alt="">
-      <div class="meter h65perc animate">
-        <span style="width: 100%"><span></span></span>
+<body>
+  <div class="content">
+      <div class="sidenav">
+        <button class="sidenav_burger">
+          <div class="sidenav_burger_bar1"></div>
+          <div class="sidenav_burger_bar2"></div>
+          <div class="sidenav_burger_bar3"></div>
+        </button>
+        <ul>
+          <li><a id="navbar_welcome" href="{{ url_for('welcome')}}">Welcome</a></li>
+          <li> <a id="navbar_help" href="{{ url_for('help') }}">Help</a></li>
+          <li><a id="navbar_inventory" href="{{ url_for('inventory') }}">Add</a></li>
+          <li><a id="navbar_process" onclick="Process()"">Process</a></li>
+          <li><a id="navbar_results" href="{{ url_for('results') }}">Results</a></li>
+          <li><a id="navbar_contact" href="{{ url_for('contact') }}">Contact</a></li>
+        </ul>  
+        <div class="quirinuslogo">
+          <img src="/static/img/QuirinusTech.png">
+          <p>Quirinus Technologies © 2020</p>
+        </div>
+      </div> 
+      <div id="main" class="main">
+        {% block body %}
+        {% endblock %}
+      </div>  
+      <div class="main h70perc" id="pre_loader">
+        <p>loading...</p>
+        <!-- <img src="/static/img/loading.gif" alt=""> -->
+        <div class="meter h65perc animate">
+          <span style="width: 100%"><span></span></span>
+        </div>
       </div>
-    </div>
-  </div>
 
+  </div>
 </body>
-<div id="ishecon_bottom_nav" style="bottom: 0px; height: 100px;">
-<footer>
-  <p><img class="quirinuslogo" src="/static/img/QuirinusTech.png">Quirinus Technologies © 2020</p>
-  <p>IsheCon MHI Tool v5.1 - 1/10/2020 - 19:36</p>
-</footer>
 <script>
   window.onload = function() {
     $("#navbar_"+currentpage).addClass("current_page")
@@ -55,11 +55,11 @@
     if (inventoryexists===true){
       $("#navbar_process").removeClass('disabled_link')
       $("#navbar_results").removeClass('disabled_link')
-      $("#calc_button").removeClass('disabled_button')
+      $("#calc_button").removeClass('button--disabled')
     } else if (currentpage!="results") {
       $("#navbar_results").addClass('disabled_link')
       $("#navbar_process").addClass('disabled_link')
-      $("#calc_button").addClass('disabled_button')
+      $("#calc_button").addClass('button--disabled')
     }
     loading(0)
   }

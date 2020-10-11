@@ -3,14 +3,17 @@
 {% block body %}
 <script>currentpage = "welcome"</script>
 <h1>MHI Classification Tool</h1>
-<div class="blueblock block flexdc" id="get_started_message_div">
-  <p>
-    The MHI Classification Tool provides an estimation of your establishment's MHI classification and associated hazard level.
-  </p>
-<div class="flexdr jcse h100perc">
-  <button onclick="Redirect('/help')">How it works</button>
-  <button onclick="Redirect('/inventory')">Get Started!</button>
+<div class='main_content'>
+  <div class="block flexdc" id="get_started_message_div">
+    <p>
+      The MHI Classification Tool provides an estimation of your establishment's MHI classification and associated hazard level.
+    </p>
+    <div class="button_bar">
+      <button class="button button--primary" onclick="Redirect('/help')">How it is calculated</button>
+      <button class="button button--primary"  onclick="Redirect('/inventory')">Get Started!</button>
+    </div>
+  </div>
 </div>
-</div>
+
 
 {% endblock %}
