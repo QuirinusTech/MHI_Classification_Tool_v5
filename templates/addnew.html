@@ -40,16 +40,15 @@
       <div class="addnew_input">
         <!-- changed the 'for' attribute here, the for and the input id should be the same, that how the browser associates them -->
         <label for="qty_1">Quantity in tonnes</label>
-        <input onkeyup="enable_add_button(1)" type="number" id="qty_1"  autocomplete="off" min='0'>
+        <input onkeyup="enable_add_button(1)" id="qty_1"  autocomplete="off">
       </div>   
       <!-- moved all the buttons to the bottom to give it a more 'form' feel -->
       <div class="addnew_footer">
-        <button id="addtoinv_1" class="button button--primary button--disabled">Add to Inventory</button>        
-        <button class="button button_primary--orange" onclick="hideaddnew()">Cancel</button> 
-        <button id="clear_1_button" class="button button button--secondary" data-toggle="tooltip" title="Clear the current fields." >Reset</button>  
+        <button id="addtoinv_1" class="button button--primary button--small button--disabled">Add to Inventory</button>        
+        <button class="button button--secondary button--small" onclick="hideaddnew()">Cancel</button> 
+        <button id="clear_1_button" class="button button--secondary button--small" data-toggle="tooltip" title="Clear the current fields." >Reset</button>  
       </div>
     </div>
-
 
   <!-- tab1 row2-->
 
@@ -69,54 +68,59 @@
 
   <!-- END TAB 1 -->
 
-
-
-
-
-
-
-
-
-
   <!-- TAB2 -->
     <!-- tab 2 row 1-->
-    <div id="tab_2_row_1" class="flexdr nowrap jcse pad15px padbotnone aifa">
-      <div class="flexdc h40perc">
+    <div id="tab_2_row_1" class="addnew_inputrow">
+      <div class="addnew_input">
         <label for="substance_2">Substance</label>
         <input class='tab_2_input' type="text" id="substance_2">
       </div>
-      <div class="flexdc h30perc">
-        <label for="substance_2">CAS Number (optional)</label>
+
+      <div class="addnew_input">
+        <!-- changed the 'for' attribute here, the for and the input id should be the same, that how the browser associates them -->
+        <label for="cas_2">CAS Number (optional)</label>
         <input class='tab_2_input' type="text" id="cas_2" placeholder="CAS (Optional)">
       </div>
-      <div class="flexdc h20perc">
-        <label for="qty_2">Qty</label>
-        <input class='tab_2_input' type="text" id="qty_2">
-      </div>
+
     </div>
       <!-- end row 1-->
       <!-- tab 2 row 2-->
   
-    <div id="tab_2_row_2" class="flexdr aife nowrap jcse pad15px">
-      <div class="flexdc h30perc">
+    <div id="tab_2_row_2" class="addnew_inputrow">
+
+      <!-- moved this one down to have the same amount of inputs in each row -->
+      <div class="addnew_input">
+        <label for="qty_2">Quantity in tonnes</label>
+        <input class='tab_2_input' type="text" id="qty_2">
+      </div>
+
+   <!-- commented is row out since you might be removing it and i wanted to see how the spacing looks -->
+      <!-- <div class="flexdc h30perc">
         <label for="type_2">Type</label>
         <input class='tab_2_input' name="type_2" class="whitebackground noborder" id="type_2" value="Named" disabled>
-      </div>
-      <div class="flexdc h30perc">
+      </div> -->
+
+      <div class="addnew_input">
         <label for="class_2">Class</label>
-        <select name="type_2" id="class_2" onchange="enable_add_button(2)">
-          <option default hidden value="">Select...</option>
-          {% for substance in listedSubstances %}
-          <option chemid="{{substance.chemid}}" data-toggle="tooltip" title="{{substance['tooltip']}}" value="{{substance.chemid}}">{{substance.class }}</option>
-          {% endfor %}
-        </select>
+        <div class="addnew_select">
+          <select name="type_2" id="class_2" onchange="enable_add_button(2)">
+            <option default hidden value="">Select...</option>
+            {% for substance in listedSubstances %}
+            <option chemid="{{substance.chemid}}" data-toggle="tooltip" title="{{substance['tooltip']}}" value="{{substance.chemid}}">{{substance.class }}</option>
+            {% endfor %}
+          </select>
+        </div>
       </div>
-  
-      <div class="flexr h30perc aife">
+
+      <!-- <div class="flexr h30perc aife">
         <button id="addtoinv_2" class="button--disabled mbm10px greenbutton" onclick="addtoinv('2')">Add to Inventory</button>
         <button id="clear_2_button" class="floatr" data-toggle="tooltip" title="Clear the current fields." >CLEAR</button>
+      </div> -->
+      <div class="addnew_footer">
+        <button id="addtoinv_1" class="button button--primary button--small button--disabled">Add to Inventory</button>        
+        <button class="button button button--secondary button--small" onclick="hideaddnew()">Cancel</button> 
+        <button id="clear_1_button" class="button button button--secondary button--small" data-toggle="tooltip" title="Clear the current fields." >Reset</button>  
       </div>
-  
     </div>
     <!-- END TAB2 -->
 

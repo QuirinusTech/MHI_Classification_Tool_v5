@@ -7,20 +7,20 @@ window.addEventListener('load', function() {
 function init (){
   var burger = document.querySelector('.sidenav_burger');
   var addNewButton = document.getElementById('button_addnew');
+  var main = document.querySelector('.main');
   burger && burger.addEventListener('click', ()=>{toggleMenuHandler()});
   addNewButton && addNewButton.addEventListener('click', ()=>{showAddNewHandler()})
+  main && main.addEventListener('click', () =>{toggleClickAwayHandler()})
 }
 
 function toggleMenuHandler(){
   var burger = document.querySelector('.sidenav_burger');
-  var main = document.querySelector('.main');
-  var sideBar = burger.parentElement
-  main.addEventListener('click', () =>{toggleMenuClickAwayHandler()})
+  var sideBar = burger.parentElement 
   sideBar.classList.toggle('isOpen');
   main.classList.toggle('isOpen');
 }
 
-function toggleMenuClickAwayHandler() {
+function toggleClickAwayHandler(e) {
   var main = document.querySelector('.main');
   if (main.classList.contains('isOpen')) {
     var burger = document.querySelector('.sidenav_burger');
@@ -34,15 +34,6 @@ function showAddNewHandler () {
   document.getElementById('button_addnew').style.display = 'none'
   document.getElementById('addnewbox').style.display = 'flex'
 }
-
-
-
-
-
-
-
-
-
 
 function loading(x, t=1500) {
   if (x==1) {

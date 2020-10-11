@@ -47,8 +47,12 @@
   window.onload = function() {
     $("#navbar_"+currentpage).addClass("current_page")
     if (currentpage == "inventory"){
-      document.getElementById("clear_1_button").addEventListener("click", function () {clear(1)})
-      document.getElementById("clear_2_button").addEventListener("click", function () {clear(2)})
+
+      // added a safety net to first check if the button is present/ is not null
+      var buttonclear1 = document.getElementById("clear_1_button")
+      var buttonclear2 = document.getElementById("clear_2_button")
+      buttonclear1 && buttonclear1.addEventListener("click", function () {clear(1)})
+      buttonclear2 && buttonclear2.addEventListener("click", function () {clear(2)})
       tabtoggle(1)
       $(".acli").hide()
     }

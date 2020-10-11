@@ -91,7 +91,7 @@ footer .quirinuslogo{
   margin-right: 1em;
 }
 
-input{
+input, select, option{
   font-family: 'Montserrat',Helvetica,Arial,Lucida,sans-serif;
 }
 
@@ -296,9 +296,8 @@ transform-origin: left;
   margin-bottom: 0;
 }
 
-.button_small{
+.button--small{
   font-size: 12px;
-  margin-bottom: 10px;
 }
 
 .button--disabled {
@@ -443,7 +442,7 @@ tbody tr td:nth-child(6){
   padding: 0 10px;
   margin-top: 20px;
   flex: 1;
-  min-width: 300px;
+  min-width: 200px;
 }
 
 .addnew_inputrow .addnew_input label{
@@ -455,7 +454,7 @@ tbody tr td:nth-child(6){
   display: block;
 }
 
-.addnew_inputrow .addnew_input input{
+.addnew_inputrow .addnew_input input, .addnew_inputrow .addnew_input select{
   width: 100%;
   height: 42px;
   padding: 0 15px;
@@ -466,10 +465,42 @@ tbody tr td:nth-child(6){
   margin-top: 5px;
 }
 
-.addnew_footer{
-  padding: 30px 10px 0 10px;
+.addnew_select{
+  position: relative;
 }
 
+.addnew_select::-ms-expand select{
+  display: none;
+}
+
+.addnew_select select{
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.addnew_select::after{
+  content: ' ';
+  width: 14px;
+  height: 14px;
+  position: absolute;
+  top: 21px;
+  right: 15px;
+  background-image: url('../img/arrow-down.svg');
+  background-size: 100% 100%;
+  z-index: 99;
+}
+
+/* Styling th 'options' is hell so if you'd like a custom one i can make one but ill have to restructure your markup a bit and bind the onchange to a hidden input field */
+
+.addnew_footer{
+  width: 100%;
+  margin: 20px 10px 0 10px;
+}
+
+.addnew_footer button{
+  margin-right: 5px;
+  margin-top: 10px;
+}
 
 /* pop up */
 #substance_1_autocomplete_div{
@@ -511,7 +542,6 @@ tbody tr td:nth-child(6){
   border-color: red;
 }
 
-
 /* scrollbar*/
 
 /* width */
@@ -538,20 +568,6 @@ tbody tr td:nth-child(6){
   background: #555;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* trumps */
 .bold{
   font-weight: bold !important;
@@ -563,7 +579,7 @@ tbody tr td:nth-child(6){
     font-size: 3rem;
   }
   .content{
-    padding: 0 33px 0 33px;
+    padding: 0 18px 0 33px;
     margin-top: 0px;
     height: 100%;
   }
