@@ -29,14 +29,21 @@ function tabtoggle(int) {
 function AutusCumpletus() {
   $(".acli").hide()
   let text = $("#substance_1").val()
-  text = text.replace(/-| /g, '');
+  text = text.replace(/[\s\,\-]+/g, '');
   if (text.length > 2) {
     let idlist = $("li.acli")
     for (let i = 0; i < idlist.length; i++) {
       let name = idlist[i].innerText
-      name = name.replace(/-| /g, '');
+      let title = $(idlist[i]).attr("title")
+      name = name.replace(/[\s\,\-]+/g, '');
+      title = title.replace(/[\s\,\-]+/g, '');
       for (let j = 0; j < name.length; j++) {
         if (name.slice(j, j + text.length).toUpperCase() === text.toUpperCase()) {
+          $(idlist[i]).show()
+        }
+      }
+      for (let k = 0; k < title.length; k++) {
+        if (title.slice(k, k + text.length).toUpperCase() === text.toUpperCase()) {
           $(idlist[i]).show()
         }
       }
@@ -63,7 +70,7 @@ function enable_add_button(x) {
   if (x == 1) {
     let substance_1 = $("#substance_1").val()
     let qty_1 = $("#qty_1").val()
-    if (substance_1.length > 5 && qty_1>0) {
+    if (substance_1.length > 5 && qty_1 > 0) {
       if (new RegExp(letterNumberDashSpace).test(substance_1) && new RegExp(numbers).test(qty_1)) {
         document.getElementById("addtoinv_1").addEventListener("click", function () {
           addtoinv(1)
@@ -152,7 +159,7 @@ function addtoinv(x) {
   if (pre_add_check(x) === false) {
     alert("Please check that you've entered valid information into the fields above.")
   } else {
-    if (x==2) {
+    if (x == 2) {
       chemid = $("#class_2").val()
       d = new Date()
       substid = "custom_" + d.getDate().toString() + d.getHours() + d.getMinutes() + d.getSeconds()
@@ -169,7 +176,7 @@ function addtoinv(x) {
       }
       loading(1)
       addtoinvPOST(newEntryObj)
-    } else if (x==1) {
+    } else if (x == 1) {
       id = $("#substance_1").attr("chemid")
       qty = $("#qty_1").val()
       newEntryObj = {
@@ -186,25 +193,25 @@ function addtoinv(x) {
 
 /** provides the interace for the user to update the qty of an item in already in the inv */
 function edit(x) {
-  let qty = $("#"+x+"_qty_td").html()
+  let qty = $("#" + x + "_qty_td").html()
   qty = Number(qty)
   let input = document.createElement('input')
   input.setAttribute('type', 'number')
-  input.setAttribute('id', 'newqty_'+x)
+  input.setAttribute('id', 'newqty_' + x)
   input.value = qty
   let button = document.createElement('button')
-  button.setAttribute("onclick","update(\'"+x+"\')")
+  button.setAttribute("onclick", "update(\'" + x + "\')")
   button.innerHTML = "OK"
   let div = document.createElement("div")
   div.classList.add('flexdr')
   div.appendChild(input)
   div.appendChild(button)
-  $("#"+x+"_qty_td").html(div)
+  $("#" + x + "_qty_td").html(div)
 }
 
 /** submits a post request updating the qty of an item already in the inv */
 function update(x) {
-  let newval = $("#newqty_"+x).val()
+  let newval = $("#newqty_" + x).val()
   newEntryObj = {
     "id": x,
     "qty": newval
@@ -225,21 +232,33 @@ function del(x) {
 
 /** submits a post request to add a substance to the inventory */
 function addtoinvPOST(newEntryObj) {
+  newEntry = JSON.stringify(newEntryObj)
   $.post("/addtoinv", {
-    "newEntry": JSON.stringify(newEntryObj)
-  },
-  function (data) {
-    if (data !== "updated") {
+      "newEntry": newEntry
+    },
+    function (data) {
+      if (data === "updated") {
+        location.reload()
+      } else {
+        console.log(data)
+        $("#noinv_tr").remove()
+        $("#list_div > table").append(data)
+        inventoryexists = true
+        $("#navbar_process").removeClass('disabled_link')
+        $("#calc_button").removeClass('disabled_button')
+        loading(0)
+      }
+      clear(1)
+      clear(2)
+    });
+}
+
+/** object must include either a "CAS" key or a "name" key */
+function updateh(x) {
+  $.post("/updatehphrases", {
+      "substance": JSON.stringify(x)
+    },
+    function (data) {
       console.log(data)
-      $("#noinv_tr").remove()
-      $("#list_div > table").append(data)
-      inventoryexists=true
-      $("#navbar_process").removeClass('disabled_link')
-      $("#calc_button").removeClass('disabled_button')
-      loading(0)
-    } else if (data === "updated") {
-      location.reload()
-    }
-  });
-clear(x)
+    });
 }
