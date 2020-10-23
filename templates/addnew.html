@@ -2,46 +2,59 @@
 <script src="/static/js/addnew_scripts.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-<div class="rectangle flexdc padnone mh250px" id="addnewbox">
-
-  <div class="flexdr">
+<div class="rectangle flexdc padnone mh250px" id="addnewbox" style="display: none;">
+  <!-- created a header div for the tabs -->
+  <div class="addnew_header">
     <!-- TABS ROW-->
-    <div id="tab_1" class="tab jcc h45perc active_tab">
-      <h2 onclick="tabtoggle(1)">Named Substance</h2>
-    </div>
-    <div id="tab_2" class="tab jcc h45perc">
-      <h2 onclick="tabtoggle(2)">Listed Substance</h2>
-    </div>
-    <button class="red_button" onclick="hideaddnew()">&times;</button>      
-  </div> <!-- TABS ROW-->
+    <div class="tabs_holder">
+      <div id="tab_1" class="tabs_tab  active_tab"  onclick="tabtoggle(1)">
+        <h2>Named Substance</h2>
+      </div>
+      <div id="tab_2" class="tabs_tab" onclick="tabtoggle(2)">
+        <h2>Listed Substance</h2>
+      </div>
+    </div>       
+  </div> 
+  
+  <!-- TABS ROW-->
 
+  <!-- created a body div for some shared styling for the tab content -->
+  <div class='addnew_body'>
   <!-- TAB 1 -->
-  <div class="flexdr nowrap jcse pad15px padbotnone aife" id="tab_1_row_1">
-    <!-- tab1 row1-->
-    <div class="flexdc h30perc">
-      <label for="substance_name">Substance name or CAS number</label>
-      <div id="substance_1_autocomplete_div">
-        <input onkeyup="AutusCumpletus()" class="h100perc" type="text" id="substance_1" placeholder="Start typing...">
-        <ul id="autocompletelist">
-          {% for item in chemlist %}
-          <li class="acli" id="li_{{ item['id'] }}" chemclass="{{item['class']}}" chemtype="{{item['type']}}" data-toggle="tooltip" title="{{item['tooltip']}}" onclick="populate('{{ item.id }}')">{% if item["CAS"] %}{{ item.CAS }} - {% endif %}{{ item.name }}</li>
-          {% endfor %}
-        </ul>
-        <!-- autocompletelist goes here -->
+    <div class="addnew_inputrow" id="tab_1_row_1">
+      <!-- tab1 row1-->
+      <div class="addnew_input">
+        <!-- changed the 'for' attribute here, the for and the input id should be the same, that how the browser associates them -->
+        <label for="substance_1">Substance name or CAS number</label>
+        <div id="substance_1_autocomplete_div">
+          <input onkeyup="AutusCumpletus()"  type="text" id="substance_1" placeholder="Start typing..." autocomplete="off">
+          <ul id="autocompletelist">
+            {% for item in chemlist %}
+            <li class="acli" id="li_{{ item['id'] }}" chemclass="{{item['class']}}" chemtype="{{item['type']}}" data-toggle="tooltip" title="{{item['tooltip']}}" onclick="populate('{{ item.id }}')">{% if item["CAS"] %}{{ item.CAS }} - {% endif %}{{ item.name }}</li>
+            {% endfor %}
+          </ul>
+          <!-- autocompletelist goes here -->
+        </div>
+      </div>
+
+      <div class="addnew_input">
+        <!-- changed the 'for' attribute here, the for and the input id should be the same, that how the browser associates them -->
+        <label for="qty_1">Quantity in tonnes</label>
+        <input onkeyup="enable_add_button(1)" id="qty_1"  autocomplete="off">
+      </div>   
+      <!-- moved all the buttons to the bottom to give it a more 'form' feel -->
+      <div class="addnew_footer">
+        <button id="addtoinv_1" class="button button--primary button--small button--disabled">Add to Inventory</button>        
+        <button class="button button--secondary button--small" onclick="hideaddnew()">Cancel</button> 
+        <button id="clear_1_button" class="button button--secondary button--small" data-toggle="tooltip" title="Clear the current fields." >Reset</button>  
       </div>
     </div>
 
-    <div class="flexdc h30perc">
-      <label for="substance_qty">Quantity in tonnes</label>
-      <input onkeyup="enable_add_button(1)" class="h100perc" type="number" id="qty_1">
-    </div>
-
-    <div class="flexdc v100perc h30perc aic">
-      <button id="addtoinv_1" class="greenbutton mbm10px disabled_button">Add to Inventory</button>
-    </div>
-  </div>
   <!-- tab1 row2-->
-  <div class="flexdr nowrap pad15px" id="tab_1_row_2">
+
+  <!-- commented is row out since you might be removing it and i wanted to see how the spacing looks -->
+
+  <!-- <div class="flexdr nowrap pad15px" id="tab_1_row_2">
     <div class="h40perc v100perc nowrap flexdr jcsb">
       <label class="h30perc" for="Type">Type: </label>
       <input class="h70perc whitebackground noborder" disabled type="text" id="type_1" value="Named">
@@ -50,51 +63,70 @@
       <label class="h30perc" for="Type">Class: </label>
       <input class="h70perc whitebackground noborder" disabled type="text" id="class_1" value="">
     </div>
-    <div class="h20perc v100perc nowrap">
-      <button id="clear_1_button" class="floatr" data-toggle="tooltip" title="Clear the current fields." >CLEAR</button>
-    </div>
-  </div>
+  
+  </div> -->
+
   <!-- END TAB 1 -->
+
   <!-- TAB2 -->
     <!-- tab 2 row 1-->
-  <div id="tab_2_row_1" class="flexdr nowrap jcse pad15px padbotnone aifa">
-    <div class="flexdc h40perc">
-      <label for="substance_2">Substance</label>
-      <input class='tab_2_input' type="text" id="substance_2">
+    <div id="tab_2_row_1" class="addnew_inputrow">
+      <div class="addnew_input">
+        <label for="substance_2">Substance</label>
+        <input class='tab_2_input' type="text" id="substance_2">
+      </div>
+
+      <div class="addnew_input">
+        <!-- changed the 'for' attribute here, the for and the input id should be the same, that how the browser associates them -->
+        <label for="cas_2">CAS Number (optional)</label>
+        <input class='tab_2_input' type="text" id="cas_2" placeholder="CAS (Optional)">
+      </div>
+
     </div>
-    <div class="flexdc h30perc">
-      <label for="substance_2">CAS Number (optional)</label>
-      <input class='tab_2_input' type="text" id="cas_2" placeholder="CAS (Optional)">
+      <!-- end row 1-->
+      <!-- tab 2 row 2-->
+  
+    <div id="tab_2_row_2" class="addnew_inputrow">
+
+      <!-- moved this one down to have the same amount of inputs in each row -->
+      <div class="addnew_input">
+        <label for="qty_2">Quantity in tonnes</label>
+        <input class='tab_2_input' type="text" id="qty_2">
+      </div>
+
+   <!-- commented is row out since you might be removing it and i wanted to see how the spacing looks -->
+      <!-- <div class="flexdc h30perc">
+        <label for="type_2">Type</label>
+        <input class='tab_2_input' name="type_2" class="whitebackground noborder" id="type_2" value="Named" disabled>
+      </div> -->
+
+      <div class="addnew_input">
+        <label for="class_2">Class</label>
+        <div class="addnew_select">
+          <select name="type_2" id="class_2" onchange="enable_add_button(2)">
+            <option default hidden value="">Select...</option>
+            {% for substance in listedSubstances %}
+            <option chemid="{{substance.chemid}}" data-toggle="tooltip" title="{{substance['tooltip']}}" value="{{substance.chemid}}">{{substance.class }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <!-- <div class="flexr h30perc aife">
+        <button id="addtoinv_2" class="button--disabled mbm10px greenbutton" onclick="addtoinv('2')">Add to Inventory</button>
+        <button id="clear_2_button" class="floatr" data-toggle="tooltip" title="Clear the current fields." >CLEAR</button>
+      </div> -->
+      <div class="addnew_footer">
+        <button id="addtoinv_1" class="button button--primary button--small button--disabled">Add to Inventory</button>        
+        <button class="button button button--secondary button--small" onclick="hideaddnew()">Cancel</button> 
+        <button id="clear_1_button" class="button button button--secondary button--small" data-toggle="tooltip" title="Clear the current fields." >Reset</button>  
+      </div>
     </div>
-    <div class="flexdc h20perc">
-      <label for="qty_2">Qty</label>
-      <input class='tab_2_input' type="text" id="qty_2">
-    </div>
+    <!-- END TAB2 -->
+
+
+
   </div>
-    <!-- end row 1-->
-    <!-- tab 2 row 2-->
 
-  <div id="tab_2_row_2" class="flexdr aife nowrap jcse pad15px">
-    <div class="flexdc h30perc">
-      <label for="type_2">Type</label>
-      <input class='tab_2_input' name="type_2" class="whitebackground noborder" id="type_2" value="Listed" disabled>
-    </div>
-    <div class="flexdc h30perc">
-      <label for="class_2">Class</label>
-      <select name="type_2" id="class_2" onchange="enable_add_button(2)">
-        <option default hidden value="">Select...</option>
-        {% for substance in listedSubstances %}
-        <option chemid="{{substance.chemid}}" data-toggle="tooltip" title="{{substance['tooltip']}}" value="{{substance.chemid}}">{{substance.class }}</option>
-        {% endfor %}
-      </select>
-    </div>
-
-    <div class="flexr h30perc aife">
-      <button id="addtoinv_2" class="disabled_button mbm10px greenbutton" onclick="addtoinv('2')">Add to Inventory</button>
-      <button id="clear_2_button" class="floatr" data-toggle="tooltip" title="Clear the current fields." >CLEAR</button>
-    </div>
-
-  </div>
-  <!-- END TAB2 -->
   <script>$(".tab_2_input").on('blur',enable_add_button(2))</script>
 </div>

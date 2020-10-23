@@ -171,6 +171,14 @@
   margin-top: 10px;
 }
 
+.martop15px {
+  margin-top: 15px;
+}
+
+.marbottom15px {
+  margin-bottom: 15px;
+}
+
 .noborder {
   border: none;
 }

@@ -5,19 +5,24 @@
   currentpage = "inventory"
   inventoryexists = false
 </script>
-  <div id="list_div" class="mar30px martopnone">
+  <h2>Inventory:</h2>
+  <div id="list_div" class="table--scroll">
     <table>
-      <tr>
-        <th>#</th>
-        <th>CAS</th>
-        <th>Substance</th>
-        <th>Type</th>
-        <th>Class</th>
-        <th>Qty (tonnes)</th>
-        <th>EDIT</th>
-        <th>X</th>
-      </tr>
-      {% if inventory %}
+      <thead>
+        <tr>
+          <th>#</th>
+          <th >CAS</th>
+          <th >Substance</th>
+          <th>Type</th>
+          <th>Class</th>
+          <th>Qty <br><span>(tonnes)</span></th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if inventory %}
+     
       <script>
         inventoryexists = true
       </script>
@@ -38,18 +43,20 @@
         inventoryexists = false
       </script>
       <tr id="noinv_tr">
-        <td colspan="8">You haven't added anything to your inventory yet. Click the "Add new" button to start.</td>
+        <td class="row--empty">You haven't added anything to your inventory yet. Click the <span class="bold">ADD NEW</span> button below.</td>
       </tr>
       {% endif %}
-    </table>
+      </tbody>
+    </table>    
   </div>
-
-
-<div id="addnew_div" class="mar30px">
+  <div class="flexdr jcfs martop10px">
+   <button class="button button--primary" id="button_addnew">Add new</buton>
+  </div>
+<div id="addnew_div" class="">  
   {% include 'addnew.html' %}
 </div>
 
-<div id="calc_div" class="flexdr jcfe">
-  <button id="calc_button" onclick="Process()">CALCULATE</button>
+<div id="calc_div" class="flexdr jcfs martop10px">
+  <button id="calc_button" class="button button--primary" onclick="Process()">Calculate</button>
 </div>
 {% endblock %}
