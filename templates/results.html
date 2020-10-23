@@ -2,37 +2,39 @@
 
 {% block body %}
 <script>currentpage="results"</script>
-<div id="results_div" class="flexdc nowrap whiteblock">
-  <div id="final_tier_row">
-    <h3>Final tier:</h3>
-    <h2>{{ results.finaltier }}</h2>
-  </div>
-  <div id="resultspage_grid" class="flexdr wrap">
-    <div id="grid_1" class="h50perc grid">
-      <h3>Detailed View</h3>
-      <h4>Individual Tier</h4>
-      <p>{{ results.indtier }}</p>
-      <h4>Cumulative Tier</h4>
-      <p>{{ results.cumultier }}</p>
+<div class="header">
+  <h1>Results</h1>
+</div>
+<div class='main_content'>
+  <div id="results_div" class="results block block--text block--wide">
+    <div id="final_tier_row" class="results_header">
+      <h2>Establishment tier: {{ results.finaltier }}</h2>
+    </div>
+    <div class="results_overview">
+      <h3>Overview</h3>
+      <p>Individual Tier: {{ results.indtier }}<br/>
+        Cumulative Tier: {{ results.cumultier }}</p>
       <p>Click <a onclick="show('detailed_view_div')">here</a> for a detailed analysis.</p>
     </div>
-    <div id="grid_2" class="h50perc grid">
+    <div id="detailed_view_div" style="display: none;">
+      {% include 'detailed.html' %}
+    </div>
+    <div class="results_recommended">
       <h3>Recommended Action</h3>
       {% include 'recommendation.html' %}
+      <br/>
     </div>
-    <div id="grid_3" class="h50perc grid">
-      <h3 onclick="NewStart()">Start Again</h3>
-      <p>or</p>
-      <h3 onclick="Redirect('/inventory')">Edit Inventory</h3>
+    <div class="button_bar">
+      <button class="button button--primary" onclick="NewStart()">Start Over</button>
+      <button class="button button--primary" onclick="Redirect('/inventory')">Edit Inventory</button>
+      <br/>
     </div>
-    <div id="grid_4" class="h50perc grid">
-      <h3>Get in touch</h3>
-      <img src="/static/img/envelope.jfif">
-    </div>
-  </div>
-  <div id="detailed_view_div" style="display: none;">
-    {% include 'detailed.html' %}
+    <div class="results_cta">
+      <p>Do the sales pitch here, after taking them through the journey in the end the real point is to get them to click on this anchor link - <a onclick="Redirect('/contact')">Contact Us</a></p>      
+    </div>    
+    <small>
+      Note - any classification provided is for information purposes only and should not be interpreted as a formal classification study.
+    </small>
   </div>
 </div>
-
 {% endblock %}

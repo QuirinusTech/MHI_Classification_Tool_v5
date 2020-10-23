@@ -5,58 +5,68 @@
   currentpage = "inventory"
   inventoryexists = false
 </script>
-  <h2>Inventory:</h2>
-  <div id="list_div" class="table--scroll">
-    <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th >CAS</th>
-          <th >Substance</th>
-          <th>Type</th>
-          <th>Class</th>
-          <th>Qty <br><span>(tonnes)</span></th>
-          <th></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {% if inventory %}
-     
-      <script>
-        inventoryexists = true
-      </script>
-      {% for item in inventory %}
-      <tr>
-        <td>{{ loop.index }}</td>
-        <td>{{ item.CAS }}</td>
-        <td>{{ item.name }}</td>
-        <td>{{ item.type }}</td>
-        <td>{{ item.class }}</td>
-        <td id="{{ item.id }}_qty_td">{{ item.qty }}</td>
-        <td><button onclick="edit('{{ item.id }}')">EDIT</button></td>
-        <td><button onclick="del('{{ item.id }}')">X</button></td>
-      </tr>
-      {% endfor %}
-      {% else %}
-      <script>
-        inventoryexists = false
-      </script>
-      <tr id="noinv_tr">
-        <td class="row--empty">You haven't added anything to your inventory yet. Click the <span class="bold">ADD NEW</span> button below.</td>
-      </tr>
-      {% endif %}
-      </tbody>
-    </table>    
+  <div class="header">
+    <h1>Inventory</h1>
   </div>
-  <div class="flexdr jcfs martop10px">
-   <button class="button button--primary" id="button_addnew">Add new</buton>
-  </div>
-<div id="addnew_div" class="">  
-  {% include 'addnew.html' %}
-</div>
+  <div class='main_content'>
+    <div class="block block--wide" id="">
+      <div id="list_div" class="table--scroll table--inventory">
+        <table>
+          <thead>
+            <tr>
+              <th><h4>#</h4></th>
+              <th><h4>CAS</h4></th>
+              <th><h4>Substance</h4></th>
+              <th><h4>Type</h4></th>
+              <th><h4>Class</h4></th>
+              <th><h4>Qty <br><span>(tonnes)</span></h4></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if inventory %}
+         
+          <script>
+            inventoryexists = true
+          </script>
+          {% for item in inventory %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ item.CAS }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.type }}</td>
+            {% if item['class'] %}
+            <td>{{ item.class }}</td>
+            {% else %}
+            <td>-</td>
+            {% endif %}
+            <td id="{{ item.id }}_qty_td" EditMode=false Value="{{ item.qty }}"><p>{{ item.qty }}</p></td>
+            <td><button onclick="toggleEditMode(event, '{{ item.id }}')" class="button_icon button_icon--edit"></button><button onclick="del('{{ item.id }}')" class="button_icon button_icon--del"></button></td>
+          </tr>
+          {% endfor %}
+          {% else %}
+          <script>
+            inventoryexists = false
+          </script>
+          <tr id="noinv_tr">
+            <td class="row--empty">Your inventory is currently empty. To start, click on the <span class="bold">&nbsp;Add New&nbsp;</span> button below.</td>
+          </tr>
+          {% endif %}
+          </tbody>
+        </table>    
+      </div>
+    </div>
 
-<div id="calc_div" class="flexdr jcfs martop10px">
-  <button id="calc_button" class="button button--primary" onclick="Process()">Calculate</button>
-</div>
+
+  <div class="flexdr jcfs martop10px">
+   <button class="button button--primary" id="button_addnew">Add New</buton>
+  </div>
+  <div id="addnew_div" class="">  
+    {% include 'addnew.html' %}
+  </div>
+
+  <div id="calc_div" class="flexdr jcfs martop10px">
+    <button id="calc_button" class="button button--primary" onclick="Process()">Calculate</button>
+  </div>
+  </div>
 {% endblock %}

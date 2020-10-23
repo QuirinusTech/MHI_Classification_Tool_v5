@@ -125,7 +125,7 @@ function clear(x) {
   $(".flash").removeClass("flash")
 }
 
-/** add or reemove red borders on fields with invalid values when trying to add a substance to the inv */
+/** add or remove red borders on fields with invalid values when trying to add a substance to the inv */
 function pre_add_check(x) {
   if (x == 1) {
     if (!$("#addtoinv_1").hasClass("button--disabled")) {
@@ -151,9 +151,10 @@ function pre_add_check(x) {
 
 /** using the input fields, adds a substance to the inventory */
 function addtoinv(x) {
-  if (pre_add_check(x) === false) {
-    alert("Please check that you've entered valid information into the fields above.")
-  } else {
+  // var preCheck = pre_add_check(x)
+  // if (pre_add_check(x) === false) {
+  //   alert("Please check that you've entered valid information into the fields above.")
+  // } else {
     if (x==2) {
       chemid = $("#class_2").val()
       d = new Date()
@@ -182,37 +183,59 @@ function addtoinv(x) {
       loading(1)
       addtoinvPOST(newEntryObj, x)
     }
+  // }
+}
 
+function toggleEditMode (e, x){
+  const target = e.target
+  const classes = target.classList
+  const cell = document.getElementById(x + "_qty_td")
+  const inEditMode = cell.getAttribute('EditMode')
+  if (inEditMode === 'false') {
+    cell.setAttribute('EditMode', true)
+    target.classList.remove('button_icon--edit')
+    target.classList.add('button_icon--check')
+    edit(x, cell)
+  } else {
+    cell.setAttribute('EditMode', false)
+    target.classList.add('button_icon--edit')
+    target.classList.remove('button_icon--check')
+    update(x, cell)
   }
 }
 
-/** provides the interace for the user to update the qty of an item in already in the inv */
-function edit(x) {
-  let qty = $("#"+x+"_qty_td").html()
-  qty = Number(qty)
-  let input = document.createElement('input')
+
+/** provides the interface for the user to update the qty of an item in already in the inv */
+function edit(x, cell) {
+  const qty = cell.getAttribute('value')
+  const input = document.createElement('input')
   input.setAttribute('type', 'number')
+  input.setAttribute('min', "1")
+  input.setAttribute('max', "9999")
   input.setAttribute('id', 'newqty_'+x)
   input.value = qty
-  let button = document.createElement('button')
-  button.setAttribute("onclick","update(\'"+x+"\')")
-  button.innerHTML = "OK"
-  let div = document.createElement("div")
-  div.classList.add('flexdr')
+  const div = document.createElement("div")
+  div.classList.add('editfield')
   div.appendChild(input)
-  div.appendChild(button)
   $("#"+x+"_qty_td").html(div)
 }
 
 /** submits a post request updating the qty of an item already in the inv */
-function update(x) {
+function update(x, cell) {
   let newval = $("#newqty_"+x).val()
-  newEntryObj = {
-    "id": x,
-    "qty": newval
+  const prevQty = cell.getAttribute('value')
+  if (prevQty === newval) {
+    const p = document.createElement("p")
+    p.innerHTML = prevQty
+    $("#"+x+"_qty_td").html(p)
+  } else {
+    newEntryObj = {
+      "id": x,
+      "qty": newval
+    }
+    loading(1)
+    addtoinvPOST(newEntryObj)
   }
-  loading(1)
-  addtoinvPOST(newEntryObj)
 }
 
 /** deletes an item from the inv */

@@ -2,32 +2,40 @@
 
 {% block body %}
 <script>currentpage = "help"</script>
-
-<h2>How it works</h2>
+<div class="header">
+  <h1>How it is calculated</h1>
+</div>
 <div class='main_content'>
   <div class="block" id="howitworksdiv">
-    <p>
-      Quantities of all hazardous materials stored or handled at the site are provided by the establishment. The tool will calculate the total quantity per hazard class and estimate the site's MHI classification and Hazard Level.
-    </p>
-    <div class="martop15px marbottom15px">
-      <p class="bold">
-        The classification tool can assist in estimating:
-      </p>
+    <h2 class="marbottom15px">
+      The Process:
+    </h2>
+    <ul class="fancyul">
+      <li>Quantities of all hazardous materials stored or handled at the site are provided by the establishment.</li>
+      <li>Total quantity per hazard class is calculated.</li>
+      <li>The site's MHI classification and Hazard Level is estimated.</li>
+      <li>Report with recommendations is created.</li>
+    </ul>
+
+      <h2 class="martop30px marbottom15px">
+        What it can assist in estimating:
+      </h2>
       <ol>
         <li>
-          Whether the establishment is likely to be classified as a Mahor Hazard Establishment.
+          Whether the establishment is likely to be classified as a Major Hazard Establishment.
         </li>
         <li>
-          Whether the establishment is klikely to be classified as a High Hazard, a Medium Hazard or a Low Hazard establishment.
+          Whether the establishment is likely to be classified as a High Hazard, a Medium Hazard or a Low Hazard establishment.
         </li>
       </ol>
-    </div>
-    <quote>
-      Note - any classification provided is for information purposes only and should not be interpreted as a formal classification study.
-    </quote>
+    <br/>
     <div class="button_bar">
-      <button class="button button--primary asfe" onclick="Redirect('/inventory')">Next</button>
+      <button class="button button--primary" onclick="Redirect('/inventory')">Get Started!</button>
     </div>
+    <br/>
+    <small>
+      Note - any classification provided is for information purposes only and should not be interpreted as a formal classification study.
+    </small>
   </div>
 </div>
 {% endblock %}

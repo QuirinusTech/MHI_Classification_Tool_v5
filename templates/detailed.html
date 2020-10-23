@@ -1,23 +1,94 @@
-<div class="flexdr wrap martop10px">
-  <div class="h100perc flexdr jcsb">
-    <h2>Detailed View</h2>
-    <button class="red_button" onclick="hide('detailed_view_div')">&times;</button>
+<div class="detailsView">
+  <div class="detailsView_header">
+    <h3>Detailed View</h3>
+    <button onclick="hide('detailed_view_div')" class="button_icon fs-25">&times;</button>
   </div>
-  <div class="flexdc mar10px">
-    <h3>
-      Individual Rating
-    </h3>
-    <span>
-      {{ results.indtier }}
-    </span>
+  <div class="detailsView_body">
+    <div class="detailsView_body_column">
+      <div class="detailsView_body_column_header">
+        <h4>
+          Individual Rating
+        </h4>
+        <p>
+          {{ results.indtier }}
+        </p>
+      </div>
+      <div class="detailsView_body_column_body">
+        <div class="detailsView_body_column_body_subheader">
+          <p>Substance</p>
+          <p>Tier</p>
+        </div>
+        <div class="detailsView_body_column_body_content">
+          {% for item in inv %}
+            <p>{{ item.name}}</p>
+            <p>{{ item.tier}}</p>
+          {% endfor %}
+        </div>
+        <div id="ind_tier_explain" class="detailsView_body_column_body_footnote">
+          <h5>Some subheading explaining what this is</h5>
+          <p>Individual tier rating explanation message goes here.</p>
+        </div>
+      </div>
+    </div>
+    {% if results.usedlistedsubs|length  > 0 %}
+    <div class="detailsView_body_column">
+      <div class="detailsView_body_column_header">
+        <h4>
+          Cumulative Rating
+        </h4>
+        <p>
+          {{ results.cumultier }}
+        </p>
+      </div>
+      <div class="detailsView_body_column_body">
+        <div class="detailsView_body_column_body_subheader">
+          <p>Substance</p>
+          <p>Tier</p>
+        </div>
+        <div class="detailsView_body_column_body_content">  
+          {% for class in results.usedlistedsubs %}
+            <p>{{ item.name}}</p>
+            <p>{{ item.tier}}</p>
+          {% endfor %}
+        </div>
+        <div id="cumul_tier_explain" class="detailsView_body_column_body_footnote">
+          <h5>Some subheading explaining what this is</h5>
+          <p>Cumulative tier rating explanation message goes here..</p>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+
+
+
+
+
+<!-- 
+
+  <div>
     <table>
+      <thead>
+        <tr>
+          <th>
+            <h4>
+              Individual Rating
+            </h4>
+          </th>
+          <th>
+            {{ results.indtier }}
+          </th>
+      </tr>
+    </thead>
+    <tbody>
       <tr>
-        <th>
-          Substance
-        </th>
-        <th>
-          Tier
-        </th>
+        <td>
+          <p>Substance</p>
+        </td>
+        <td>
+          <p>Tier</p>
+        </td>
       </tr>
       {% for item in inv %}
       <tr>
@@ -29,11 +100,22 @@
         </td>
       </tr>
       {% endfor %}
+    </tbody>
     </table>
     <div id="ind_tier_explain">
       <p>Individual tier rating explanation message goes here.</p>
     </div>
   </div>
+
+
+
+
+
+
+
+
+
+
   <div class="flexdc mar10px">
     <h3>
       Cumulative Rating
@@ -64,5 +146,5 @@
     <div id="cumul_tier_explain">
       <p>Cumulative tier rating explanation message goes here.</p>
     </div>
-  </div>
+  </div> -->
 </div>
