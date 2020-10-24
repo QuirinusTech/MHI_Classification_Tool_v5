@@ -1,5 +1,6 @@
 import re
 import json
+import hphrases
 
 def stringsearch(z,t):
   if t == "H":
@@ -20,15 +21,15 @@ def getnums(x):
   return listresults[0]
 
 
-# 0id, 1CAS, 2substance, 3tier1, 4tier2, 5tier3, 6type, 7class, 8tooltip
+# 0id, 1CAS, 2substance, 3tier1, 4tier2, 5tier3, 6type, 7class, 8tooltip, 9h-phrases
 bigDatabase = [
-[101, "", "Carcinogens", 0.05, 0.5, 2, "named", "", "Carcinogens at concentration above 5%: 4-Aminobiphenyl, Benzotrichloride, Benzidine, Chloromethyl ether, Chloromethyl methyl ether, 1,2-Dibromoethane, Diethyl sulphate, Dimethyl sulphate, Dimethylcarbamoyl Chloride, 1,2-Dibromo-3-chloropropane, 1,2-Dimethylhydrazine, Dimethylnitrosamine, Hexamethylphosphoric triamide, Hydrazine, 2-Naphthylamine, 2-Naphthylamine salts, 4-Nitrodiphenyl, 1,3-Propanesultone",""],
+[101, "", "Carcinogens", 0.05, 0.5, 2, "named", "", "Carcinogens at concentration above 5%: 4-Aminobiphenyl, Benzotrichloride, Benzidine, Chloromethyl ether, Chloromethyl methyl ether, 1,2-Dibromoethane, Diethyl sulphate, Dimethyl sulphate, Dimethylcarbamoyl Chloride, 1,2-Dibromo-3-chloropropane, 1,2-Dimethylhydrazine, Dimethylnitrosamine, Hexamethylphosphoric triamide, Hydrazine, 2-Naphthylamine, 2-Naphthylamine salts, 4-Nitrodiphenyl, 1,3-Propanesultone","",[]],
 [6326, "74-86-2", "Acetylene", 0.5, 5, 50, "named", "", "", ["H220"]],
 [222, "7664-41-7", "Ammonia anhydrous", 5, 50, 200, "named", "", "", ["H221", "H314", "H331", "H400"]],
-[229851, "6484-52-2", "Ammonium nitrate (Composites)", 500, 5000, 10000, "named", "", "Ammonium Nitrate-based fertiliser composites with less than 25% Nitrogen content as a result of Ammonium Nitrate and with no more than 0.4% total combustible or organic materials (or which satisfy the detonation resistance test)."],
-[229852, "6484-52-2", "Ammonium nitrate (Fertiliser grade)", 125, 1250, 5000, "named", "", "Ammonium Nitrate-based Fertiliser with more than 24,5% Nitrogen as a result of Ammonium Nitrate or Ammonium Sulphate composites with more than 16% Nitrogen as a result of Ammonium Nitrate."],
-[229853, "6484-52-2", "Ammonium nitrate (Technical grade)", 35, 350, 2500, "named", "", "Ammonium Nitrate and preparations of ammonium nitrate in with more than 24,5% Nitrogen as a result of Ammonium Nitrate or aqueous ammonium nitrate solutions of which 80% or more is Ammonium Nitrate."],
-[229854, "6484-52-2", "Ammonium nitrate (10/50 Off-Specs)", 1, 10, 50, "named", "", "Ammonium Nitrate \"off-specs\" material and fertilisers not satisfying the detonation resistance test or degraded and/or contaminated Ammonium Nitrate compounds."],
+[229851, "6484-52-2", "Ammonium nitrate (Composites)", 500, 5000, 10000, "named", "", "Ammonium Nitrate-based fertiliser composites with less than 25% Nitrogen content as a result of Ammonium Nitrate and with no more than 0.4% total combustible or organic materials (or which satisfy the detonation resistance test).",["H272"]],
+[229852, "6484-52-2", "Ammonium nitrate (Fertiliser grade)", 125, 1250, 5000, "named", "", "Ammonium Nitrate-based Fertiliser with more than 24,5% Nitrogen as a result of Ammonium Nitrate or Ammonium Sulphate composites with more than 16% Nitrogen as a result of Ammonium Nitrate.",["H272"]],
+[229853, "6484-52-2", "Ammonium nitrate (Technical grade)", 35, 350, 2500, "named", "", "Ammonium Nitrate and preparations of ammonium nitrate in with more than 24,5% Nitrogen as a result of Ammonium Nitrate or aqueous ammonium nitrate solutions of which 80% or more is Ammonium Nitrate.",["H272"]],
+[229854, "6484-52-2", "Ammonium nitrate (10/50 Off-Specs)", 1, 10, 50, "named", "", "Ammonium Nitrate \"off-specs\" material and fertilisers not satisfying the detonation resistance test or degraded and/or contaminated Ammonium Nitrate compounds.",["H272"]],
 [234, "7778-39-4", "Arsenic (V) acid and/or salts", 0.1, 1, 2, "named", "", "", ["H301","H312","H314","H318","H331","H350","H361","H400","H410"]],
 [14771, "1303-28-2", "Arsenic pentoxide", 0.1, 1, 2, "named", "", "",["H301","H331","H350","H400","H410"]],
 [518605, "1327-53-3", "Arsenic trioxide", 0.01, 0.1, 0.1, "named", "", "Tetraarsenic oxide / ",["H300","H314","H350","H400", "H410"]],
@@ -36,7 +37,7 @@ bigDatabase = [
 [24408, "7726-95-6", "Bromine", 2, 20, 100, "named", "", "",["H314","H330","H400"]],
 [6371, "75-44-5", "Carbonyl dichloride", 0.03, 0.3, 0.75, "named", "", "Phosgene",["H314","H330"]],
 [23969, "7784-42-1", "Arsenic trihydride", 0.02, 0.2, 1, "named", "", "Arsine / Hydrogen arsenide",["H220","H330","H373","H400","H410"]],
-[24526, "7782-50-5", "Chlorine", 1, 10, 25, "named", "", "Chloride, Bertholite, ",["H270","H315","H319","H331","H335","H400"]],
+[24526, "7782-50-5", "Chlorine", 1, 10, 25, "named", "", "Chloride, Bertholite",["H270","H315","H319","H331","H335","H400"]],
 [6354, "75-21-8", "Ethylene oxide", 0.5, 5, 50, "named", "", "",["H220","H315","H319","H331","H335","H340","H350"]],
 [9033, "151-56-4", "Ethyleneimine", 1, 10, 20, "named", "", "Aziridine, Polyethyleneimine",["H225","H300","H310","H314","H330","H340","H350","H411"]],
 [24524, "7782-41-4", "Fluorine", 1, 10, 20, "named", "", "",["H270","H314","H330"]],
@@ -44,8 +45,8 @@ bigDatabase = [
 [783, "1333-74-0", "Hydrogen", 0.5, 5, 50, "named", "", "",["H220"]],
 [313, "7647-01-0", "Hydrogen chloride", 2.5, 25, 250, "named", "", "Hydrochloric Acid (liquefied gas)",["H314", "H331"]],
 [14917, "7664-39-3", "Hydrogen fluoride", 0.5, 5, 20, "named", "", "",["H300","H310","H314","H330"]],
-[21, "", "Lead alkyls", 0.5, 5, 50, "named", "", ""],
-[22, "", "LPG", 5, 50, 200, "named", "", "Liquefied extremely flammable gases (including LPG) and natural gas (liquefied or otherwise)."],
+[21, "", "Lead alkyls", 0.5, 5, 50, "named", "", "", []],
+[22, "", "LPG", 5, 50, 200, "named", "", "Liquefied extremely flammable gases (including LPG) and natural gas (liquefied or otherwise).",[]],
 [887, "67-56-1", "Methanol", 50, 500, 5000, "named", "", "Carbinol",["H225","H301","H311","H331","H370"]],
 [12228, "624-83-9", "Methyl isocyanate", 0.015, 0.15, 0.15, "named", "", "Methyl carbonimide",["H225","H301","H311","H315","H317","H318","H330","H334","H335","H361"]],
 [7543, '101-14-4', '4,4-Methylenebis', 0.001, 0.01, 0.01, 'named', '', '2-Chloraniline and/or salts (Powder form)',["H302","H350","H400","H410"]],
@@ -82,39 +83,62 @@ chemlist = []
 MainDB = []
 
 for chem in bigDatabase:
-  MainDB.append({"id": chem[0], "CAS": chem[1], "name": chem[2], "tier1": chem[3], "tier2": chem[4], "tier3": chem[5], "type": chem[6], "class": chem[7], "tooltip": chem[8], "hphrases": chem[9]})
+  MainDB.append({"chemid": chem[0], "CAS": chem[1], "name": chem[2], "tier1": chem[3], "tier2": chem[4], "tier3": chem[5], "type": chem[6], "class": chem[7], "tooltip": chem[8], "hphrases": chem[9]})
 
 for chem in MainDB:
-  chemlist.append({"id": chem["id"], "CAS": chem["CAS"], "name": chem["name"], "type": chem["type"], "class": chem["class"], "tooltip": chem["tooltip"]})
+  chemlist.append({"chemid": chem["chemid"], "CAS": chem["CAS"], "name": chem["name"], "type": chem["type"], "class": chem["class"], "tooltip": chem["tooltip"], "hphrases": chem["hphrases"]})
 print("chemlist loaded!")
 
 def findattribs(param1):
   print("findattribs", param1)
   for chem in chemlist:
-    if param1 == chem["id"]:
+    if param1 == chem["chemid"]:
       return chem
 
 def assessment(inv):
-  #cumulative
-
-  indtier = 0
+  results = {"indtier" : 0, "cumultier": 0, "finaltier": 0}
   for item in inv:
+    #individual
     item["tier"] = deftier(item)
-    if item["tier"] > indtier:
-      indtier = item["tier"]
-  inv["indtier"] = indtier
-  return inv
+    if item["tier"] > results["indtier"]:
+      results["indtier"] = item["tier"]
+  if results["indtier"] > 1:
+    results["finaltier"] = results["indtier"]
+  elif results["indtier"] == 0:
+    #cumulative
+    usedlistedsubs = {"A": 0, "B": 0, "C": 0}
+    if item['type']=="named":
+      for substance in MainDB:
+        if int(item["chemid"]) == int(substance["chemid"]):
+          qx = int(item["qty"]) / int(substance["tier3"])
+          rule = hphrases.RuleFinder(item)
+          usedlistedsubs[rule] = usedlistedsubs[rule] + qx
+    elif item["type"]=="listed":
+      for substance in listedSubstances:
+        if int(item["chemid"]) == int(substance["chemid"]):
+          qx = int(item["qty"]) / int(substance["tier3"])
+          rule = hphrases.RuleFinder(item)
+          usedlistedsubs[rule] = usedlistedsubs[rule] + qx
+    for sub in usedlistedsubs.keys():
+      if usedlistedsubs[sub] >= 1:
+        results["cumultier"] = 3
+        results["finaltier"] = 3
+    results["usedlistedsubs"] = usedlistedsubs
+  print(results)
+  return results
+
+
 
 def deftier(item):
   qty = int(item["qty"])
   if item['type']=="named":
-    for chem in bigDatabase:
-      if int(item["id"]) == chem[0]:
-        if qty > chem[5]:
+    for substance in MainDB:
+      if int(item["chemid"]) == int(substance["chemid"]):
+        if qty > substance["tier3"]:
           return 3
-        elif qty > chem[4]:
+        elif qty > substance["tier2"]:
           return 2
-        elif qty > chem[3]:
+        elif qty > substance["tier1"]:
           return 1
         else:
           return 0

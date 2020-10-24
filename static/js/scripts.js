@@ -11,6 +11,14 @@ function init (){
   burger && burger.addEventListener('click', ()=>{toggleMenuHandler()});
   addNewButton && addNewButton.addEventListener('click', ()=>{showAddNewHandler()})
   main && main.addEventListener('click', () =>{toggleClickAwayHandler()})
+
+  // addtoinv() and clear() buttons
+  var btnclear = document.getElementById("clear_btn")
+  btnclear && btnclear.addEventListener("click", ()=>{clear()})
+
+  // set tab 1 to active
+  tabtoggle(1)
+  loading(0)
 }
 
 function toggleMenuHandler(){
@@ -55,7 +63,7 @@ function loading(x, t=1500) {
 
 /** activatees loading screen and redirect.
  * arg1=href (e.g. '/about')  */
- function Redirect(arg) {
+function Redirect(arg) {
   loading(1)
   window.location.href = arg;
 }

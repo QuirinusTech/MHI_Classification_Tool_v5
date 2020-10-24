@@ -14,7 +14,7 @@
       inventoryexists = true
     </script>
     {% for item in inventory %}
-    <tr id="{{ item.id }}_tr" class="{{ item.id }}">
+    <tr chemid="{{item.chemid}}" id="{{ item.id }}_tr" class="{{ item.id }}">
       <td>{{ item.indexpos }}</td>
       <td>{{ item.CAS }}</td>
       <td>{{ item.name }}</td>

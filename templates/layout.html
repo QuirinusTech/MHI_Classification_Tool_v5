@@ -43,29 +43,4 @@
 
   </div>
 </body>
-<script>
-  window.onload = function() {
-    $("#navbar_"+currentpage).addClass("current_page")
-    if (currentpage == "inventory"){
-
-      // added a safety net to first check if the button is present/ is not null
-      var buttonclear1 = document.getElementById("clear_1_button")
-      var buttonclear2 = document.getElementById("clear_2_button")
-      buttonclear1 && buttonclear1.addEventListener("click", function () {clear(1)})
-      buttonclear2 && buttonclear2.addEventListener("click", function () {clear(2)})
-      tabtoggle(1)
-      $(".acli").hide()
-    }
-    if (inventoryexists===true){
-      $("#navbar_process").removeClass('disabled_link')
-      $("#navbar_results").removeClass('disabled_link')
-      $("#calc_button").removeClass('button--disabled')
-    } else if (currentpage!="results") {
-      $("#navbar_results").addClass('disabled_link')
-      $("#navbar_process").addClass('disabled_link')
-      $("#calc_button").addClass('button--disabled')
-    }
-    loading(0)
-  }
-</script>
 </html> 

@@ -25,7 +25,7 @@ def addtoinv():
     newEntry = json.loads(request.form['newEntry'])
     print("newEntry", newEntry)
     for chem in inv:
-      if newEntry["id"] == str(chem["id"]):
+      if newEntry["chemid"] == str(chem["chemid"]):
         if int(newEntry["qty"]) > 0:
           chem["qty"] = newEntry["qty"]
         elif int(newEntry["qty"]) == 0:
@@ -34,7 +34,7 @@ def addtoinv():
     #listed substance
     if newEntry["type"] == "named":
       for chem in hyginus.chemlist:
-        if newEntry["id"] == str(chem["id"]):
+        if newEntry["chemid"] == str(chem["chemid"]):
           result = chem
           result["qty"] = newEntry["qty"]
           result["indexpos"] = len(inv)+1
@@ -95,7 +95,7 @@ def updatehphrases(entry):
     hazardphrases = hyginus.stringsearch(json.dumps(queryAnswer2), "H")
     print("hazardphrases: ", hazardphrases)
     for item in inv:
-      if entry["id"] == item["id"]:
+      if entry["chemid"] == item["chemid"]:
         item["hphrases"] = hazardphrases
   except Exception as e:
     print(e)

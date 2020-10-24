@@ -50,13 +50,13 @@
           Tier
         </th>
       </tr>
-      {% for class in results.usedlistedsubs %}
-      <tr id="listed_{{class.id}}_tr">
+      {% for sub in results.usedlistedsubs.keys() %}
+      <tr id="{{sub}}_tr">
         <td>
-          {{ class.class }}
+          {{ sub }}
         </td>
         <td>
-          {{ class.tier }}
+          {{ results.usedlistedsubs[sub] * 100 }}%
         </td>
       </tr>
       {% endfor %}

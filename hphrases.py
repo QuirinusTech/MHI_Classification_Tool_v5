@@ -1,6 +1,6 @@
 hphrases = {
     "H200":	"Unstable explosive",
-    "H201": "	Explosive; mass explosion hazard",
+    "H201": "Explosive; mass explosion hazard",
     "H202": "Explosive; severe projection hazard",
     "H203": "Explosive; fire, blast or projection hazard",
     "H204": "Fire or projection hazard",
@@ -161,17 +161,27 @@ hgroups = [
     },
 ]
 
+
+rules = {
+  "A": [201, 202],
+  "B": [203, 204, 205, 206, 207],
+  "C": [208, 209]
+}
+
 cumulativerule = {}
 for group in hgroups:
   cumulativerule[group['chemid']] = 0
 
 
-def assignChemIDs(inv):
-  for item in inv:
+def RuleFinder(item):
+  if item['type'] == "named":
     for hphrase in item["hphrases"]:
       for group in hgroups:
         if hphrase in group["hphrases"]:
-          item['groups'].append(group['chemid'])
-  return inv
-
-
+          for rule in rules.keys():
+            if group["chemid"] in rules[rule]:
+              return rule
+  elif item['type'] == "listed":
+    for rule in rules.keys():
+      if item["chemid"] in rules[rule]:
+              return rule

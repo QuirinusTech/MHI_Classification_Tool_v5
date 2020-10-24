@@ -7,10 +7,10 @@
   <div class="addnew_header">
     <!-- TABS ROW-->
     <div class="tabs_holder">
-      <div id="tab_1" class="tabs_tab  active_tab"  onclick="tabtoggle(1)">
+      <div id="tab_1" value="1" class="tabs_tab  active_tab"  onclick="tabtoggle(1)">
         <h2>Named Substance</h2>
       </div>
-      <div id="tab_2" class="tabs_tab" onclick="tabtoggle(2)">
+      <div id="tab_2" value="2" class="tabs_tab" onclick="tabtoggle(2)">
         <h2>Listed Substance</h2>
       </div>
     </div>       
@@ -30,7 +30,7 @@
           <input onkeyup="AutusCumpletus()"  type="text" id="substance_1" placeholder="Start typing..." autocomplete="off">
           <ul id="autocompletelist">
             {% for item in chemlist %}
-            <li class="acli" id="li_{{ item['id'] }}" chemclass="{{item['class']}}" chemtype="{{item['type']}}" data-toggle="tooltip" title="{{item['tooltip']}}" onclick="populate('{{ item.id }}')">{% if item["CAS"] %}{{ item.CAS }} - {% endif %}{{ item.name }}</li>
+            <li class="acli" style="display: none;" id="li_{{ item['chemid'] }}" chemclass="{{item['class']}}" chemtype="{{item['type']}}" data-toggle="tooltip" title="{{item['tooltip']}}" onclick="populate('{{ item.chemid }}')">{% if item["CAS"] %}{{ item.CAS }} - {% endif %}{{ item.name }}</li>
             {% endfor %}
           </ul>
           <!-- autocompletelist goes here -->
@@ -40,13 +40,13 @@
       <div class="addnew_input">
         <!-- changed the 'for' attribute here, the for and the input id should be the same, that how the browser associates them -->
         <label for="qty_1">Quantity in tonnes</label>
-        <input onkeyup="enable_add_button(1)" id="qty_1"  autocomplete="off">
+        <input id="qty_1"  autocomplete="off">
       </div>   
       <!-- moved all the buttons to the bottom to give it a more 'form' feel -->
       <div class="addnew_footer">
-        <button id="addtoinv_1" class="button button--primary button--small button--disabled">Add to Inventory</button>        
+        <button id="addtoinv_btn" onclick="addtoinv()" class="button button--primary button--small">Add to Inventory</button>        
         <button class="button button--secondary button--small" onclick="hideaddnew()">Cancel</button> 
-        <button id="clear_1_button" class="button button--secondary button--small" data-toggle="tooltip" title="Clear the current fields." >Reset</button>  
+        <button id="clear_btn" class="button button--secondary button--small" data-toggle="tooltip" title="Clear the current fields.">Reset</button>  
       </div>
     </div>
 
@@ -103,7 +103,7 @@
       <div class="addnew_input">
         <label for="class_2">Class</label>
         <div class="addnew_select">
-          <select name="type_2" id="class_2" onchange="enable_add_button(2)">
+          <select name="type_2" id="class_2">
             <option default hidden value="">Select...</option>
             {% for substance in listedSubstances %}
             <option chemid="{{substance.chemid}}" data-toggle="tooltip" title="{{substance['tooltip']}}" value="{{substance.chemid}}">{{substance.class }}</option>
@@ -117,7 +117,7 @@
         <button id="clear_2_button" class="floatr" data-toggle="tooltip" title="Clear the current fields." >CLEAR</button>
       </div> -->
       <div class="addnew_footer">
-        <button id="addtoinv_1" class="button button--primary button--small button--disabled">Add to Inventory</button>        
+        <button id="addtoinv_btn" onclick="addtoinv()" class="button button--primary button--small">Add to Inventory</button>        
         <button class="button button button--secondary button--small" onclick="hideaddnew()">Cancel</button> 
         <button id="clear_1_button" class="button button button--secondary button--small" data-toggle="tooltip" title="Clear the current fields." >Reset</button>  
       </div>
@@ -128,5 +128,5 @@
 
   </div>
 
-  <script>$(".tab_2_input").on('blur',enable_add_button(2))</script>
+
 </div>

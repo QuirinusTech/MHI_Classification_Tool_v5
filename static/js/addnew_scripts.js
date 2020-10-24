@@ -7,6 +7,7 @@ function hideaddnew() {
 
 /** used to switch between named and listed substance tabs  */
 function tabtoggle(int) {
+
   switch (int) {
     case 1:
       $("#tab_2_row_1").hide()
@@ -65,7 +66,7 @@ function populate(x) {
 }
 
 /** uses regex to validate the user input where x is the current tab */
-function enable_add_button(x) {
+function checkinputs(x) {
   var letterNumberDashSpace = /^[0-9a-zA-Z\-\s\/\\\(\)]+$/;
   var numbers = /^[0-9]+$/
 
@@ -74,16 +75,10 @@ function enable_add_button(x) {
     let qty_1 = $("#qty_1").val()
     if (substance_1.length > 5 && qty_1 > 0) {
       if (new RegExp(letterNumberDashSpace).test(substance_1) && new RegExp(numbers).test(qty_1)) {
-        document.getElementById("addtoinv_1").addEventListener("click", function () {
-          addtoinv(1)
-        })
-        $("#addtoinv_1").removeClass("button--disabled")
+        return true
       }
     } else {
-      $("#addtoinv_1").addClass("button--disabled")
-      document.getElementById("addtoinv_1").removeEventListener("click", function () {
-        addtoinv(1)
-      })
+      return false
     }
   } else if (x == 2) {
     let substance_2 = $("#substance_2").val()
@@ -92,79 +87,40 @@ function enable_add_button(x) {
       test_2_2 = $("#class_2").val() !== "" ? true : false
       test_2_3 = new RegExp(numbers).test($("#qty_2").val()) ? true : false
       if (test_2_1 === true && test_2_2 === true && test_2_3 === true) {
-        $("#addtoinv_2").removeClass("button--disabled")
-        document.getElementById("addtoinv_2").addEventListener("click", function () {
-          addtoinv(2)
-        })
+        return true
       } else {
-        $("#addtoinv_2").addClass("button--disabled")
-        document.getElementById("addtoinv_2").removeEventListener("click", function () {
-          addtoinv(2)
-        })
+        return false
       }
     }
   }
 }
 
-/** clears the input fields where x is the tab number */
-function clear(x) {
-  console.log(`clear(${x})`)
-  switch (x) {
-    case 1:
-      document.getElementById("substance_1").value = "";
-      $("#substance_1").val("")
-      $("#qty_1").val("")
-      $("#class_1").val("")
-      $("#type_1").val("")
-      break;
-    case 2:
-      $("#substance_2").val("")
-      $("#qty_2").val("")
-      $("#class_2").val("")
-      $("#type_2").val("")
-      break;
-    default:
-      console.log("false", x)
-      return false;
-  }
-  $("#addtoinv_1").addClass("button--disabled")
-  $("#addtoinv_2").addClass("button--disabled")
+/** clears the input fields */
+function clear() {
+  $("#substance_1").val("");
+  $("#qty_1").val("")
+  $("#class_1").val("")
+  $("#type_1").val("")
+  $("#substance_2").val("")
+  $("#qty_2").val("")
+  $("#class_2").val("")
+  $("#type_2").val("")
   $(".flash").removeClass("flash")
 }
 
-/** add or reemove red borders on fields with invalid values when trying to add a substance to the inv */
-function pre_add_check(x) {
-  if (x == 1) {
-    if (!$("#addtoinv_1").hasClass("button--disabled")) {
-      $("input.invalid_input").removeClass("invalid_input")
-      return true;
-    } else {
-      $("#substance_1").addClass("invalid_input")
-      $("#qty_1").addClass("invalid_input")
-    }
-  } else if (x == 2) {
-    if (!$("#addtoinv_2").hasClass("button--disabled")) {
-      $("input.invalid_input").removeClass("invalid_input")
-      return true;
-    } else {
-      $("#substance_2").addClass("invalid_input")
-      $("#type_2").addClass("invalid_input")
-      $("#class_2").addClass("invalid_input")
-      $("#qty_2").addClass("invalid_input")
-    }
-  }
-  return false
-}
+
 
 /** using the input fields, adds a substance to the inventory */
-function addtoinv(x) {
-  if (pre_add_check(x) === false) {
+function addtoinv() {
+  let x = $("div.active_tab").attr("value")
+
+  if (checkinputs(x) === false) {
     alert("Please check that you've entered valid information into the fields above.")
   } else {
+    d = new Date()
+    substid = "custom_" + d.getDate().toString() + d.getHours() + d.getMinutes() + d.getSeconds()
     if (x == 2) {
       chemid = $("#class_2").val()
-      d = new Date()
-      substid = "custom_" + d.getDate().toString() + d.getHours() + d.getMinutes() + d.getSeconds()
       qty = $("#qty_2").val()
       substname = $("#substance_2").val()
       cas = $("#cas_2").val()
@@ -182,7 +138,8 @@ function addtoinv(x) {
       id = $("#substance_1").attr("chemid")
       qty = $("#qty_1").val()
       newEntryObj = {
-        "id": id,
+        "id": substid,
+        "chemid": $("#substance_1").attr("chemid"),
         "qty": qty,
         "type": "named"
       }
@@ -235,6 +192,7 @@ function del(x) {
 /** submits a post request to add a substance to the inventory */
 function addtoinvPOST(newEntryObj, x) {
   console.log(newEntryObj)
+  newEntry = JSON.stringify(newEntryObj)
   $.post("/addtoinv", {
       "newEntry": newEntry
     },
@@ -250,8 +208,7 @@ function addtoinvPOST(newEntryObj, x) {
         $("#calc_button").removeClass('disabled_button')
         loading(0)
       }
-      clear(1)
-      clear(2)
+      clear()
     });
 }
 
@@ -261,6 +218,9 @@ function updateh(x) {
       "substance": JSON.stringify(x)
     },
     function (data) {
+      if (data === "updated") {
+        location.reload()
+      } else {
       console.log(data)
       $("#noinv_tr").remove()
       $("#list_div > table").append(data)
@@ -268,9 +228,7 @@ function updateh(x) {
       $("#navbar_process").removeClass('disabled_link')
       $("#calc_button").removeClass('button--disabled')
       loading(0)
-    } else if (data === "updated") {
-      location.reload()
     }
   });
-clear(x)
+clear()
 }
