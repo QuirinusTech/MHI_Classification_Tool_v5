@@ -16,8 +16,7 @@ function init (){
   var btnclear = document.getElementById("clear_btn")
   btnclear && btnclear.addEventListener("click", ()=>{clear()})
 
-  // set tab 1 to active
-  tabtoggle(1)
+  // remove loader
   loading(0)
 }
 

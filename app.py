@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request, flash, redirect, render_template, url
 import json
 import hyginus
 import requests
+from hphrases import ClassFinder
 
 app = Flask(__name__)
 
@@ -24,20 +25,16 @@ def addtoinv():
   try:
     newEntry = json.loads(request.form['newEntry'])
     print("newEntry", newEntry)
-    for chem in inv:
-      if newEntry["chemid"] == str(chem["chemid"]):
-        if int(newEntry["qty"]) > 0:
-          chem["qty"] = newEntry["qty"]
-        elif int(newEntry["qty"]) == 0:
-          inv.remove(chem)
-        return "updated"
     #listed substance
     if newEntry["type"] == "named":
       for chem in hyginus.chemlist:
         if newEntry["chemid"] == str(chem["chemid"]):
           result = chem
+          result["class"] = ClassFinder(chem["hphrases"])
+          result["id"] = newEntry["id"]
           result["qty"] = newEntry["qty"]
           result["indexpos"] = len(inv)+1
+          break
     #listed substance
     else:
       result = newEntry
@@ -50,7 +47,24 @@ def addtoinv():
   except Exception as e:
     print(e)
     return f"An Error Occured: {e}"
-  
+
+@app.route("/update", methods=["POST"])
+def update():
+  try:
+    update = json.loads(request.form['update'])
+    print("update", update)
+    for chem in inv:
+      if update["id"] == str(chem["id"]):
+        if int(update["qty"]) > 0:
+          chem["qty"] = update["qty"]
+          return "updated"
+        elif int(update["qty"]) == 0:
+          inv.remove(chem)
+          return "deleted"
+  except Exception as e:
+    print(e)
+    return f"An Error Occured: {e}"
+
 @app.route('/results')
 def results():
   if len(inv) > 0:

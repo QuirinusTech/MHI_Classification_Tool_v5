@@ -50,16 +50,37 @@
           Tier
         </th>
       </tr>
+      <tr>
+        <td colspan="2">
+          The following  group classification ratings are in terms of point 5, subsection A 2 of the MHI Regulations.
+        </td>
+      </tr>
+      {% if results.usedlistedsubs %}
       {% for sub in results.usedlistedsubs.keys() %}
       <tr id="{{sub}}_tr">
         <td>
-          {{ sub }}
+          {% if sub == "A" %}
+          Group A <button class="info_button" data-type="tooltip" title="Toxic and Very Toxic">Hover for more info</button>
+          {% endif %}
+          {% if sub == "B" %}
+          Group B <button class="info_button" data-type="tooltip" title="Oxidising, Esplosive, Flammable, Highly Flammable and Extremely Flammable">Hover for more info</button>
+          {% endif %}
+          {% if sub == "C" %}
+          Group C <button class="info_button" data-type="tooltip" title="Toxic or Very Toxic to Aquatic Organisms">Hover for more info</button>
+          {% endif %}
         </td>
         <td>
           {{ results.usedlistedsubs[sub] * 100 }}%
         </td>
       </tr>
       {% endfor %}
+      {% else %}
+      <tr>
+        <td colspan="2">
+          No Cumulative Rating was calculated, as the rating provided by the individual rating supercedes the cumulative rating.
+        </td>
+      </tr>
+      {% endif %}
     </table>
     <div id="cumul_tier_explain">
       <p>Cumulative tier rating explanation message goes here.</p>

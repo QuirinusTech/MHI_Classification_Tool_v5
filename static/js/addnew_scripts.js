@@ -171,35 +171,45 @@ function edit(x) {
 /** submits a post request updating the qty of an item already in the inv */
 function update(x) {
   let newval = $("#newqty_" + x).val()
-  newEntryObj = {
+  updateObj = {
     "id": x,
     "qty": newval
   }
   loading(1)
-  addtoinvPOST(newEntryObj)
+  updatePost(updateObj)
 }
 
 /** deletes an item from the inv */
 function del(x) {
-  newEntryObj = {
+  delObj = {
     "id": x,
     "qty": 0
   }
   loading(1)
-  addtoinvPOST(newEntryObj)
+  updatePost(delObj)
+}
+
+function updatePost(Obj) {
+  console.log(Obj)
+  jsonstring = JSON.stringify(Obj)
+  $.post("/update", {
+      "update": jsonstring
+    },
+    function (data) {
+        console.log(data)
+        loading(0)
+        location.reload()
+    });
 }
 
 /** submits a post request to add a substance to the inventory */
-function addtoinvPOST(newEntryObj, x) {
+function addtoinvPOST(newEntryObj) {
   console.log(newEntryObj)
   newEntry = JSON.stringify(newEntryObj)
   $.post("/addtoinv", {
       "newEntry": newEntry
     },
     function (data) {
-      if (data === "updated") {
-        location.reload()
-      } else {
         console.log(data)
         $("#noinv_tr").remove()
         $("#list_div > table").append(data)
@@ -207,7 +217,6 @@ function addtoinvPOST(newEntryObj, x) {
         $("#navbar_process").removeClass('disabled_link')
         $("#calc_button").removeClass('disabled_button')
         loading(0)
-      }
       clear()
     });
 }

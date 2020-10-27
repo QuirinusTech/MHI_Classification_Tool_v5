@@ -172,6 +172,11 @@ cumulativerule = {}
 for group in hgroups:
   cumulativerule[group['chemid']] = 0
 
+def ClassFinder(hphraselist):
+    for hphrase in hphraselist:
+      for group in hgroups:
+        if hphrase in group["hphrases"]:
+          return group["desc"]
 
 def RuleFinder(item):
   if item['type'] == "named":
