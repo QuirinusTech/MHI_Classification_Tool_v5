@@ -3,7 +3,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>window.onload = ()=> {
   tabtoggle(1)}</script>
-<div class="rectangle flexdc padnone mh250px" id="addnewbox" style="display: none;">
+<div class="rectangle flexdc padnone" id="addnewbox" style="display: none;">
   <!-- created a header div for the tabs -->
   <div class="addnew_header">
     <!-- TABS ROW-->
@@ -74,7 +74,7 @@
     <div id="tab_2_row_1" class="addnew_inputrow">
       <div class="addnew_input">
         <label for="substance_2">Substance</label>
-        <input class='tab_2_input' type="text" id="substance_2">
+        <input class='tab_2_input' type="text" id="substance_2" autocomplete="off">
       </div>
 
       <div class="addnew_input">
@@ -92,7 +92,7 @@
       <!-- moved this one down to have the same amount of inputs in each row -->
       <div class="addnew_input">
         <label for="qty_2">Quantity in tonnes</label>
-        <input class='tab_2_input' type="text" id="qty_2">
+        <input class='tab_2_input' type="number" id="qty_2" autocomplete="off" min="0">
       </div>
 
    <!-- commented is row out since you might be removing it and i wanted to see how the spacing looks -->

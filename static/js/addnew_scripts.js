@@ -146,37 +146,59 @@ function addtoinv() {
       loading(1)
       addtoinvPOST(newEntryObj, x)
     }
+  // }
+}
 
+function toggleEditMode (e, x){
+  const target = e.target
+  const classes = target.classList
+  const cell = document.getElementById(x + "_qty_td")
+  const inEditMode = cell.getAttribute('EditMode')
+  if (inEditMode === 'false') {
+    cell.setAttribute('EditMode', true)
+    target.classList.remove('button_icon--edit')
+    target.classList.add('button_icon--check')
+    edit(x, cell)
+  } else {
+    cell.setAttribute('EditMode', false)
+    target.classList.add('button_icon--edit')
+    target.classList.remove('button_icon--check')
+    update(x, cell)
   }
 }
 
-/** provides the interace for the user to update the qty of an item in already in the inv */
-function edit(x) {
-  let qty = $("#" + x + "_qty_td").html()
-  qty = Number(qty)
-  let input = document.createElement('input')
+
+/** provides the interface for the user to update the qty of an item in already in the inv */
+function edit(x, cell) {
+  const qty = cell.getAttribute('value')
+  const input = document.createElement('input')
   input.setAttribute('type', 'number')
-  input.setAttribute('id', 'newqty_' + x)
+  input.setAttribute('min', "1")
+  input.setAttribute('max', "9999")
+  input.setAttribute('id', 'newqty_'+x)
   input.value = qty
-  let button = document.createElement('button')
-  button.setAttribute("onclick", "update(\'" + x + "\')")
-  button.innerHTML = "OK"
-  let div = document.createElement("div")
-  div.classList.add('flexdr')
+  const div = document.createElement("div")
+  div.classList.add('editfield')
   div.appendChild(input)
-  div.appendChild(button)
-  $("#" + x + "_qty_td").html(div)
+  $("#"+x+"_qty_td").html(div)
 }
 
 /** submits a post request updating the qty of an item already in the inv */
-function update(x) {
-  let newval = $("#newqty_" + x).val()
-  updateObj = {
-    "id": x,
-    "qty": newval
+function update(x, cell) {
+  let newval = $("#newqty_"+x).val()
+  const prevQty = cell.getAttribute('value')
+  if (prevQty === newval) {
+    const p = document.createElement("p")
+    p.innerHTML = prevQty
+    $("#"+x+"_qty_td").html(p)
+  } else {
+    newEntryObj = {
+      "id": x,
+      "qty": newval
+    }
+    loading(1)
+    updatePost(newEntryObj)
   }
-  loading(1)
-  updatePost(updateObj)
 }
 
 /** deletes an item from the inv */
@@ -230,14 +252,15 @@ function updateh(x) {
       if (data === "updated") {
         location.reload()
       } else {
-      console.log(data)
-      $("#noinv_tr").remove()
-      $("#list_div > table").append(data)
-      inventoryexists=true
-      $("#navbar_process").removeClass('disabled_link')
-      $("#calc_button").removeClass('button--disabled')
-      loading(0)
-    }
-  });
-clear()
+        console.log(data)
+        $("#noinv_tr").remove()
+        $("#list_div > table").append(data)
+        inventoryexists = true
+        $("#navbar_process").removeClass('disabled_link')
+        $("#calc_button").removeClass('button--disabled')
+        loading(0)
+      }
+    });
+  clear()
+}
 }

@@ -77,6 +77,11 @@ def results():
 def help():
   return render_template("help.html")
 
+@app.route('/faq')
+def faq():
+  return render_template("faq.html")
+
+
 @app.route('/contact')
 def contact():
   return render_template('contact.html')

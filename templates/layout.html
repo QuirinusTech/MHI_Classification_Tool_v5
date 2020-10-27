@@ -19,11 +19,11 @@
         </button>
         <ul>
           <li><a id="navbar_welcome" href="{{ url_for('welcome')}}">Welcome</a></li>
-          <li> <a id="navbar_help" href="{{ url_for('help') }}">Help</a></li>
-          <li><a id="navbar_inventory" href="{{ url_for('inventory') }}">Add</a></li>
-          <li><a id="navbar_process" onclick="Process()"">Process</a></li>
+          <li> <a id="navbar_help" href="{{ url_for('help') }}">How it is calculated</a></li>
+          <li><a id="navbar_inventory" href="{{ url_for('inventory') }}">Inventory</a></li>          
           <li><a id="navbar_results" href="{{ url_for('results') }}">Results</a></li>
           <li><a id="navbar_contact" href="{{ url_for('contact') }}">Contact</a></li>
+          <li><a id="navbar_faq" href="{{ url_for('faq') }}">FAQ</a></li>
         </ul>  
         <div class="quirinuslogo">
           <img src="/static/img/QuirinusTech.png">
@@ -34,14 +34,12 @@
         {% block body %}
         {% endblock %}
       </div>  
-      <div class="main h70perc" id="pre_loader">
+      <div class="loading" id="pre_loader">
         <p>loading...</p>
-        <!-- <img src="/static/img/loading.gif" alt=""> -->
-        <div class="meter h65perc animate">
+        <div class="meter animate">
           <span style="width: 100%"><span></span></span>
         </div>
       </div>
-
   </div>
 </body>
 </html> 

@@ -2,14 +2,22 @@
 
 {% block body %}
 <script>currentpage = "welcome"</script>
-<h1>MHI Classification Tool</h1>
+<div class="header">
+  <h1>MHI Classification Tool</h1>
+</div>
 <div class='main_content'>
-  <div class="block flexdc" id="get_started_message_div">
+  <div class="block block--text" id="get_started_message_div">
+    <h2>Welcome</h2>
     <p>
-      The MHI Classification Tool provides an estimation of your establishment's MHI classification and associated hazard level.
+      <!-- The MHI Classification Tool provides an estimation of your establishment's MHI classification and associated hazard level. -->      
+      Using the MHI Classification Tool, you will be able to calculate your establishment's MHI classification and associated hazard level.
     </p>
+    <br/>
+    <p>For more information on how it is calculated visit:&nbsp;&nbsp;<a onclick="Redirect('/help')">How it is calculated</a></p>
+    <p>Visit our frequently asked questions page for general information:&nbsp;&nbsp;<a onclick="Redirect('/faq')">FAQ</a></p>
+    <br/>
     <div class="button_bar">
-      <button class="button button--primary" onclick="Redirect('/help')">How it is calculated</button>
+      <!-- <button class="button button--primary" onclick="Redirect('/help')">How it is calculated</button> -->
       <button class="button button--primary"  onclick="Redirect('/inventory')">Get Started!</button>
     </div>
   </div>
