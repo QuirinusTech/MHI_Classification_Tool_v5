@@ -258,10 +258,24 @@ function addtoinvPOST(newEntryObj) {
 function UpdateHPhrasesController(newEntryObj) {
 
   // init with temporary var
-  x = newEntryObj
+
+  // Shaun - the variable below is being declaired in the global scope which is to be avoided since it can easily be overwritten if another variable called x is decalred in the global scope
+  // Shaun - A better way to copy objects are with the spread operator "...", what you are doing below is assigning the var x to the same object in memory, so when you change a value oon  it will be changed on newEntryObj
+
+  // x = newEntryObj
+  // x["hphrases"] = "";
+  // x["cid"] = "";
+
+  // Shaun - Below creates a local object with the keys and values spread into x
+  const x = {...newEntryObj}
   x["hphrases"] = "";
   x["cid"] = "";
-  let readyObj = newEntryObj
+
+  // Shaun - Did the same here just in case havent seen what your doing with it yet but usually doesnt do any harm
+
+  // let readyObj = newEntryObj
+
+  let readyObj = {...newEntryObj}
   let error = false
   let done = false
   var validcasregex = /^[\d]{1,4}\-[\d]{1,4}\-[\d]{1,4}$/;
@@ -275,21 +289,13 @@ function UpdateHPhrasesController(newEntryObj) {
   }
 
   // first call
-  results = updateh(x)
 
-  for (let index = 0; index < 15; index++) {
-    setTimeout(() => {
-      if (results != null) {
-        index = 15
-      }
-      else if (results === null && index == 14) {
-        fail = true
-      }
-    }, 1000);
-  }
-  
-while (done === false) {
-  if (!fail) {
+  // Shaun - Global var to be avoided
+  // After commenting everything out except 'results = updateh(x)' it returned undefined, then i noticed you werent returning anything in the updateh function, when you say var name = function, the function has to return something to assign to the variable
+  // results = updateh(x)
+
+  updateh(x).then((results) => {
+    console.log(results)
     if (results["found"] == true && results["foundresult"] == "named") {
       readyObj["hphrases"] = results["hphrases"]
       if (readyObj["name"] != results["recordTitle"]) {
@@ -326,39 +332,116 @@ while (done === false) {
         done = True
       }
     }
-  } else {
-    done = true
-    error = true
-    errorMsg = "Failure to obtain information from server"
-  }
-}
+    }
+  )
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//   for (let index = 0; index < 15; index++) {
+//     setTimeout(() => {
+//       if (results != null) {
+//         index = 15
+//       }
+//       else if (results === null && index == 14) {
+//         fail = true
+//       }
+//     }, 1000);
+//   }
+  
+// while (done === false) {
+//   if (!fail) {
+//     if (results["found"] == true && results["foundresult"] == "named") {
+//       readyObj["hphrases"] = results["hphrases"]
+//       if (readyObj["name"] != results["recordTitle"]) {
+//         readyObj["name"] = newEntryObj["name"] + " (" + results["recordTitle"] + ")"
+//       }
+//       readyObj["hphrases"] = results["hphrases"]
+//       addtoinvPOST(readyObj)
+//     }
+//     if (results["found"] === false && results["retry"] == true) {
+//       // Coudn´t find a substance with the CAS number, retry with substance name
+//       barwidth(25)
+//       x["searchtype"] = "name";
+//       results = updateh(x)
+//     }
+//     if (results["found"] === false && results["retry"] == false) {
+//       // no results for name or cas number
+//       error = true
+//       errorMsg = 'We were unable to find any information for this substance name or CAS number. Please see error code "Galapagos" on the FAQ page.'
+//     }
+//     if (results["found"] === true) {
+//       // found either cid or h-phrases
+//       if (results["foundresult"] == "cid" && results["cid"].length() > 1) {
+//         barwidth(50)
+//         x["cid"] = results["cid"]
+//         x["searchtype"] = "cid";
+//         // final call with cid to get h-phrases
+//         results = updateh(x)
+//       }
+//       else if (results["foundresult"] == "final") {
+//         // search complete, h-phrases found
+//         barwidth(90)
+//         x["hphrases"] = results["hphrases"]
+//         x["name"] = x["name"] + " (" + results["recordTitle"] + ")"
+//         done = True
+//       }
+//     }
+//   } else {
+//     done = true
+//     error = true
+//     errorMsg = "Failure to obtain information from server"
+//   }
+// }
 
     
 
-  if (done === true && error === false) {
-    let readyObj = newEntryObj
-    readyObj["id"] = x["id"];
-    readyObj["name"] = x["name"]
-    readyObj["hphrases"] = x["hphrases"]
-    addtoinvPOST(readyObj)
-  }
-  else if (done === true && error === true) {
-    alert(errorMsg)
-    addtoinvPOST(readyObj)
-  }
+//   if (done === true && error === false) {
+//     let readyObj = newEntryObj
+//     readyObj["id"] = x["id"];
+//     readyObj["name"] = x["name"]
+//     readyObj["hphrases"] = x["hphrases"]
+//     addtoinvPOST(readyObj)
+//   }
+//   else if (done === true && error === true) {
+//     alert(errorMsg)
+//     addtoinvPOST(readyObj)
+//   }
 }
 
 /** object must include either a "CAS" key or a "name" key */
-function updateh(x) {
-  console.log(x)
-  $.post("/updatehphrases", {
-      "substance": JSON.stringify(x)
-    },
-    function(data) {
-      console.log('Response from server: ')
-      console.log(data)
-      updateHPhrasesControllerresultsvariable = data
-    });
+
+// Shaun - redid this part to test but rememeber to return something always
+
+// function updateh(x) {
+//   console.log(x)
+//   $.post("/updatehphrases", {
+//       "substance": JSON.stringify(x)
+//     },
+//     function(data) {
+//       console.log('Response from server: ')
+//       console.log(data)
+//       updateHPhrasesControllerresultsvariable = data
+//     });
+// }
+
+async function updateh(x) { 
+  const data = await $.post("/updatehphrases", {
+             "substance": JSON.stringify(x)
+           })
+  updateHPhrasesControllerresultsvariable = data
+  return data
 }
 
 function barwidth(param) {
