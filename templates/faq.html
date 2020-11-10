@@ -7,7 +7,16 @@
 </div>
 <div class='main_content'>
   <div class="block" id="">
-    <p>A good place to explain/remind users of common terms</p>
+    <h4>Error Code Galapagos</h4>
+    <p>This error message means that we couldn't find an online record of the substance you entered.</p>
+    This can be due to a number of reasons:
+    <ul>
+      <li>Misspelled substance name</li>
+      <li>CAS number entered incorrectly</li>
+      <li>The substance is extremely rare and/or uncommon</li>
+      <li>There are too many Isotopes to establish with reasonable certainty that we're assessing the hazard of the correct substance.</li>
+      <p>In this case, the exact results of the assessment may be somewhat inaccurate. We recommend you <a href="{{ url_for('contact')}}">contact</a> one of our engineers directly for more help with this substance.</p>
+    </ul>
   </div>
 </div>
 {% endblock %}

@@ -172,13 +172,24 @@ cumulativerule = {}
 for group in hgroups:
   cumulativerule[group['chemid']] = 0
 
-def ClassFinder(hphraselist):
+def ClassFinder(hphraselist, field):
+
+    """
+      using an array of hphrases, finds the first match from the array in the hphrases group where the hphrase is found.
+      return value is determined by the field argument, which can be either desc (description) or chemid (an id used to find other info on this substance in the database)
+    """
+
     for hphrase in hphraselist:
       for group in hgroups:
         if hphrase in group["hphrases"]:
-          return group["desc"]
+            return group[field]
 
 def RuleFinder(item):
+  """
+    takes an item as an argument and returns the rule group in which a substance falls (a / b / c).
+    item must have the following fields: type, chemid, hphrases
+  """
+
   if item['type'] == "named":
     for hphrase in item["hphrases"]:
       for group in hgroups:
@@ -189,4 +200,4 @@ def RuleFinder(item):
   elif item['type'] == "listed":
     for rule in rules.keys():
       if item["chemid"] in rules[rule]:
-              return rule
+        return rule

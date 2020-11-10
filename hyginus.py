@@ -3,20 +3,60 @@ import json
 import hphrases
 
 def stringsearch(z,t):
-  if t == "H":
+  """
+    Searches a given string (z) for one of the patterns patterns (t)
+    
+  """
+  print("string to search (z): ", z)
+  print("key to search by (t): ", t)
+
+  print("stringsearch by t: ", t)
+  if t == "H": #Hazard statements
     hazardphraseslist = re.findall(r"H[2-4]\d\d", z)
     results = []
     for i in hazardphraseslist:
+      print(i)
       if i not in results:
         results.append(i)
-    return
-  elif t == "cid":
-     match = re.search(r"(\"cid\"\:\s)([0-9]+)", z)
-     return match.group(2)
+    print("Response: ", results)
+    return results
+  elif t == "cid": #cid
+    match = re.search(r"(\"cid\"\:\s)([0-9]+)", z)
+    if match is None:
+       print("stringsearch", t, "No cid found")
+       return "NotFound"
+    else:
+      print("Response: ", match.group(2))
+      return match.group(2)
+  elif t == "fault": #PUG errors
+     match = re.search(r"(PUG[REST|VIEW]\.)(NotFound)", z)
+     print("Match value: ", match)
+     if match is None:
+       print("stringsearch", t, "No faults found")
+       return "OK"
+     else:
+       print("fault found: ", match.group(2))
+       return match.group(2)
+  elif t == "RT": #Record Title
+    match = re.search(r"(\'RecordTitle\'\: \')([A-Za-z\s]+)(\')", z)
+    if match is None:
+      print("stringsearch", t, "Response: None")
+      return None
+    else:
+      print("Response: ", match.group(2))
+      return match.group(2)
+
   else:
     pass
 
+def checkCAS(arg1):
+  result = re.search(r"[\d]{1,4}-[\d]{1,4}-[\d]{1,4}", arg1)
+  return result
+
 def getnums(x):
+  """
+    Extracts numbers from a string (x)
+  """
   listresults = re.search(r"[0-9]+", x)
   return listresults[0]
 
@@ -90,22 +130,36 @@ for chem in MainDB:
 print("chemlist loaded!")
 
 def findattribs(param1):
+
+  """
+    Small function for finding attributes of a listed substance based on the chemid (param1)
+  """
+
   print("findattribs", param1)
   for chem in chemlist:
     if param1 == chem["chemid"]:
       return chem
 
 def assessment(inv):
+
+  """
+    Full inventory (inv) assessment assessment.
+    Determined individual tier
+    if individual tier = 0, also determines cumulative tier
+
+    returns an dict of results
+  """
+
   results = {"indtier" : 0, "cumultier": 0, "finaltier": 0}
   for item in inv:
     #individual
     item["tier"] = deftier(item)
     if item["tier"] > results["indtier"]:
       results["indtier"] = item["tier"]
-  if results["indtier"] > 1:
+  if results["indtier"] > 0:
     results["finaltier"] = results["indtier"]
   elif results["indtier"] == 0:
-    #cumulative
+    #no individual substances exceed the threshold, calculate the cumulative
     usedlistedsubs = {"A": 0, "B": 0, "C": 0}
     if item['type']=="named":
       for substance in MainDB:
@@ -119,6 +173,7 @@ def assessment(inv):
           qx = int(item["qty"]) / int(substance["tier3"])
           rule = hphrases.RuleFinder(item)
           usedlistedsubs[rule] = usedlistedsubs[rule] + qx
+    #update the overall/final tier based on the findings of the cumulative tier rule
     for sub in usedlistedsubs.keys():
       if usedlistedsubs[sub] >= 1:
         results["cumultier"] = 3
@@ -130,6 +185,14 @@ def assessment(inv):
 
 
 def deftier(item):
+
+  """
+    takes a single substance (item) from the inventory and returns it's tier
+    The function reads the item's chemid to find the thresholds in the database
+    item must have the followings fields:
+    qty, type, chemid 
+  """
+
   qty = int(item["qty"])
   if item['type']=="named":
     for substance in MainDB:

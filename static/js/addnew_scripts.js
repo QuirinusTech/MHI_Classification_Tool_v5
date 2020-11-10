@@ -1,8 +1,10 @@
+/** Global variable */
+let updateHPhrasesControllerresultsvariable = ""
+
 /** function to hide the "AddNew" dialog box */
 function hideaddnew() {
   document.getElementById('button_addnew').style.display = 'block'
   document.getElementById('addnewbox').style.display = 'none'
-  // $("#addnewbox").fadeOut()
 }
 
 /** used to switch between named and listed substance tabs  */
@@ -51,6 +53,13 @@ function AutusCumpletus() {
         }
       }
     }
+    // if no records are found
+    if (!$(".acli").is(":visible")) {
+      show("NoRecords")
+    }
+  } else {
+    // if user enters less than three characters
+    show("threeCharsMin")
   }
 }
 
@@ -82,17 +91,18 @@ function checkinputs(x) {
     }
   } else if (x == 2) {
     let substance_2 = $("#substance_2").val()
-    if (substance_2.length > 5) {
+    if (substance_2.length > 4) {
       test_2_1 = new RegExp(letterNumberDashSpace).test($("#substance_2").val()) ? true : false
       test_2_2 = $("#class_2").val() !== "" ? true : false
       test_2_3 = new RegExp(numbers).test($("#qty_2").val()) ? true : false
       if (test_2_1 === true && test_2_2 === true && test_2_3 === true) {
         return true
-      } else {
-        return false
       }
+    } else {
+      return false
     }
   }
+  return false
 }
 
 /** clears the input fields */
@@ -117,23 +127,28 @@ function addtoinv() {
   if (checkinputs(x) === false) {
     alert("Please check that you've entered valid information into the fields above.")
   } else {
+    loading(1)
     d = new Date()
     substid = "custom_" + d.getDate().toString() + d.getHours() + d.getMinutes() + d.getSeconds()
     if (x == 2) {
-      chemid = $("#class_2").val()
-      qty = $("#qty_2").val()
-      substname = $("#substance_2").val()
-      cas = $("#cas_2").val()
-      newEntryObj = {
-        "id": substid,
-        "name": substname,
-        "CAS": cas,
-        "qty": qty,
-        "chemid": chemid,
-        "type": "listed"
+      if (confirm("Finding information for a custom substance can take up to 45 seconds in some cases. Continue?")) {
+        chemid = $("#class_2").val()
+        qty = $("#qty_2").val()
+        substname = $("#substance_2").val()
+        cas = $("#cas_2").val()
+
+        newEntryObj = {
+          "id": substid,
+          "name": substname,
+          "CAS": cas,
+          "qty": qty,
+          "chemid": chemid,
+          "type": "listed"
+        }
+        UpdateHPhrasesController(newEntryObj)
+      } else {
+        return false
       }
-      loading(1)
-      addtoinvPOST(newEntryObj, x)
     } else if (x==1) {
       id = $("#substance_1").attr("chemid")
       qty = $("#qty_1").val()
@@ -143,10 +158,9 @@ function addtoinv() {
         "qty": qty,
         "type": "named"
       }
-      loading(1)
-      addtoinvPOST(newEntryObj, x)
+      addtoinvPOST(newEntryObj)
     }
-  // }
+  }
 }
 
 function toggleEditMode (e, x){
@@ -236,31 +250,118 @@ function addtoinvPOST(newEntryObj) {
         $("#noinv_tr").remove()
         $("#list_div > table").append(data)
         inventoryexists = true
-        $("#navbar_process").removeClass('disabled_link')
         $("#calc_button").removeClass('disabled_button')
         loading(0)
       clear()
     });
 }
+function UpdateHPhrasesController(newEntryObj) {
+
+  // init with temporary var
+  x = newEntryObj
+  x["hphrases"] = "";
+  x["cid"] = "";
+  let readyObj = newEntryObj
+  let error = false
+  let done = false
+  var validcasregex = /^[\d]{1,4}\-[\d]{1,4}\-[\d]{1,4}$/;
+
+  if (new RegExp(validcasregex).test(x["CAS"])) {
+    x["searchtype"] = "CAS";
+    barwidth(5)
+  } else {
+    x["searchtype"] = "name";
+    barwidth(45)
+  }
+
+  // first call
+  results = updateh(x)
+
+  for (let index = 0; index < 15; index++) {
+    setTimeout(() => {
+      if (results != null) {
+        index = 15
+      }
+      else if (results === null && index == 14) {
+        fail = true
+      }
+    }, 1000);
+  }
+  
+while (done === false) {
+  if (!fail) {
+    if (results["found"] == true && results["foundresult"] == "named") {
+      readyObj["hphrases"] = results["hphrases"]
+      if (readyObj["name"] != results["recordTitle"]) {
+        readyObj["name"] = newEntryObj["name"] + " (" + results["recordTitle"] + ")"
+      }
+      readyObj["hphrases"] = results["hphrases"]
+      addtoinvPOST(readyObj)
+    }
+    if (results["found"] === false && results["retry"] == true) {
+      // Coudn´t find a substance with the CAS number, retry with substance name
+      barwidth(25)
+      x["searchtype"] = "name";
+      results = updateh(x)
+    }
+    if (results["found"] === false && results["retry"] == false) {
+      // no results for name or cas number
+      error = true
+      errorMsg = 'We were unable to find any information for this substance name or CAS number. Please see error code "Galapagos" on the FAQ page.'
+    }
+    if (results["found"] === true) {
+      // found either cid or h-phrases
+      if (results["foundresult"] == "cid" && results["cid"].length() > 1) {
+        barwidth(50)
+        x["cid"] = results["cid"]
+        x["searchtype"] = "cid";
+        // final call with cid to get h-phrases
+        results = updateh(x)
+      }
+      else if (results["foundresult"] == "final") {
+        // search complete, h-phrases found
+        barwidth(90)
+        x["hphrases"] = results["hphrases"]
+        x["name"] = x["name"] + " (" + results["recordTitle"] + ")"
+        done = True
+      }
+    }
+  } else {
+    done = true
+    error = true
+    errorMsg = "Failure to obtain information from server"
+  }
+}
+
+    
+
+  if (done === true && error === false) {
+    let readyObj = newEntryObj
+    readyObj["id"] = x["id"];
+    readyObj["name"] = x["name"]
+    readyObj["hphrases"] = x["hphrases"]
+    addtoinvPOST(readyObj)
+  }
+  else if (done === true && error === true) {
+    alert(errorMsg)
+    addtoinvPOST(readyObj)
+  }
+}
 
 /** object must include either a "CAS" key or a "name" key */
 function updateh(x) {
+  console.log(x)
   $.post("/updatehphrases", {
       "substance": JSON.stringify(x)
     },
-    function (data) {
-      if (data === "updated") {
-        location.reload()
-      } else {
-        console.log(data)
-        $("#noinv_tr").remove()
-        $("#list_div > table").append(data)
-        inventoryexists = true
-        $("#navbar_process").removeClass('disabled_link')
-        $("#calc_button").removeClass('button--disabled')
-        loading(0)
-      }
+    function(data) {
+      console.log('Response from server: ')
+      console.log(data)
+      updateHPhrasesControllerresultsvariable = data
     });
-  clear()
 }
+
+function barwidth(param) {
+  console.log("Barwidth = " + param)
+  $("#pre_loader").val(param)
 }
