@@ -1071,10 +1071,40 @@ tbody tr td{
 
 
 
+/* -------------------------------------------- */
+/* -----------------------FAQ------------------ */
+/* -------------------------------------------- */
 
+.question{
+  margin-bottom: 36px;
+}
 
+.question > h4 {
+  margin-bottom: 1em;
+}
 
+.question > p {
+  margin-bottom: 1em;
+}
 
+.question > p:last-of-type {
+  margin-bottom: 0;
+}
+
+.question > ul{
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+.question > ol li{ 
+  margin-bottom: 0.5em;
+}
+
+.question img{
+  margin-top: 10px;
+  width: 100%;
+  max-width: 600px;
+}
 
 
 
