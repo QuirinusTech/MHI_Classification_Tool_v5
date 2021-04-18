@@ -38,11 +38,15 @@ def addtoinv():
     #listed substance
     else:
       result = newEntry
-      if len(result["hphrases"]) > 0:
-        hphrasesarr = hyginus.stringsearch(newEntry["hphrases"],"H")
+      if len(result["hphrases"]) > 0 and result["hphrases"] != "" and result["hphrases"] != []:
+        if isinstance(result["hphrases"],list):
+          hphrasesarr = newEntry["hphrases"]
+        else:
+          hphrasestr = json.dumps(newEntry["hphrases"])
+          hphrasesarr = hyginus.stringsearch(hphrasestr,"H")
+          result["hphrases"] = hphrasesarr
         result["class"] = ClassFinder(hphrasesarr,"desc")
         result["chemid"] = ClassFinder(hphrasesarr,"chemid")
-        result["hphrases"] = hphrasesarr
       else:
         for listedsub in hyginus.listedSubstances:
           if result["chemid"] == listedsub["chemid"]:
@@ -105,59 +109,77 @@ def updatehphrases():
   print(entry)
   # check if substance not named substances database
   for chem in hyginus.MainDB:
-    if entry["CAS"] == chem["CAS"] or entry["name"] == chem["name"]:
-      findings = {"found": True, "foundresult": "named", "retry": False, "recordTitle": chem["name"], "hazardPhrases": chem["hphrases"]}
-      print('Substance found in database under "named substances": ', findings)
-      return json.dumps(findings) 
+    if entry["CAS"] != "" and entry["CAS"] == chem["CAS"]:
+        findings = {"found": True, "foundresult": "named", "retry": False, "recordTitle": chem["name"], "hphrases": chem["hphrases"]}
+        print('Substance found in database under "named substances": ', findings)
+        return json.dumps(findings) 
+    elif entry["name"] == chem["name"] and entry["name"] != "":
+        findings = {"found": True, "foundresult": "named", "retry": False, "recordTitle": chem["name"], "hphrases": chem["hphrases"]}
+        print('Substance found in database under "named substances": ', findings)
+        return json.dumps(findings)
 
   # no results from checking existing database
   print("Substance not in named substances database. Continue external calls.")
 
+  #CALL 1
+
   # search by CAS
-  if entry["searchtype"] == "CAS" and hyginus.checkCAS(entry["CAS"]) == True:
-    print('searching by CAS')
+  if entry["searchtype"] == "CAS":
+    print('Searching by CAS')
     cas = entry["CAS"]
     query = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/substance/xref/rn/{cas}/json"
-    retry = True
+
   # search by substance name
   else:
-    print('searching by substance name')
+    print('Invalid CAS. Searching by substance name')
     substance = entry["name"]
     query = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/substance/name/{substance}/json"
-    retry = False
 
-  if entry["searchtype"] == "name" or entry["searchtype"] == "CAS":
-    response = requests.get(query)
-    queryAnswer = json.loads(response.content)
-    print(queryAnswer)
-    check1 = hyginus.stringsearch(json.dumps(queryAnswer),"fault")
-    #parse the response
-    if check1 == "NotFound":
-      result = {"found": False, "retry": retry}
-      return json.dumps(results)
-
-    elif check1 == "OK":
-      cid = hyginus.stringsearch(json.dumps(queryAnswer), "cid")
-      result = {"found": True, "foundresult": "cid", "cid": cid, "retry": retry}
+  response = requests.get(query)
+  queryAnswer = json.loads(response.content)
+  print("Response 1 received")
+  print(queryAnswer)
+  check1 = hyginus.stringsearch(json.dumps(queryAnswer),"fault")
+  #parse the response
+  if check1 == "NotFound":
+    if entry["name"] is None or entry["name"] == "":
+      result = {"found" : False}
       return json.dumps(result)
+    else:
+      #call 1b
+      print('No results found with CAS. Searching by substance name')
+      substance = entry["name"]
+      query = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/substance/name/{substance}/json"
+      response = requests.get(query)
+      queryAnswer = json.loads(response.content)
+      print("Response 1b received")
+      print(queryAnswer)
+      check1b = hyginus.stringsearch(json.dumps(queryAnswer),"fault")
+      if check1b == "NotFound":
+        result = {"found" : False}
+        return json.dumps(result)
+      elif check1b == "OK":
+        cid = hyginus.stringsearch(json.dumps(queryAnswer), "cid")
+        print("CID found: ", cid)
+  
+  elif check1 == "OK":
+    cid = hyginus.stringsearch(json.dumps(queryAnswer), "cid")
+    print("CID found: ", cid)
 
-
-  if entry["searchtype"] == "cid":
-    cid = entry["cid"]
-    query2 = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/{cid}/JSON?heading=GHS classification"
-    print("query2: ", query2)
-    response2 = requests.get(query2)
-    print("response2: ", response2)
-    queryAnswer2 = json.loads(response2.content)
-    print("response2content: ", queryAnswer2)
-    check2 = hyginus.stringsearch(json.dumps(queryAnswer2),"fault")
-    if check2 == "NotFound":
-      print("Check2 failed")
-      result = {"found": False, "retry": False}
-      return json.dumps(results)
-    elif check2 == "OK":
-      hazardPhrases = hyginus.stringsearch(json.dumps(queryAnswer2), "H")
-      recordTitle = hyginus.stringsearch(json.dumps(queryAnswer2), "RT")
-      findings = {"found": True, "foundresult": "final", "recordTitle": recordTitle, "hazardPhrases": hazardPhrases}
-      print(findings)
-      return json.dumps(findings)
+  #call 2
+  query2 = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/{cid}/JSON?heading=GHS classification"
+  print("query2: ", query2)
+  response2 = requests.get(query2)
+  queryAnswer2 = json.loads(response2.content)
+  print("response2 received")
+  check2 = hyginus.stringsearch(json.dumps(queryAnswer2),"fault")
+  if check2 == "NotFound":
+    print("Check2 failed")
+    result = {"found" : False, "foundresult": "final", "retry": False}
+    return json.dumps(results)
+  elif check2 == "OK":
+    hazardPhrases = hyginus.stringsearch(json.dumps(queryAnswer2), "H")
+    recordTitle = hyginus.stringsearch(json.dumps(queryAnswer2), "RT")
+    findings = {"found": True, "foundresult": "final", "recordTitle": recordTitle, "hphrases": hazardPhrases}
+    print(findings)
+    return json.dumps(findings)

@@ -781,10 +781,10 @@ tbody tr td{
 .detailsView_body_column_header h4{
   flex: 1 1 50%;
 }
-
+/*
 .detailsView_body_column_body{
-
-}
+  
+} */
 
 .detailsView_body_column_body_subheader{
   display: flex;
@@ -980,6 +980,13 @@ tbody tr td{
   height: 10px;
 }
 
+.status_message {
+  top: 1rem;
+  left: 0;
+  position: relative;
+  font-size: small;
+  color: black;
+}
 
 /** stolen code */
 .meter { 

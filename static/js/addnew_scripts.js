@@ -79,25 +79,58 @@ function checkinputs(x) {
   var letterNumberDashSpace = /^[0-9a-zA-Z\-\s\/\\\(\)]+$/;
   var numbers = /^[0-9]+$/
 
+  // named substance
   if (x == 1) {
     let substance_1 = $("#substance_1").val()
-    let qty_1 = $("#qty_1").val()
+    let qty_1 = Math.floor($("#qty_1").val())
     if (substance_1.length > 5 && qty_1 > 0) {
       if (new RegExp(letterNumberDashSpace).test(substance_1) && new RegExp(numbers).test(qty_1)) {
         return true
+      } else {
+        $("#substance_1").addClass("invalid_input");
       }
     } else {
       return false
     }
+    // listed substance
   } else if (x == 2) {
     let substance_2 = $("#substance_2").val()
-    if (substance_2.length > 4) {
-      test_2_1 = new RegExp(letterNumberDashSpace).test($("#substance_2").val()) ? true : false
-      test_2_2 = $("#class_2").val() !== "" ? true : false
-      test_2_3 = new RegExp(numbers).test($("#qty_2").val()) ? true : false
-      if (test_2_1 === true && test_2_2 === true && test_2_3 === true) {
-        return true
+
+    // test substance 2 name
+    if (new RegExp(letterNumberDashSpace).test(substance_2)) {
+      test_2_1 = true
+    } else {
+      $("#substance_2").addClass("invalid_input");
+
+      // if the substance fails validation, also test the CAS
+      var validcasregex = /^[\d]{1,5}\-[\d]{1,5}\-[\d]{1,5}$/;
+      if (new RegExp(validcasregex).test($("#cas_2").val())) {
+        test_2_1 = true;
+      } else {
+        $("#cas_2").addClass("invalid_input");
       }
+    }
+    
+    // check that the user selected a class
+    if ($("#class_2").val() === ""){
+      test_2_2 = false
+      $("#class_2").addClass("invalid_input");
+    } else {
+      test_2_2 = true
+    }
+
+    // check that the user entered a value
+    if (new RegExp(numbers).test($("#qty_2").val())){
+      test_2_3 = true
+    } else {
+      test_2_3 = false
+      $("#qty_2").addClass("invalid_input");
+    }
+
+    // summary test to check all values entered
+    if (test_2_1 === true && test_2_2 === true && test_2_3 === true) {
+      $(".invalid_input").removeClass("invalid_input")  
+      return true
     } else {
       return false
     }
@@ -141,11 +174,11 @@ function addtoinv() {
           "id": substid,
           "name": substname,
           "CAS": cas,
-          "qty": qty,
+          "qty": Math.floor(qty),
           "chemid": chemid,
           "type": "listed"
         }
-        UpdateHPhrasesController(newEntryObj)
+        updateh(newEntryObj)
       } else {
         return false
       }
@@ -177,6 +210,7 @@ function toggleEditMode (e, x){
     cell.setAttribute('EditMode', false)
     target.classList.add('button_icon--edit')
     target.classList.remove('button_icon--check')
+    x = Math.floor(x)
     update(x, cell)
   }
 }
@@ -226,13 +260,11 @@ function del(x) {
 }
 
 function updatePost(Obj) {
-  console.log(Obj)
   jsonstring = JSON.stringify(Obj)
   $.post("/update", {
       "update": jsonstring
     },
-    function (data) {
-        console.log(data)
+    function () {
         loading(0)
         location.reload()
     });
@@ -240,13 +272,11 @@ function updatePost(Obj) {
 
 /** submits a post request to add a substance to the inventory */
 function addtoinvPOST(newEntryObj) {
-  console.log(newEntryObj)
   newEntry = JSON.stringify(newEntryObj)
   $.post("/addtoinv", {
       "newEntry": newEntry
     },
     function (data) {
-        console.log(data)
         $("#noinv_tr").remove()
         $("#list_div > table").append(data)
         inventoryexists = true
@@ -255,113 +285,45 @@ function addtoinvPOST(newEntryObj) {
       clear()
     });
 }
-function UpdateHPhrasesController(newEntryObj) {
-
-  // init with temporary var
-  x = newEntryObj
-  x["hphrases"] = "";
-  x["cid"] = "";
-  let readyObj = newEntryObj
-  let error = false
-  let done = false
-  var validcasregex = /^[\d]{1,4}\-[\d]{1,4}\-[\d]{1,4}$/;
-
-  if (new RegExp(validcasregex).test(x["CAS"])) {
-    x["searchtype"] = "CAS";
-    barwidth(5)
-  } else {
-    x["searchtype"] = "name";
-    barwidth(45)
-  }
-
-  // first call
-  results = updateh(x)
-
-  for (let index = 0; index < 15; index++) {
-    setTimeout(() => {
-      if (results != null) {
-        index = 15
-      }
-      else if (results === null && index == 14) {
-        fail = true
-      }
-    }, 1000);
-  }
-  
-while (done === false) {
-  if (!fail) {
-    if (results["found"] == true && results["foundresult"] == "named") {
-      readyObj["hphrases"] = results["hphrases"]
-      if (readyObj["name"] != results["recordTitle"]) {
-        readyObj["name"] = newEntryObj["name"] + " (" + results["recordTitle"] + ")"
-      }
-      readyObj["hphrases"] = results["hphrases"]
-      addtoinvPOST(readyObj)
-    }
-    if (results["found"] === false && results["retry"] == true) {
-      // Coudn´t find a substance with the CAS number, retry with substance name
-      barwidth(25)
-      x["searchtype"] = "name";
-      results = updateh(x)
-    }
-    if (results["found"] === false && results["retry"] == false) {
-      // no results for name or cas number
-      error = true
-      errorMsg = 'We were unable to find any information for this substance name or CAS number. Please see error code "Galapagos" on the FAQ page.'
-    }
-    if (results["found"] === true) {
-      // found either cid or h-phrases
-      if (results["foundresult"] == "cid" && results["cid"].length() > 1) {
-        barwidth(50)
-        x["cid"] = results["cid"]
-        x["searchtype"] = "cid";
-        // final call with cid to get h-phrases
-        results = updateh(x)
-      }
-      else if (results["foundresult"] == "final") {
-        // search complete, h-phrases found
-        barwidth(90)
-        x["hphrases"] = results["hphrases"]
-        x["name"] = x["name"] + " (" + results["recordTitle"] + ")"
-        done = True
-      }
-    }
-  } else {
-    done = true
-    error = true
-    errorMsg = "Failure to obtain information from server"
-  }
-}
-
-    
-
-  if (done === true && error === false) {
-    let readyObj = newEntryObj
-    readyObj["id"] = x["id"];
-    readyObj["name"] = x["name"]
-    readyObj["hphrases"] = x["hphrases"]
-    addtoinvPOST(readyObj)
-  }
-  else if (done === true && error === true) {
-    alert(errorMsg)
-    addtoinvPOST(readyObj)
-  }
-}
 
 /** object must include either a "CAS" key or a "name" key */
-function updateh(x) {
-  console.log(x)
+async function updateh(x) {
+  const readyObj = {...x}
+  var validcasregex = /^[\d]{1,5}\-[\d]{1,5}\-[\d]{1,5}$/;
+  if (new RegExp(validcasregex).test(x["CAS"])) {
+    x["searchtype"] = "CAS";
+  } else {
+    x["searchtype"] = "name";
+  }
+
   $.post("/updatehphrases", {
       "substance": JSON.stringify(x)
-    },
-    function(data) {
-      console.log('Response from server: ')
-      console.log(data)
-      updateHPhrasesControllerresultsvariable = data
+    }, function(data) {
+      data = JSON.parse(data)
+      if (data["foundresult"] == "named") {
+        readyObj["hphrases"] = data["hphrases"]
+        if (data["recordTitle"] && readyObj["name"].toUpperCase() != data["recordTitle"].toUpperCase()) {
+          readyObj["name"] = newEntryObj["name"] + " (" + data["recordTitle"] + ")"
+        }
+        readyObj["hphrases"] = data["hphrases"]
+        $("#status_message").html("Substance found under named substances.")
+        addtoinvPOST(readyObj)
+      }
+      // successful information retrieval
+      else if (data["found"] === true && data["foundresult"] !== "named") {
+        // search complete, h-phrases found
+          readyObj["hphrases"] = data["hphrases"]
+          if (data["recordTitle"] && readyObj["name"].toUpperCase() != data["recordTitle"].toUpperCase()) {
+            readyObj["name"] = newEntryObj["name"] + " (" + data["recordTitle"] + ")"
+          }
+          addtoinvPOST(readyObj)
+        }
+      // couldn't find anything with the given info
+      else {
+        errorMsg = 'We were unable to corroborate the given information. Please see error code "Galapagos" on our FAQ page for more info.'
+        alert(errorMsg)
+        addtoinvPOST(readyObj)
+      }
     });
 }
 
-function barwidth(param) {
-  console.log("Barwidth = " + param)
-  $("#pre_loader").val(param)
-}

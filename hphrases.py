@@ -173,16 +173,51 @@ for group in hgroups:
   cumulativerule[group['chemid']] = 0
 
 def ClassFinder(hphraselist, field):
+  
+  """
+    using an array of hphrases, finds the first match from the array in the hphrases group where the hphrase is found.
+    return value is determined by the field argument, which can be either 'desc' (description) or 'chemid' (an id used to find other info on this substance in the database)
+  """
 
-    """
-      using an array of hphrases, finds the first match from the array in the hphrases group where the hphrase is found.
-      return value is determined by the field argument, which can be either desc (description) or chemid (an id used to find other info on this substance in the database)
-    """
+  possiblegroups = []
+  for hphrase in hphraselist:
+    for group in hgroups:
+      if hphrase in group["hphrases"]:
+        possiblegroups.append(group[field])
 
-    for hphrase in hphraselist:
-      for group in hgroups:
-        if hphrase in group["hphrases"]:
-            return group[field]
+  if field == "chemid":
+    #precedence rules
+    if 201 in possiblegroups:
+      return 201
+    elif 202 in possiblegroups:
+      return 202
+    elif 207 in possiblegroups:
+      return 207
+    elif 206 in possiblegroups:
+      return 206
+    elif 205 in possiblegroups:
+      return 205
+    elif 204 in possiblegroups:
+      return 204
+    else:
+      return possiblegroups[0]
+
+  elif field == "desc":
+    #precedence rules
+    if "Very toxic" in possiblegroups:
+      return "Very toxic"
+    elif "Toxic" in possiblegroups:
+      return "Toxic"
+    elif "Extremely Flammable" in possiblegroups:
+      return "Extremely Flammable"
+    elif "Highly Flammable (b)" in possiblegroups:
+      return "Highly Flammable (b)"
+    elif "Highly Flammable (a)" in possiblegroups:
+      return "Highly Flammable (a)"
+    elif "Flammable" in possiblegroups:
+      return "Flammable"
+    else:
+      return possiblegroups[0]
 
 def RuleFinder(item):
   """

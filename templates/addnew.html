@@ -47,26 +47,10 @@
       <!-- moved all the buttons to the bottom to give it a more 'form' feel -->
       <div class="addnew_footer">
         <button id="addtoinv_btn" onclick="addtoinv()" class="button button--primary button--small">Add to Inventory</button>        
-        <button class="button button--secondary button--small" onclick="hideaddnew()">Cancel</button> 
-        <button id="clear_btn" class="button button--secondary button--small" data-toggle="tooltip" title="Clear the current fields.">Reset</button>  
+        <button class="button button--secondary button--small" data-toggle="tooltip" title="Close this window." onclick="hideaddnew()">Cancel</button> 
+        <button id="clear_btn" class="button button--secondary button--small" data-toggle="tooltip" title="Clear the current fields.">Reset</button>
       </div>
     </div>
-
-  <!-- tab1 row2-->
-
-  <!-- commented is row out since you might be removing it and i wanted to see how the spacing looks -->
-
-  <!-- <div class="flexdr nowrap pad15px" id="tab_1_row_2">
-    <div class="h40perc v100perc nowrap flexdr jcsb">
-      <label class="h30perc" for="Type">Type: </label>
-      <input class="h70perc whitebackground noborder" disabled type="text" id="type_1" value="Named">
-    </div>
-    <div class="h40perc v100perc nowrap flexdr jcsb">
-      <label class="h30perc" for="Type">Class: </label>
-      <input class="h70perc whitebackground noborder" disabled type="text" id="class_1" value="">
-    </div>
-  
-  </div> -->
 
   <!-- END TAB 1 -->
 
@@ -80,7 +64,7 @@
 
       <div class="addnew_input">
         <!-- changed the 'for' attribute here, the for and the input id should be the same, that how the browser associates them -->
-        <label for="cas_2">CAS Number (optional)</label>
+        <label for="cas_2">CAS Number</label>
         <input class='tab_2_input' type="text" id="cas_2" placeholder="CAS (Optional)">
       </div>
 

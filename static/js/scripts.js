@@ -3,7 +3,7 @@ window.addEventListener('load', function() {
   init();
 })
 
-// Add event listners etc
+// Add event listeners etc
 function init (){
   var burger = document.querySelector('.sidenav_burger');
   var addNewButton = document.getElementById('button_addnew');
@@ -43,6 +43,7 @@ function showAddNewHandler () {
 }
 
 function loading(x, t=1500) {
+  $("#loader_width_adjustable").attr("style", "width: 100%")
   if (x==1) {
     $("#main").hide()
     $("#pre_loader").show()
@@ -57,6 +58,52 @@ function loading(x, t=1500) {
   } else {
     $("#pre_loader").hide()
     $("#main").show()
+  }
+}
+
+// adjusts loader width. if m = true: message will display.
+function barwidth(int,m=false) {
+  $("#loader_width_adjustable").animate({"width" : int.toString() + "%"})
+
+  if (m) {
+    switch(int) {
+      case 0:
+        $("#status_message").html("establishing connection")
+        break
+      case 10:
+        $("#status_message").html("checking CAS number validity")
+        break
+      case 20:
+        $("#status_message").html("searching by CAS")
+        break
+      case 30:
+        $("#status_message").html("cross-referencing with external database")
+        break
+      case 40:
+        $("#status_message").html("parsing first response")
+        break
+      case 45:
+        $("#status_message").html("invalid CAS. Searching by substance name")
+        break
+      case 50:
+        $("#status_message").html("verifying matches")
+        break
+      case 60:
+        $("#status_message").html("parsing second response")
+        break
+      case 70:
+        $("#status_message").html("obtaining classification")
+        break
+      case 80:
+        $("#status_message").html("parsing GHS statements")
+        break
+      case 90:
+        $("#status_message").html("calculating tier thresholds")
+        break
+      case 100:
+        $("#status_message").html("complete!")
+        break
+    }
   }
 }
 
@@ -99,3 +146,4 @@ function NewStart() {
     }
   })
 }
+
