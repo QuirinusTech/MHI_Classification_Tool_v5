@@ -15,7 +15,7 @@
           <thead>
             <tr>
               <th><h4>#</h4></th>
-              <td>{% if item.CAS %}{{ item.CAS }}{% else %}None{% endif %}</td>
+              <td><h4>CAS</h4></td>
               <th><h4>Substance</h4></th>
               <th><h4>Type</h4></th>
               <th><h4>Class</h4></th>
@@ -32,7 +32,7 @@
           {% for item in inventory %}
           <tr>
             <td>{{ loop.index }}</td>
-            <td>{{ item.CAS }}</td>
+            <td>{% if item["CAS"] %}{{ item.CAS}}{% else %}None{% endif %}</td>
             <td>{{ item.name }}</td>
             <td>{{ item.type }}</td>
             {% if item['class'] %}

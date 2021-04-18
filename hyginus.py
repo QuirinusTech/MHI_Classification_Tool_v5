@@ -3,27 +3,66 @@ import json
 import hphrases
 
 def stringsearch(z,t):
-  if t == "H":
+  """
+    Searches a given string (z) for one of the patterns patterns (t)
+    
+  """
+  print("key to search by (t): ", t)
+
+  print("stringsearch by t: ", t)
+  if t == "H": #Hazard statements
     hazardphraseslist = re.findall(r"H[2-4]\d\d", z)
     results = []
     for i in hazardphraseslist:
+      print(i)
       if i not in results:
         results.append(i)
-    return
-  elif t == "cid":
-     match = re.search(r"(\"cid\"\:\s)([0-9]+)", z)
-     return match.group(2)
+    print("Response: ", results)
+    return results
+  elif t == "cid": #cid
+    match = re.search(r"(\"cid\"\:\s*)([0-9]+)", z)
+    if match is None:
+       print("stringsearch", t, "No cid found")
+       return "NotFound"
+    else:
+      print("Response: ", match.group(2))
+      return match.group(2)
+  elif t == "fault": #PUG errors
+     match = re.search(r"(PUG[REST|VIEW].)([NotFound|Timeout])", z)
+     print("Match value: ", match)
+     if match is None:
+       print("stringsearch", t, "No faults found")
+       return "OK"
+     else:
+       print("fault found: ", match.group(2))
+       return match.group(2)
+  elif t == "RT": #Record Title
+    match = re.search(r"(RecordTitle.\: [\'|\"])([A-Za-z\s*]+)([\'|\"])", z)
+    if match is None:
+      print("stringsearch", t, "Response: None")
+      return None
+    else:
+      print("Response: ", match.group(2))
+      return match.group(2)
+
   else:
     pass
 
+def checkCAS(arg1):
+  result = re.search(r"[\d]{1,5}-[\d]{1,5}-[\d]{1,5}", arg1)
+  return result
+
 def getnums(x):
+  """
+    Extracts numbers from a string (x)
+  """
   listresults = re.search(r"[0-9]+", x)
   return listresults[0]
 
 
 # 0id, 1CAS, 2substance, 3tier1, 4tier2, 5tier3, 6type, 7class, 8tooltip, 9h-phrases
 bigDatabase = [
-[101, "", "Carcinogens", 0.05, 0.5, 2, "named", "", "Carcinogens at concentration above 5%: 4-Aminobiphenyl, Benzotrichloride, Benzidine, Chloromethyl ether, Chloromethyl methyl ether, 1,2-Dibromoethane, Diethyl sulphate, Dimethyl sulphate, Dimethylcarbamoyl Chloride, 1,2-Dibromo-3-chloropropane, 1,2-Dimethylhydrazine, Dimethylnitrosamine, Hexamethylphosphoric triamide, Hydrazine, 2-Naphthylamine, 2-Naphthylamine salts, 4-Nitrodiphenyl, 1,3-Propanesultone","",[]],
+[101, "", "Carcinogens", 0.05, 0.5, 2, "named", "", "Carcinogens at concentration above 5%: 4-Aminobiphenyl, Benzotrichloride, Benzidine, Chloromethyl ether, Chloromethyl methyl ether, 1,2-Dibromoethane, Diethyl sulphate, Dimethyl sulphate, Dimethylcarbamoyl Chloride, 1,2-Dibromo-3-chloropropane, 1,2-Dimethylhydrazine, Dimethylnitrosamine, Hexamethylphosphoric triamide, Hydrazine, 2-Naphthylamine, 2-Naphthylamine salts, 4-Nitrodiphenyl, 1,3-Propanesultone","",["H302", "H350", "H400", "H410"]],
 [6326, "74-86-2", "Acetylene", 0.5, 5, 50, "named", "", "", ["H220"]],
 [222, "7664-41-7", "Ammonia anhydrous", 5, 50, 200, "named", "", "", ["H221", "H314", "H331", "H400"]],
 [229851, "6484-52-2", "Ammonium nitrate (Composites)", 500, 5000, 10000, "named", "", "Ammonium Nitrate-based fertiliser composites with less than 25% Nitrogen content as a result of Ammonium Nitrate and with no more than 0.4% total combustible or organic materials (or which satisfy the detonation resistance test).",["H272"]],
@@ -52,9 +91,9 @@ bigDatabase = [
 [7543, '101-14-4', '4,4-Methylenebis', 0.001, 0.01, 0.01, 'named', '', '2-Chloraniline and/or salts (Powder form)',["H302","H350","H400","H410"]],
 [25, "", "Nickel compounds", 0.1, 1, 1, "named", "", "Nickel compounds in inhalable powder form: Nickel monoxide, Nickel dioxide, Nickel sulphide, tri-Nickel disulphide, di-Nickel trioxide.",[]],
 [977, "7782-44-7", "Oxygen", 20, 200, 2000, "named", "", "",["H270"]],
-[27, "", "Petroleum products", 250, 2500, 25000, "named", "", "gasolines ; naphthas; kerosenes (including jet fuels); gas oils (including diesel fuels; home heating oils and gas oil blending streams)",[]],
+[6334, "6334", "Petroleum products", 250, 2500, 25000, "named", "", "gasolines ; naphthas; kerosenes (including jet fuels); gas oils (including diesel fuels; home heating oils and gas oil blending streams)",["H220"]],
 [24404, "7803-51-2", "Phosphorus trihydride", 0.02, 0.2, 1, "named", "", "Phosphine",["H220","H314","H330","H400"]],
-[29, "", "Polychlorodibenzofurans / polychlorodibenzodioxins (including TCDD)", 1, 0.001, 0.001, "named", "", "Please see Note 7 on the 'Help' page for more info.",[]],
+[15625, "1746-01-6", "Polychlorodibenzofurans / polychlorodibenzodioxins (including TCDD)", 1, 0.001, 0.001, "named", "", "Please see the Note 7 table on the FAQ page for more info about this substances composition.",["H300", "H319", "H400", "H410"]],
 [244341, "", "Potassium nitrate (granular)", 500, 5, 10, "named", "", "Potassium nitrate (5 000/10 000): composite potassium nitrate-based fertilisers composed of potassium nitrate in prilled/granular form.",[]],
 [244342, "", "Potassium nitrate (crystalline)", 125, 1, 5, "named", "", "Potassium nitrate (1 250/5 000): composite potassium nitrate-based fertilisers composed of potassium nitrate in crystalline form.",[]],
 [6378, "75-56-9", "Propylene oxide", 0.5, 5, 50, "named", "", "Methyloxirane",["H224","H302","H311","H319","H331","H335","H340","H350"]],
@@ -90,22 +129,36 @@ for chem in MainDB:
 print("chemlist loaded!")
 
 def findattribs(param1):
+
+  """
+    Small function for finding attributes of a listed substance based on the chemid (param1)
+  """
+
   print("findattribs", param1)
   for chem in chemlist:
     if param1 == chem["chemid"]:
       return chem
 
 def assessment(inv):
+
+  """
+    Full inventory (inv) assessment assessment.
+    Determined individual tier
+    if individual tier = 0, also determines cumulative tier
+
+    returns an dict of results
+  """
+
   results = {"indtier" : 0, "cumultier": 0, "finaltier": 0}
   for item in inv:
     #individual
     item["tier"] = deftier(item)
     if item["tier"] > results["indtier"]:
       results["indtier"] = item["tier"]
-  if results["indtier"] > 1:
+  if results["indtier"] > 0:
     results["finaltier"] = results["indtier"]
   elif results["indtier"] == 0:
-    #cumulative
+    #no individual substances exceed the threshold, calculate the cumulative
     usedlistedsubs = {"A": 0, "B": 0, "C": 0}
     if item['type']=="named":
       for substance in MainDB:
@@ -119,6 +172,7 @@ def assessment(inv):
           qx = int(item["qty"]) / int(substance["tier3"])
           rule = hphrases.RuleFinder(item)
           usedlistedsubs[rule] = usedlistedsubs[rule] + qx
+    #update the overall/final tier based on the findings of the cumulative tier rule
     for sub in usedlistedsubs.keys():
       if usedlistedsubs[sub] >= 1:
         results["cumultier"] = 3
@@ -130,6 +184,14 @@ def assessment(inv):
 
 
 def deftier(item):
+
+  """
+    takes a single substance (item) from the inventory and returns it's tier
+    The function reads the item's chemid to find the thresholds in the database
+    item must have the followings fields:
+    qty, type, chemid 
+  """
+
   qty = int(item["qty"])
   if item['type']=="named":
     for substance in MainDB:

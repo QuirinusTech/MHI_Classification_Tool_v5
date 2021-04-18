@@ -16,7 +16,7 @@
     {% for item in inventory %}
     <tr chemid="{{item.chemid}}" id="{{ item.id }}_tr" class="{{ item.id }}">
       <td>{{ item.indexpos }}</td>
-      <td>{% if item.CAS %}{{ item.CAS }}{% else %}None{% endif %}</td>
+      <td>{% if item["CAS"] %}{{ item.CAS }}{% else %}None{% endif %}</td>
       <td>{{ item.name }}</td>
       <td>{{ item.type }}</td>
       <td>{{ item.class }}</td>

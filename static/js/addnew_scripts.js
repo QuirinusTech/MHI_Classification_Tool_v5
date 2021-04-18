@@ -1,8 +1,10 @@
+/** Global variable */
+let updateHPhrasesControllerresultsvariable = ""
+
 /** function to hide the "AddNew" dialog box */
 function hideaddnew() {
   document.getElementById('button_addnew').style.display = 'block'
   document.getElementById('addnewbox').style.display = 'none'
-  // $("#addnewbox").fadeOut()
 }
 
 /** used to switch between named and listed substance tabs  */
@@ -51,6 +53,13 @@ function AutusCumpletus() {
         }
       }
     }
+    // if no records are found
+    if (!$(".acli").is(":visible")) {
+      show("NoRecords")
+    }
+  } else {
+    // if user enters less than three characters
+    show("threeCharsMin")
   }
 }
 
@@ -70,29 +79,63 @@ function checkinputs(x) {
   var letterNumberDashSpace = /^[0-9a-zA-Z\-\s\/\\\(\)]+$/;
   var numbers = /^[0-9]+$/
 
+  // named substance
   if (x == 1) {
     let substance_1 = $("#substance_1").val()
-    let qty_1 = $("#qty_1").val()
+    let qty_1 = Math.floor($("#qty_1").val())
     if (substance_1.length > 5 && qty_1 > 0) {
       if (new RegExp(letterNumberDashSpace).test(substance_1) && new RegExp(numbers).test(qty_1)) {
         return true
+      } else {
+        $("#substance_1").addClass("invalid_input");
       }
     } else {
       return false
     }
+    // listed substance
   } else if (x == 2) {
     let substance_2 = $("#substance_2").val()
-    if (substance_2.length > 5) {
-      test_2_1 = new RegExp(letterNumberDashSpace).test($("#substance_2").val()) ? true : false
-      test_2_2 = $("#class_2").val() !== "" ? true : false
-      test_2_3 = new RegExp(numbers).test($("#qty_2").val()) ? true : false
-      if (test_2_1 === true && test_2_2 === true && test_2_3 === true) {
-        return true
+
+    // test substance 2 name
+    if (new RegExp(letterNumberDashSpace).test(substance_2)) {
+      test_2_1 = true
+    } else {
+      $("#substance_2").addClass("invalid_input");
+
+      // if the substance fails validation, also test the CAS
+      var validcasregex = /^[\d]{1,5}\-[\d]{1,5}\-[\d]{1,5}$/;
+      if (new RegExp(validcasregex).test($("#cas_2").val())) {
+        test_2_1 = true;
       } else {
-        return false
+        $("#cas_2").addClass("invalid_input");
       }
     }
+    
+    // check that the user selected a class
+    if ($("#class_2").val() === ""){
+      test_2_2 = false
+      $("#class_2").addClass("invalid_input");
+    } else {
+      test_2_2 = true
+    }
+
+    // check that the user entered a value
+    if (new RegExp(numbers).test($("#qty_2").val())){
+      test_2_3 = true
+    } else {
+      test_2_3 = false
+      $("#qty_2").addClass("invalid_input");
+    }
+
+    // summary test to check all values entered
+    if (test_2_1 === true && test_2_2 === true && test_2_3 === true) {
+      $(".invalid_input").removeClass("invalid_input")  
+      return true
+    } else {
+      return false
+    }
   }
+  return false
 }
 
 /** clears the input fields */
@@ -117,23 +160,28 @@ function addtoinv() {
   if (checkinputs(x) === false) {
     alert("Please check that you've entered valid information into the fields above.")
   } else {
+    loading(1)
     d = new Date()
     substid = "custom_" + d.getDate().toString() + d.getHours() + d.getMinutes() + d.getSeconds()
     if (x == 2) {
-      chemid = $("#class_2").val()
-      qty = $("#qty_2").val()
-      substname = $("#substance_2").val()
-      cas = $("#cas_2").val()
-      newEntryObj = {
-        "id": substid,
-        "name": substname,
-        "CAS": cas,
-        "qty": qty,
-        "chemid": chemid,
-        "type": "listed"
+      if (confirm("Finding information for a custom substance can take up to 45 seconds in some cases. Continue?")) {
+        chemid = $("#class_2").val()
+        qty = $("#qty_2").val()
+        substname = $("#substance_2").val()
+        cas = $("#cas_2").val()
+
+        newEntryObj = {
+          "id": substid,
+          "name": substname,
+          "CAS": cas,
+          "qty": Math.floor(qty),
+          "chemid": chemid,
+          "type": "listed"
+        }
+        updateh(newEntryObj)
+      } else {
+        return false
       }
-      loading(1)
-      addtoinvPOST(newEntryObj, x)
     } else if (x==1) {
       id = $("#substance_1").attr("chemid")
       qty = $("#qty_1").val()
@@ -143,10 +191,9 @@ function addtoinv() {
         "qty": qty,
         "type": "named"
       }
-      loading(1)
-      addtoinvPOST(newEntryObj, x)
+      addtoinvPOST(newEntryObj)
     }
-  // }
+  }
 }
 
 function toggleEditMode (e, x){
@@ -163,6 +210,7 @@ function toggleEditMode (e, x){
     cell.setAttribute('EditMode', false)
     target.classList.add('button_icon--edit')
     target.classList.remove('button_icon--check')
+    x = Math.floor(x)
     update(x, cell)
   }
 }
@@ -212,13 +260,11 @@ function del(x) {
 }
 
 function updatePost(Obj) {
-  console.log(Obj)
   jsonstring = JSON.stringify(Obj)
   $.post("/update", {
       "update": jsonstring
     },
-    function (data) {
-        console.log(data)
+    function () {
         loading(0)
         location.reload()
     });
@@ -226,17 +272,14 @@ function updatePost(Obj) {
 
 /** submits a post request to add a substance to the inventory */
 function addtoinvPOST(newEntryObj) {
-  console.log(newEntryObj)
   newEntry = JSON.stringify(newEntryObj)
   $.post("/addtoinv", {
       "newEntry": newEntry
     },
     function (data) {
-        console.log(data)
         $("#noinv_tr").remove()
         $("#list_div > table").append(data)
         inventoryexists = true
-        $("#navbar_process").removeClass('disabled_link')
         $("#calc_button").removeClass('disabled_button')
         loading(0)
       clear()
@@ -244,23 +287,43 @@ function addtoinvPOST(newEntryObj) {
 }
 
 /** object must include either a "CAS" key or a "name" key */
-function updateh(x) {
+async function updateh(x) {
+  const readyObj = {...x}
+  var validcasregex = /^[\d]{1,5}\-[\d]{1,5}\-[\d]{1,5}$/;
+  if (new RegExp(validcasregex).test(x["CAS"])) {
+    x["searchtype"] = "CAS";
+  } else {
+    x["searchtype"] = "name";
+  }
+
   $.post("/updatehphrases", {
       "substance": JSON.stringify(x)
-    },
-    function (data) {
-      if (data === "updated") {
-        location.reload()
-      } else {
-        console.log(data)
-        $("#noinv_tr").remove()
-        $("#list_div > table").append(data)
-        inventoryexists = true
-        $("#navbar_process").removeClass('disabled_link')
-        $("#calc_button").removeClass('button--disabled')
-        loading(0)
+    }, function(data) {
+      data = JSON.parse(data)
+      if (data["foundresult"] == "named") {
+        readyObj["hphrases"] = data["hphrases"]
+        if (data["recordTitle"] && readyObj["name"].toUpperCase() != data["recordTitle"].toUpperCase()) {
+          readyObj["name"] = newEntryObj["name"] + " (" + data["recordTitle"] + ")"
+        }
+        readyObj["hphrases"] = data["hphrases"]
+        $("#status_message").html("Substance found under named substances.")
+        addtoinvPOST(readyObj)
+      }
+      // successful information retrieval
+      else if (data["found"] === true && data["foundresult"] !== "named") {
+        // search complete, h-phrases found
+          readyObj["hphrases"] = data["hphrases"]
+          if (data["recordTitle"] && readyObj["name"].toUpperCase() != data["recordTitle"].toUpperCase()) {
+            readyObj["name"] = newEntryObj["name"] + " (" + data["recordTitle"] + ")"
+          }
+          addtoinvPOST(readyObj)
+        }
+      // couldn't find anything with the given info
+      else {
+        errorMsg = 'We were unable to corroborate the given information. Please see error code "Galapagos" on our FAQ page for more info.'
+        alert(errorMsg)
+        addtoinvPOST(readyObj)
       }
     });
-  clear()
 }
-}
+

@@ -46,10 +46,24 @@
           <p>Tier</p>
         </div>
         <div class="detailsView_body_column_body_content">  
-          {% for class in results.usedlistedsubs %}
-            <p>{{ item.name}}</p>
-            <p>{{ item.tier}}</p>
+          {% if results.usedlistedsubs %}
+          {% for sub in results.usedlistedsubs.keys() %}
+              {% if sub == "A" %}
+              <p>Group A (Toxic and Very Toxic)</p>
+              <p>{{ results.usedlistedsubs[sub] * 100 }}%</p>
+              {% endif %}
+              {% if sub == "B" %}
+              <p>Group B (Oxidising, Explosive, Flammable, Highly Flammable and Extremely Flammable)</p>
+              <p>{{ results.usedlistedsubs[sub] * 100 }}%</p>
+              {% endif %}
+              {% if sub == "C" %}
+              <p>Group C (Toxic or Very Toxic to Aquatic Organisms)</p>
+              <p>{{ results.usedlistedsubs[sub] * 100 }}%</p>
+              {% endif %}
           {% endfor %}
+          {% else %}
+            <p>No Cumulative Rating was calculated, as the rating provided by the individual rating supercedes the cumulative rating.</p>
+          {% endif %}
         </div>
         <div id="cumul_tier_explain" class="detailsView_body_column_body_footnote">
           <h5>Some subheading explaining what this is</h5>

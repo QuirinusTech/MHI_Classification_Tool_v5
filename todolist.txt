@@ -2,3 +2,19 @@ get page content
 fix cumulative tier numbers
 
 https://github.com/QuirinusTech/MHI_Classification_Tool_v5.git
+
+
+-Content required from Allison-
+1. h-phrase groupings
+2. Precedence rules (hphrases.py/189-220)
+3. Content:
+    - templates/detailed.html
+    - templates/faq.html
+    - templates/help.html
+    - templates/recommendation.html
+    - templates/results.html
+
+
+- My To-do list - 
+1. Docker File to prepare for deployment
+2. Clean up the 'Contact Us' page
