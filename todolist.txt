@@ -18,3 +18,18 @@ https://github.com/QuirinusTech/MHI_Classification_Tool_v5.git
 - My To-do list - 
 1. Docker File to prepare for deployment
 2. Clean up the 'Contact Us' page
+
+content/wording:
+loading screen: fetching info from db
+
+recommended action ... [requirements]
+
+lpg failing regex check on submission of addtoinv()
+
+edit qty not working
+
+add decimal parsing for qty 
+
+qty_1 placeholder="tonnes"
+
+welcome page: Please note that this is an estimate and in some places a more detailed analysis will need to be completed.

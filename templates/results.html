@@ -13,12 +13,11 @@
     <div class="results_overview">
       <h3>Overview</h3>
       <p>
-        Individual Tier: {{ results.indtier }}
-          {% if results.indtier == 0 %}
-            <br/>Cumulative Tier: {{ results.cumultier }} </p>
-          {% elif results.indtier > 0 %}
-            <br> <p>Cumulative tier is not calculated if any individual substance exceeds the individual substance thresholds.</p><a href="{{ url_for('help') }}"> Learn more</a>
-          {% endif %}
+        Individual Tier: {{ results.indtier }} 
+      </p>
+      <p>
+      <br/>
+      Cumulative Tier: {{ results.cumultier }} </p>
       </p>
       <br>
       <p>Click <a onclick="show('detailed_view_div')">here</a> for a detailed analysis.</p>
