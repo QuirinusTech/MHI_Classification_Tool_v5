@@ -1,11 +1,12 @@
 <div class="detailsView">
 
-  <!-- Individual Ratings-->
+  <!-- Individual Classifications-->
   <div class="detailsView_body">
     <div class="detailsView_body_column">
       <div class="detailsView_body_column_body">
 
         <div class="detailsView_body_column_body_content">
+          <h2>Individual Classification</h2>
           <table class="table--inventory--results">
             <tr class="inventory--item">
               <th class="inventory--item--td-left">Substance</th>
@@ -23,45 +24,77 @@
         </div>
         <div id="ind_tier_explain" class="detailsView_body_column_body_footnote">
           <h5>Some subheading explaining what this is</h5>
-          <p>Individual tier rating explanation message goes here.</p>
+          <p>Individual tier Classification explanation message goes here.</p>
         </div>
       </div>
     </div>
 
-    <!-- Cumulative Ratings -->
+    <!-- Aggregate Classifications -->
     <div class="detailsView_body_column">
-      <div class="detailsView_body_column_header">
-        <h4>
-          Cumulative Rating
-        </h4>
-        <p>
-          {{ results.cumultier }}
-        </p>
-      </div>
       <div class="detailsView_body_column_body">
-        <div class="detailsView_body_column_body_subheader">
-          <p>Substance</p>
-          <p>Tier</p>
-        </div>
         <div class="detailsView_body_column_body_content">
-          {% for sub in results.usedlistedsubs.keys() %}
-          <div>
-            {% if sub == "A" %}
-            <p>Group A (Toxic and Very Toxic)</p>
-            {% elif sub == "B" %}
-            <p>Group B (Oxidising, Explosive, Flammable, Highly Flammable and Extremely Flammable)</p>
-            {% elif sub == "C" %}
-            <p>Group C (Toxic or Very Toxic to Aquatic Organisms)</p>
-            {% endif %}
-            <p>{{ results.usedlistedsubs[sub] * 100 }}%</p>
-          </div>
-
-
-          {% endfor %}
+          <h2>Aggregate Rule</h2>
+          <table class="table--inventory--results">
+            <tr class="inventory--item">
+              <th class="inventory--item--td-left">
+                Substance Group
+              </th>
+              <th class="inventory--item--td-right">
+                Total
+              </th>
+            </tr>
+            {% for sub in results.usedListedSubstances.keys() %}
+            <tr class="inventory--item">
+              <td class="inventory--item--td-left">            
+                {% if sub == "A" %}
+                <table>
+                  <tr>
+                    <td>
+                      Group A 
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Toxic and Very Toxic
+                    </td>
+                  </tr>
+                </table>
+                {% elif sub == "B" %}
+                <table>
+                  <tr>
+                    <td>
+                      Group B
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Oxidising, Explosive, Flammable, Highly Flammable and Extremely Flammable
+                    </td>
+                  </tr>
+                </table>
+                {% elif sub == "C" %}
+                <table>
+                  <tr>
+                    <td>
+                      Group C 
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Toxic or Very Toxic to Aquatic Organisms
+                    </td>
+                  </tr>
+                </table>
+                {% endif %}
+              </td>
+              <td class="inventory--item--td-right">{{ results.usedListedSubstances[sub] * 100 }}%</td>
+            </tr>
+            {% endfor %}
+          </table>
         </div>
-        <div id="cumul_tier_explain" class="detailsView_body_column_body_footnote">
-          <h5>Some subheading explaining what this is</h5>
-          <p>Cumulative tier rating explanation message goes here..</p>
+        <div id="aggregate_tier_explain" class="detailsView_body_column_body_footnote">
+          <h5>Aggregate Tier note:</h5>
+          <p>The aggregate tier calculation for the given inventory exceeded the <strong>{{ results.aggregateTier }}</strong> thresholds</p>
         </div>
       </div>
     </div>

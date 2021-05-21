@@ -25,8 +25,7 @@
           <br />
         </div>
         <div class="results_cta">
-          <p>Do the sales pitch here, after taking them through the journey in the end the real point is to get them to
-            click on this anchor link - <a onclick="Redirect('/contact')">Contact Us</a></p>
+         <a onclick="Redirect('/contact')">Contact Us</a>
         </div>
         <small>
           Note - any classification provided is for information purposes only and should not be interpreted as a formal
@@ -35,21 +34,21 @@
       </div>
     </div>
     <div class="results_div--right_column">
-      <h1 class="ratings">Ratings</h1>
-      <div class="results_div--right_column--top_rating">
+      <h1 class="Classifications">Classifications</h1>
+      <div class="results_div--right_column--top_Classification">
 
         <div>
           <h2>Individual:</h2>
-          <h1>{{results.indtier}}</h1>
+          <h1>{{results.indTier}}</h1>
         </div>
         <div>
-          <h2>Cumulative:</h2>
-          <h1>{{results.cumultier}}</h1>
+          <h2>Aggregate:</h2>
+          <h1>{{results.aggregateTier}}</h1>
         </div>
       </div>
-      <div class="results_div--right_column--final_rating">
+      <div class="results_div--right_column--final_Classification">
         <h2>Final Installation:</h2>
-        <h1>{{results.finaltier}}</h1>
+        <h1>{{results.finalTier}}</h1>
       </div>
     </div>
   </div>

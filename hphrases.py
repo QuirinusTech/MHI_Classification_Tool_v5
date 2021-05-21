@@ -103,7 +103,7 @@ hphrases = {
 }
 
 
-hgroups = [
+hgroups_old = [
     {
         "chemid": 201,
         "desc": "Very toxic",
@@ -161,6 +161,163 @@ hgroups = [
     },
 ]
 
+listedsubstances = [
+    {
+        "chemid": 101,
+        "tier1": 5,
+        "tier2": 5,
+        "tier3": 20,
+        "desc": "H1 Acute Toxic Category 1",
+        "hphrases": ["H300", "H310", "H330"],
+        "tooltip": "All exposure routes"
+    },
+    {
+        "chemid": 102,
+        "tier1": 15,
+        "tier2": 50,
+        "tier3": 200,
+        "desc": "H2 Acute Toxic (Inhalation)",
+        "hphrases": ["H331", "H301"],
+        "tooltip": "Category 2, all exposure routes. \n Category 3, inhalation exposure route."
+    },
+    {
+        "chemid": 103,
+        "tier1": 15,
+        "tier2": 50,
+        "tier3": 200,
+        "desc": "H3 STOT",
+        "hphrases": ["H370"],
+        "tooltip": "Specific Target Organ Toxicity. Category 1, Single Exposure SE STOT"
+    },
+    {
+        "chemid": 201,
+        "tier1": 2.5,
+        "tier2": 10,
+        "tier3": 50,
+        "desc": "P2 Flammable Gases",
+        "hphrases": ["H220", "H221"],
+        "tooltip": "Flammable gases, Category 1 or 2"
+    },
+    {
+        "chemid": 202,
+        "tier1": 50,
+        "tier2": 150,
+        "tier3": 500,
+        "desc": "P3a Flammable Aerosols",
+        "hphrases": ["H222", "H223"],
+        "tooltip": "Flammable aerosols Category 1 or 2, containing flammable gases Category 1 or 2 or flammable liquids Category 1"
+    },
+    {
+        "chemid": 203,
+        "tier1": 1250,
+        "tier2": 5000,
+        "tier3": 50000,
+        "desc": "P3b Flammable Aerosols",
+        "hphrases": [],
+        "tooltip": "Flammable’ aerosols Category 1 or 2, not containing flammable gases Category 1 or 2 nor flammable liquids category 1"
+    },
+    {
+        "chemid": 204,
+        "tier1": 20,
+        "tier2": 50,
+        "tier3": 200,
+        "desc": "P4 Oxidising Gases",
+        "hphrases": ["H270"],
+        "tooltip": "Oxidising gases, Category 1"
+    },
+    {
+        "chemid": 205,
+        "tier1": 5,
+        "tier2": 10,
+        "tier3": 50,
+        "desc": "P5a Flammable Liquids",
+        "hphrases": ["H224"],
+        "tooltip": ""
+    },
+    {
+        "chemid": 206,
+        "tier1": 20,
+        "tier2": 50,
+        "tier3": 200,
+        "desc": "P5b Flammable Liquids",
+        "hphrases": [],
+        "tooltip": ""
+    },
+    {
+        "chemid": 216,
+        "tier1": 1250,
+        "tier2": 5000,
+        "tier3": 50000,
+        "desc": "P5c Flammable Liquids",
+        "hphrases": ["H225", "H226"],
+        "tooltip": "Flammable Liquids, Categories 2 or 3 not covered by P5a and P5b"
+    },
+    {
+        "chemid": 207,
+        "tier1": 5,
+        "tier2": 10,
+        "tier3": 50,
+        "desc": "P6a Self-Reactive Substances and Mixtures and Organic Peroxides",
+        "hphrases": ["H240", "H241"],
+        "tooltip": "Self-reactive substances and mixtures, Type A or B or organic peroxides, Type A or B"
+    },
+    {
+        "chemid": 208,
+        "tier1": 20,
+        "tier2": 50,
+        "tier3": 200,
+        "desc": "P6b Self -Reactive Substances and Mixtures and Organic Peroxides",
+        "hphrases": ["H242"],
+        "tooltip": "Self-reactive substances and mixtures, Type C, D, E or F or organic peroxides, Type C, D, E, or F"
+    },
+    {
+        "chemid": 209,
+        "tier1": 20,
+        "tier2": 50,
+        "tier3": 200,
+        "desc": "P7 Pyrophoric Liquids and Solids",
+        "hphrases": ["H250"],
+        "tooltip": "Pyrophoric Liquids and Solids, Category 1"
+    },
+    {
+        "chemid": 210,
+        "tier1": 20,
+        "tier2": 50,
+        "tier3": 200,
+        "desc": "P8 Oxidising Liquids and Solids",
+        "hphrases": ["H271", "H272", "H273"],
+        "tooltip": "Oxidising Liquids, Category 1, 2 or 3, or Oxidising Solids, Category 1, 2 or 3"
+    },
+    {
+        "chemid": 301,
+        "tier1": 40,
+        "tier2": 100,
+        "tier3": 500,
+        "desc": "O1 Violent aqueous reaction.",
+        "hphrases": [],
+        "tooltip": "Substances or mixtures that reacts violently with water"
+    },
+    {
+        "chemid": 302,
+        "tier1": 40,
+        "tier2": 100,
+        "tier3": 500,
+        "desc": "O2 flammable gas emission on aqueous contact",
+        "hphrases": ["H260"],
+        "tooltip": "Substances and mixtures which in contact with water emit flammable gases"
+    },
+    {
+        "chemid": 303,
+        "tier1": 20,
+        "tier2": 50,
+        "tier3": 200,
+        "desc": "O3 Toxic gas emission on aqueous contact",
+        "hphrases": [],
+        "tooltip": "Substances or mixtures that liberates toxic gas when in contact with water."
+    }
+]
+
+
 
 rules = {
   "A": [201, 202],
@@ -168,9 +325,9 @@ rules = {
   "C": [208, 209]
 }
 
-cumulativerule = {}
+aggregaterule = {}
 for group in hgroups:
-  cumulativerule[group['chemid']] = 0
+  aggregaterule[group['chemid']] = 0
 
 def ClassFinder(hphraselist, field):
   
@@ -181,7 +338,7 @@ def ClassFinder(hphraselist, field):
   possiblegroups = []
   for hphrase in hphraselist:
     for group in hgroups:
-      if hphrase in group["hphrases"]:
+      if hphrase in group["hazardPhrases"]:
         possiblegroups.append(group[field])
 
   if field == "chemid":
@@ -225,9 +382,9 @@ def RuleFinder(item):
   """
 
   if item['chemtype'] == "named":
-    for hphrase in item["hphrases"]:
+    for hphrase in item["hazardPhrases"]:
       for group in hgroups:
-        if hphrase in group["hphrases"]:
+        if hphrase in group["hazardPhrases"]:
           for rule in rules.keys():
             if group["chemid"] in rules[rule]:
               return rule
@@ -235,3 +392,5 @@ def RuleFinder(item):
     for rule in rules.keys():
       if int(item["chemid"]) in rules[rule]:
         return rule
+  else:
+    return 0

@@ -89,7 +89,20 @@ function AutusCumpletus() {
         }
       }
     }
+  } else if (($("#searchtype").val() == 2 && text.length > 1)) {
+    // CAS
+    let idlist = $("li.acli_2")
+    for (let i = 0; i < idlist.length; i++) {
+      let name = idlist[i].innerText
+      name = name.replace(/[\s\,\-]+/g, '');
+      for (let j = 0; j < name.length; j++) {
+        if (name.slice(j, j + text.length).toUpperCase() === text.toUpperCase()) {
+          $(idlist[i]).show()
+        }
+      }
+    }
   }
+
   // if no records are found
   if (!$(".acli").is(":visible") && text.length > 2) {
     show("NoRecords")
@@ -115,6 +128,9 @@ function populate(x) {
   if (x.slice(0,4) == "cas_") {
     $("#substance").attr("chemid", x.slice(4))
     $("#hiddenInputs--chemid").val(x.slice(4))
+  } else if (x.slice(0,3) == "UN_") {
+    $("#substance").attr("chemid", x.slice(3))
+    $("#hiddenInputs--chemid").val(x.slice(3))
   } else {
     $("#substance").attr("chemid", x)
     $("#hiddenInputs--chemid").val(x)
@@ -130,7 +146,7 @@ function populateListed(x) {
   $("#substance").attr("chemid", x["chemid"])
   $("#hiddenInputs--chemid").val(x["chemid"])
   $("#hiddenInputs--chemtype").val("listed")
-  $("#hiddenInputs--hphrases").val(x["hphrases"].toString())
+  $("#hiddenInputs--hphrases").val(x["hazardPhrases"].toString())
   $("#substance").val(x["recordTitle"])
   $("#substance").addClass("flash")
   $(".acli").hide()
@@ -169,8 +185,17 @@ function checkinputs() {
         $("#substance").addClass("invalid_input");
       }
       break;
-
     case "2":
+      case "0":
+        var unNumberRegex = /^[\d]{4}$/;
+        if (substance.length == 4 && new RegExp(unNumberRegex).test(substance)) {
+          substanceTest = true
+        } else {
+          $("#substance").addClass("invalid_input");
+        }
+        break;
+
+    case "3":
       if ($("#class").val() !== "") {
         substanceTest = true
       } else {
@@ -219,12 +244,12 @@ function addtoinv() {
     var substid = "substid_" + d.getDate().toString() + d.getHours() + d.getMinutes() + d.getSeconds()
     
     var chemid, name;
-    if ($("#searchtype").val() == "2") {
+    if ($("#searchtype").val() == "3") {
       chemid = $("#class").val()
       name = chemid
     } else {
       chemid = $("#hiddenInputs--chemid").val()   
-      name = $("#substance").val()   
+      name = $("#substance").val()
     }
 
     var chemtype = $("#hiddenInputs--chemtype").val();
@@ -352,7 +377,7 @@ function addtoinvPOST(newEntryObj) {
     });
 }
 
-/** searchtype = CAS/name,  */
+/** searchtype = CAS/name/UN,  */
 async function updateh(searchtype,subst) {
   loading(1)
   var x = {"searchtype": searchtype, "field": subst}

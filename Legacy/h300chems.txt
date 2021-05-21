@@ -1,0 +1,44 @@
+[
+  {
+    'substance': 'Arsenic pentoxide, arsenic (V) acid and/or salts ',
+    'hazardCategories':
+      ['Carc. 1A',
+      'Acute Tox. 3 *',
+      'Acute Tox. 3 *',
+      'Aquatic Acute 1',
+      'Aquatic Chronic 1',
+      'Acute Tox. 2 (76%)',
+      'Acute Tox. 3 (24%)',
+      'Acute Tox. 3 (100%)',
+      'Carc. 1A (100%)',
+      'Aquatic Acute 1 (100%)']
+  },
+  {
+    'substance': 'Ethyleneimine',
+    'hazardCategories':
+      ['Flam. Liq. 2',
+      'Carc. 1B',
+      'Muta. 1B',
+      'Acute Tox. 1',
+      'Acute Tox. 2 *',
+      'Acute Tox. 2 *',
+      'Skin Corr. 1B',
+      'Aquatic Chronic 2',
+      'Flam. Liq. 2 (100%)',
+      'Acute Tox. 2 (100%)']
+  },
+  {
+    'substance': 'Hydrogen fluoride',
+    'hazardCategories':
+      ['Acute Tox. 1',
+      'Acute Tox. 2 *',
+      'Acute Tox. 2 *',
+      'Skin Corr. 1A',
+      'Acute Tox. 2 (99.88%)',
+      'Acute Tox. 1 (99.88%)',
+      'Skin Corr. 1 (100%)',
+      'Eye Dam. 1 (11.34%)',
+      'Acute Tox. 2 (99.88%)',
+      'Acute toxicity (inhalation) - category 2']
+  }
+]

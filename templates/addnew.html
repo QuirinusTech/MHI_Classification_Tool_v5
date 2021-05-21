@@ -20,7 +20,8 @@
         <select name="searchtype" id="searchtype" onchange="UpdateSearchType()">
           <option value="0">CAS number</option>
           <option selected="selected" value="1">Substance</option>
-          <option value="2">Classification</option>
+          <option value="2">UN Number</option>
+          <option value="3">Classification</option>
         </select>  
       </div>
 
@@ -30,12 +31,22 @@
         <div id="substance_autocomplete_div">
           <input name="substance" onkeyup="AutusCumpletus()" type="text" id="substance" placeholder="Start typing..." autocomplete="off">
           <ul id="autocompletelist">
+
+            <!-- named substances by name -->
             {% for item in chemlist %}
-            <li class="acli_1 acli" style="display: none;" id="li_{{ item['chemid'] }}" chemclass="{{item['class']}}" chemtype="{{item['chemtype']}}" {% if item['tooltip'] %}data-toggle="tooltip" title="{{item['tooltip']}}"{% endif %} onclick="populate('{{ item.chemid }}')">{{ item.name }}</li>
+            <li class="acli_1 acli" style="display: none;" id="li_{{ item['chemid'] }}" chemclass="{{item['category']}}" chemtype="{{item['chemtype']}}" {% if item['tooltip'] %}data-toggle="tooltip" title="{{item['tooltip']}}"{% endif %} onclick="populate('{{ item.chemid }}')">{{ item.name }}</li>
             {% endfor %}
+
+            <!-- named substances by CAS -->
             {% for item in chemlist %}
             {% if item["CAS"] %}
-            <li class="acli acli_0" style="display: none;" id="li_cas_{{ item['chemid'] }}" chemclass="{{item['class']}}" chemtype="{{item['chemtype']}}" data-toggle="tooltip" title="{{ item.name }}: {{item['tooltip']}}" onclick="populate('cas_{{ item.chemid }}')">{{ item.CAS }}</li>{% endif %}
+            <li class="acli acli_0" style="display: none;" id="li_cas_{{ item['chemid'] }}" chemclass="{{item['category']}}" chemtype="{{item['chemtype']}}" {% if substance["tooltip"] %}data-toggle="tooltip" title="{{substance['tooltip']}}"{% endif %} onclick="populate('cas_{{ item.chemid }}')">{{ item.CAS }}</li>{% endif %}
+            {% endfor %}
+
+            <!-- named substances by UN Number -->
+            {% for item in chemlist %}
+            {% if item["UN"] %}
+            <li class="acli acli_2" style="display: none;" id="li_UN_{{ item['chemid'] }}" chemclass="{{item['category']}}" chemtype="{{item['chemtype']}}" {% if substance["tooltip"] %}data-toggle="tooltip" title="{{substance['tooltip']}}"{% endif %} onclick="populate('UN_{{ item.chemid }}')">{{ item.UN }}</li>{% endif %}
             {% endfor %}
             <option id="NoRecords" class="acli" style="display: none;" onclick="ListedSubstanceSearch()">No records found. Click here to search online database.</option>
             <option id="threeCharsMin" class="acli" style="display: none;">Type at least 3 characters to begin searching.</option>
@@ -51,7 +62,7 @@
           <select name="type" id="class">
             <option default hidden value="">Select...</option>
             {% for substance in listedSubstances %}
-            <option chemid="{{substance.chemid}}" data-toggle="tooltip" title="{{substance['tooltip']}}" value="{{substance.chemid}}">{{substance.class }}</option>
+            <option chemid="{{substance.chemid}}" {% if substance["tooltip"] %}data-toggle="tooltip" title="{{substance['tooltip']}}"{% endif %} value="{{substance.chemid}}">{{substance.desc }}</option>
             {% endfor %}
           </select>
         </div>

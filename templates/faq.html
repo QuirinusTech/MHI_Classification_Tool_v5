@@ -8,40 +8,47 @@
 <div class='main_content'>
   <div class="block" id="faq_block">
 
-<div class="question">
-  <h4>Where can I find the regulations?</h4>
-  <p>The Regulations are available <a href="https://www.ishecon.co.za/a-summary-of-the-new-draft-mhi-regulations/" target="_blank">here </a> <i>(Opens in new window)</i></p>
-  <br>
-</div>
-<div class="question">
-  <h4>What are the implications of the error Code "Galapagos"?</h4>
-  <p>This error message means that we couldn't find an online record of the substance you entered.</p>
-  This could be due to any number of the following reasons:
-  <ul>
-    <li>Misspelled substance name</li>
-    <li>CAS number entered incorrectly</li>
-    <li>The substance is extremely rare and/or uncommon</li>
-    <li>There are too many Isotopes to establish with reasonable certainty that we're assessing the hazard of the correct substance.</li>
-    <p>In this case, the exact results of the assessment may be somewhat inaccurate. We recommend you <a href="{{ url_for('contact')}}">contact</a> one of our engineers directly for more help with this substance.</p>
-  </ul>
-</div>
-<div class="question">
-  <h4>What is the difference between "Cumulative" and "Individual" Tier Rating?</h4>
-  <p>The first basis on which an MHI is determined to be hazardous is on the quantity of dangerous substances stored on the premises.</p>
-  <p>The Department of Shits and Giggles has detailed the specified thresholds for 35 named substances as well as categorisation for any other potentially hazardous substances.</p>
-  <p>Further classification is done according to annexure b of the regulations, which provides guidelines for grouping substances according to their classification.</p>
-  <p>In the event that no single individual substance exceeds the prescribed thresholds, the MHI tool will take the given substances' categories into account and, based on the MHI regulations, perform these sutle calculations to determine the risk based on grouping substances into one of the following three groups:</p>
-  <ol>
-    <li>Group A: Toxic and Very Toxic</li>
-    <li>Group B: Oxidising, Explosive, Flammable, Highly Flammable and Extremely Flammable</li>
-    <li>Group C: Toxic or Very Toxic to Aquatic Organisms</li>
-  </ol>
-</div>
-<div class="question">
-  <h4>Polychlorodibenzofurans / polychlorodibenzodioxins</h4>
-  {% include 'note7.html' %}
-</div>
-   
+    <div class="question">
+      <h4>Where can I find the regulations?</h4>
+      <p>The Regulations are available <a href="https://www.ishecon.co.za/a-summary-of-the-new-draft-mhi-regulations/" target="_blank">here</a><i>(Opens in new window)</i></p>
+      <br>
+    </div>
+    <div class="question">
+      <h4>What are the implications of the error Code "Galapagos"?</h4>
+      <p>This error message means that we couldn't find an online record of the substance you entered.</p>
+      This could be due to any number of the following reasons:
+      <ul>
+        <li>Misspelled substance name</li>
+        <li>CAS number entered incorrectly</li>
+        <li>The substance is extremely rare and/or uncommon</li>
+        <li>There are too many Isotopes to establish with reasonable certainty that we're assessing the hazard of the correct substance.</li>
+        <p>In this case, the exact results of the assessment may be somewhat inaccurate. We recommend you <a href="{{ url_for('contact')}}">contact</a> one of our engineers directly for more help with this substance.</p>
+      </ul>
+    </div>
+    <div class="question">
+      <h4>What is the difference between "Aggregate" and "Individual" Tier classification?</h4>
+      <p>The first basis on which an MHI is determined to be hazardous is on the quantity of dangerous substances stored on the premises.</p>
+      <p>The Department of Employment and Labour has detailed the specified thresholds for a specific named substances as well as categorisation for any other potentially hazardous substances.</p>
+      <p>Further classification is done according to Annexure B of the regulations, which provides guidelines for grouping substances according to their classification.</p>
+      <p>In addition to calculating whether any individual substance exceeds the prescribed thresholds, the MHI tool will take the given substances' categories into account and, based on the MHI regulations, perform these sutle calculations to determine the risk based on grouping substances into one of the following three groups:</p>
+      <ol>
+        <li>Group A: Toxic and Very Toxic</li>
+        <li>Group B: Oxidising, Explosive, Flammable, Highly Flammable and Extremely Flammable</li>
+        <li>Group C: Toxic or Very Toxic to Aquatic Organisms</li>
+      </ol>
+      <p>This second calculation is known as the "Aggregate" classification.</p>
+    </div>
+    <div class="question">
+      <h4>Polychlorodibenzofurans / polychlorodibenzodioxins</h4>
+      {% include 'note7.html' %}
+    </div>
+    <div class="question">
+      <h4>How we process data on this site</h4>
+      <p>no tracking [...]</p>
+      <p>We check how many people visit the site [...]</p>
+      <p>We don't record any personal details [...]</p>
+      <p>When you contact us, we will only the details you provide in the contact us form and a copy the information you entered on the site.</p>
+    </div>   
 
   </div>
 </div>

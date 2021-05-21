@@ -1,0 +1,217 @@
+{
+  "Record": {
+    "RecordType": "CID",
+    "RecordNumber": 14771,
+    "RecordTitle": "Arsenic pentoxide",
+    "Section": [
+      {
+        "TOCHeading": "Safety and Hazards",
+        "Description": "Safety and hazards information, properties, management techniques, reactivities and incompatibilities, first aid treatments, and more. For toxicity and related information, please visit Toxicity section.",
+        "Section": [
+          {
+            "TOCHeading": "Hazards Identification",
+            "Description": "Hazards Identification includes all hazards regarding the chemical; required label elements",
+            "Section": [
+              {
+                "TOCHeading": "Hazard Classes and Categories",
+                "Description": "The Hazard Classes and Categories are aligned with GHS (Globally Harmonized System of Classification and Labelling of Chemicals) hazard statement codes. More info can be found at the PubChem GHS summary page. The percentage data in the parenthesis from ECHA indicates that the hazard classes and categories information are consolidated from multiple companies, see the detailed explanation from the above GHS classification section.",
+                "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/",
+                "DisplayControls": {
+                  "ShowAtMost": 2
+                },
+                "Information": [
+                  {
+                    "ReferenceNumber": 10,
+                    "Value": {
+                      "StringWithMarkup": [
+                        {
+                          "String": "Carc. 1A"
+                        },
+                        {
+                          "String": "Acute Tox. 3 *"
+                        },
+                        {
+                          "String": "Acute Tox. 3 *"
+                        },
+                        {
+                          "String": "Aquatic Acute 1"
+                        },
+                        {
+                          "String": "Aquatic Chronic 1"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "ReferenceNumber": 11,
+                    "Value": {
+                      "StringWithMarkup": [
+                        {
+                          "String": "Acute Tox. 2 (76%)"
+                        },
+                        {
+                          "String": "Acute Tox. 3 (24%)"
+                        },
+                        {
+                          "String": "Acute Tox. 3 (100%)"
+                        },
+                        {
+                          "String": "Carc. 1A (100%)"
+                        },
+                        {
+                          "String": "Aquatic Acute 1 (100%)"
+                        },
+                        {
+                          "String": "Aquatic Chronic 1 (100%)"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "ReferenceNumber": 16,
+                    "Value": {
+                      "StringWithMarkup": [
+                        {
+                          "String": "Acute toxicity - category 3"
+                        },
+                        {
+                          "String": "Acute toxicity - category 4"
+                        },
+                        {
+                          "String": "Carcinogenicity - category 1A"
+                        },
+                        {
+                          "String": "Germ cell mutagenicity - category 2"
+                        },
+                        {
+                          "String": "Specific target organ toxicity (repeated exposure) - category 2"
+                        },
+                        {
+                          "String": "Hazardous to the aquatic environment (acute) - category 1"
+                        },
+                        {
+                          "String": "Hazardous to the aquatic environment (chronic) - category 1"
+                        },
+                        {
+                          "String": "Skin corrosion - category 1"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "ReferenceNumber": 19,
+                    "Value": {
+                      "StringWithMarkup": [
+                        {
+                          "String": "Acute toxicity (Dermal) - Category 2"
+                        },
+                        {
+                          "String": "Respiratory sensitization - Category 2"
+                        },
+                        {
+                          "String": "Reproductive toxicity - Category 1A"
+                        },
+                        {
+                          "String": "Specific target organ toxicity - Single exposure - Category 2"
+                        },
+                        {
+                          "String": "Specific target organ toxicity - Repeated exposure - Category 1 (digestive system, circulatory system, nervous system, blood system, respiratory system, skin, kidney, liver)"
+                        },
+                        {
+                          "String": "Aspiration hazard - Category 1 (digestive system, circulatory system, nervous system, kidney, liver, blood system, respiratory system, skin)"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "ReferenceNumber": 20,
+                    "Value": {
+                      "StringWithMarkup": [
+                        {
+                          "String": "Acute toxicity (Dermal) - Category 2"
+                        },
+                        {
+                          "String": "Reproductive toxicity - Category 1A"
+                        },
+                        {
+                          "String": "Specific target organ toxicity - Repeated exposure - Category 1 (gastrointestinal tract, circulatory system, nervous system, blood system, respiratory system, skin, kidney, bone marrow, liver)"
+                        },
+                        {
+                          "String": "Aspiration hazard - Category 1 (respiratory system, skin, liver, cardiovascular system)"
+                        },
+                        {
+                          "String": "Hazardous to the aquatic environment (Long-term) - Category 3"
+                        },
+                        {
+                          "String": "Hazardous to the ozone layer - Category 3",
+                          "Markup": [
+                            {
+                              "Start": 17,
+                              "Length": 5,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/compound/ozone",
+                              "Type": "PubChem Internal Link",
+                              "Extra": "CID-24823"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "Reference": [
+      {
+        "ReferenceNumber": 10,
+        "SourceName": "EU REGULATION (EC) No 1272/2008",
+        "SourceID": "033-004-00-6",
+        "Name": "diarsenic pentaoxide;arsenic pentoxide;arsenic oxide",
+        "Description": "Regulation (EC) No 1272/2008 of the European Parliament and of the Council of 16 December 2008 on classification, labelling and packaging of substances and mixtures.",
+        "URL": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32008R1272",
+        "ANID": 392401
+      },
+      {
+        "ReferenceNumber": 11,
+        "SourceName": "European Chemicals Agency (ECHA)",
+        "SourceID": "99826",
+        "Name": "Diarsenic pentaoxide",
+        "Description": "The information provided here is aggregated from the \"Notified classification and labelling\" from ECHA's C&L Inventory. Read more: https://echa.europa.eu/information-on-chemicals/cl-inventory-database",
+        "URL": "https://echa.europa.eu/information-on-chemicals/cl-inventory-database/-/discli/details/99826",
+        "LicenseNote": "Use of the information, documents and data from the ECHA website is subject to the terms and conditions of this Legal Notice, and subject to other binding limitations provided for under applicable law, the information, documents and data made available on the ECHA website may be reproduced, distributed and/or used, totally or in part, for non-commercial purposes provided that ECHA is acknowledged as the source: \"Source: European Chemicals Agency, http://echa.europa.eu/\". Such acknowledgement must be included in each copy of the material. ECHA permits and encourages organisations and individuals to create links to the ECHA website under the following cumulative conditions: Links can only be made to webpages that provide a link to the Legal Notice page.",
+        "LicenseURL": "https://echa.europa.eu/web/guest/legal-notice",
+        "ANID": 1880469
+      },
+      {
+        "ReferenceNumber": 16,
+        "SourceName": "Hazardous Chemical Information System (HCIS), Safe Work Australia",
+        "SourceID": "298",
+        "Name": "Arsenic oxide (As2O5)",
+        "Description": "The Hazardous Chemical Information System (HCIS) at the Safe Work Australia is a database of chemical classifications and workplace exposure standards. It allows users to find information on chemicals that have been classified in accordance with the GHS or which have an Australian Workplace Exposure Standard.",
+        "URL": "http://hcis.safeworkaustralia.gov.au/HazardousChemical/Details?chemicalID=298",
+        "ANID": 2279087
+      },
+      {
+        "ReferenceNumber": 19,
+        "SourceName": "NITE-CMC",
+        "SourceID": "20A2344",
+        "Name": "Diarsenic pentaoxide - FY2008",
+        "Description": "The chemical classification in this section was conducted by the Chemical Management Center (CMC) of Japan National Institute of Technology and Evaluation (NITE) in accordance with GHS Classification Guidance for the Japanese Government, and is intended to provide a reference for preparing GHS labelling and SDS for users.",
+        "URL": "https://www.nite.go.jp/chem/english/ghs/08-mhlw-2009e.html",
+        "ANID": 2265309
+      },
+      {
+        "ReferenceNumber": 20,
+        "SourceName": "NITE-CMC",
+        "SourceID": "313",
+        "Name": "Diarsenic pentaoxide - FY2006",
+        "Description": "The chemical classification in this section was conducted by the Chemical Management Center (CMC) of Japan National Institute of Technology and Evaluation (NITE) in accordance with GHS Classification Guidance for the Japanese Government, and is intended to provide a reference for preparing GHS labelling and SDS for users.",
+        "URL": "https://www.nite.go.jp/chem/english/ghs/06-imcg-0306e.html",
+        "ANID": 8787671
+      }
+    ]
+  }
+}

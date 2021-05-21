@@ -33,7 +33,7 @@ button{
 /* Setting up some base styling*/
 
 html, body {
-  font-family: 'Montserrat',Helvetica,Arial,Lucida,sans-serif;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 16px;
   color: #333;
   box-sizing: border-box;
@@ -96,7 +96,7 @@ footer .quirinuslogo{
 }
 
 input, select, option{
-  font-family: 'Montserrat',Helvetica,Arial,Lucida,sans-serif;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 @media only screen and (min-width: 426px) {
@@ -132,6 +132,8 @@ input, select, option{
 .flexblock_70_30 {
   display: flex;
   flex-direction: row;
+  max-width: 1080px;
+  margin-left: 200px;
 }
 
 @media only screen and (min-width: 426px) {
@@ -493,6 +495,11 @@ transform-origin: left;
   top: 3px;
 }
 
+
+.warning {
+  font-weight: bold;
+}
+
 /* tables */
 
 table {
@@ -850,6 +857,7 @@ tbody tr td{
 }*/
 .detailsView_body_column_body_footnote{
   margin-bottom: 10px;
+  color: white;
 }
 
 .detailsView_body_column_body_footnote h5{
@@ -867,26 +875,43 @@ tbody tr td{
 }
 
 .results_div--right_column {
+  margin-left: 50px;
   width: 30%;
   display: flex;
   flex-direction: column;
 }
 
-.results_div--right_column--top_rating {
-  height: 30%;
+h1.Classifications {
+  align-self: center;
+  margin: 30px;
+}
+
+.results_div--right_column--top_Classification {
+  height: 20%;
   justify-content: center;
   align-content: center;
   display: flex;
   flex-direction: column;
-  border: 13px solid #007D3B;
+/*  border: 13px solid #007D3B; */
   border-radius: 25px;
   padding: 10%;
   margin: 10px;
   justify-content: space-around;
 }
 
-.results_div--right_column--final_rating {
-  height: 30%;
+.results_div--right_column--top_Classification > div {
+  border: 4px solid green;
+  border-radius: 20px;
+  padding: 10px;
+}
+
+.results_div--right_column--top_Classification > div > h1, .results_div--right_column--top_Classification > div > h2 {
+  justify-content: center;
+  display: flex;
+}
+
+.results_div--right_column--final_Classification {
+  height: 20%;
   justify-content: center;
   align-content: center;
   display: flex;
@@ -897,13 +922,12 @@ tbody tr td{
   margin: 10px;
 }
 
-.results_div--right_column--final_rating > h1 {
+.results_div--right_column--final_Classification > h1, .results_div--right_column--final_Classification > h2 {
   align-self: center;
-  padding: 10%;
   margin: 10px;
 }
 
-.results_div--right_column--final_rating > h1 {
+.results_div--right_column--final_Classification > h1 {
   font-size: 10rem;
 }
 
@@ -1009,7 +1033,40 @@ tbody tr td{
 
 
 
+/* -------------------------------------------- */
+/* -----------------------FAQ------------------ */
+/* -------------------------------------------- */
 
+.question{
+  margin-bottom: 36px;
+}
+
+.question > h4 {
+  margin-bottom: 1em;
+}
+
+.question > p {
+  margin-bottom: 1em;
+}
+
+.question > p:last-of-type {
+  margin-bottom: 0;
+}
+
+.question > ul{
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+.question > ol li{ 
+  margin-bottom: 0.5em;
+}
+
+.question img{
+  margin-top: 10px;
+  width: 100%;
+  max-width: 600px;
+}
 
 
 

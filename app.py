@@ -1,6 +1,7 @@
 from flask import Flask, flash, jsonify, request, flash, redirect, render_template, url_for, send_from_directory, session, g, abort
 import json
 import hyginus
+from finallist import namedSubstances
 import requests
 from hphrases import ClassFinder
 from random import randint
@@ -15,7 +16,7 @@ def welcome():
 
 @app.route('/inventory')
 def inventory():
-  return render_template("inventory.html", inventory=inv, chemlist=hyginus.chemlist, listedSubstances=hyginus.listedSubstances)
+  return render_template("inventory.html", inventory=inv, chemlist=finallist.namedSubstances, listedSubstances=hphrases.listedsubstances)
 
 """@app.route('/list')
 def listey():
@@ -29,13 +30,13 @@ def addtoinv():
     
     #named substance
     if newEntry["chemtype"] == "named":
-      for chem in hyginus.chemlist:
+      for chem in finallist.namedSubstances:
         if int(newEntry["chemid"]) == int(chem["chemid"]):
           result = chem
           print("found named substance in database: ")
           print(chem)
 
-          result["class"] = ClassFinder(chem["hphrases"], "desc")
+          result["class"] = ClassFinder(chem["hazardPhrases"], "desc")
           result["id"] = newEntry["id"]
           result["qty"] = newEntry["qty"]
           result["indexpos"] = len(inv)+1
@@ -44,20 +45,20 @@ def addtoinv():
     else:
       result = newEntry
       if newEntry["name"] == newEntry["chemid"]:
-        for listedsub in hyginus.listedSubstances:
-          if int(result["chemid"]) == int(listedsub["chemid"]):
-            result["class"] = listedsub["class"]
-            result["name"] = listedsub["class"] + " substance"
+        for listedSubstance in hphrases.listedsubstances:
+          if int(result["chemid"]) == int(listedSubstance["chemid"]):
+            result["class"] = listedSubstance["class"]
+            result["name"] = listedSubstance["class"] + " substance"
       else:
-        if len(result["hphrases"]) > 0 and result["hphrases"] != "" and result["hphrases"] != []:
-          if isinstance(result["hphrases"],list):
-            hphrasesarr = newEntry["hphrases"]
+        if len(result["hazardPhrases"]) > 0 and result["hazardPhrases"] != "" and result["hazardPhrases"] != []:
+          if isinstance(result["hazardPhrases"],list):
+            hPhraseArray = newEntry["hazardPhrases"]
           else:
-            hphrasestr = json.dumps(newEntry["hphrases"])
-            hphrasesarr = hyginus.stringsearch(hphrasestr,"H")
-            result["hphrases"] = hphrasesarr
-          result["class"] = ClassFinder(hphrasesarr,"desc")
-          result["chemid"] = ClassFinder(hphrasesarr,"chemid")
+            hphrasestr = json.dumps(newEntry["hazardPhrases"])
+            hPhraseArray = hyginus.stringsearch(hphrasestr,"H")
+            result["hazardPhrases"] = hPhraseArray
+          result["class"] = ClassFinder(hPhraseArray,"desc")
+          result["chemid"] = ClassFinder(hPhraseArray,"chemid")
       result["indexpos"] = len(inv)+1
     print("result", result)
     inv.append(result)
@@ -88,7 +89,11 @@ def update():
 def results():
   if len(inv) > 0:
     results = hyginus.assessment(inv)
-    return render_template('results.html', results=results, inv=inv)
+    recommendation = results.finalTier
+    results.indTier = convertNumberToWord(results.indTier)
+    results.finalTier = convertNumberToWord(results.finalTier)
+    results.aggregateTier = convertNumberToWord(results.aggregateTier)
+    return render_template('results.html', results = results, inv = hyginus.convertNumberToWord(inv), recommendation=recommendation)
   else:
     return redirect(url_for("inventory"))
 
@@ -115,20 +120,13 @@ def updatehphrases():
   entry = json.loads(request.form['substance'])
   print(entry)
   # check if substance not named substances database
-  if entry["searchtype"] == "CAS":
-    for chem in hyginus.MainDB:
-      if entry["field"] == chem["CAS"]:
-        classvar = ClassFinder([chem["hphrases"]],"chemid")
-        findings = {"found": True, "foundresult": "named", "chemclass": classvar, "retry": False, "recordTitle": chem["name"], "CAS": chem["CAS"], "hphrases": chem["hphrases"], "chemtype": "named"}
-        print('Substance found in database under "named substances": ', findings)
-        return json.dumps(findings)
-  elif entry["searchtype"] == "name":
-    for chem in hyginus.MainDB:
-      if entry["field"] == chem["name"]:
-        classvar = ClassFinder([chem["hphrases"]],"chemid")
-        findings = {"found": True, "foundresult": "named", "chemclass": classvar, "retry": False, "recordTitle": chem["name"], "CAS": chem["CAS"], "hphrases": chem["hphrases"], "chemtype": "named"}
-        print('Substance found in database under "named substances": ', findings)
-        return json.dumps(findings)
+  searchtype = entry["searchtype"]
+  for chem in finallist.namedSubstances:
+    if entry["field"] == chem[searchtype]:
+      classvar = ClassFinder([chem["hazardPhrases"]],"chemid")
+      findings = {"found": True, "foundresult": "named", "chemclass": classvar, "retry": False, "recordTitle": chem["name"], "CAS": chem["CAS"], "hphrases": chem["hazardPhrases"], "UN": chem["UN"], "chemtype": "named"}
+      print('Substance found in database under "named substances": ', findings)
+      return json.dumps(findings)
 
   # no results from checking existing database
   print("Substance not in named substances database. Continue external calls.")
@@ -141,11 +139,18 @@ def updatehphrases():
     cas = entry["field"]
     query = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/substance/xref/rn/{cas}/json"
 
+  #search by UN number
+  elif entry["searchtype"] == "UN":
+    print('Searching by UN Number')
+    un = entry["field"]
+    query = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/substance/name/UN%20{substance}/json"
+
   # search by substance name
   else:
     print('Invalid CAS. Searching by substance name')
     substance = entry["field"]
     query = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/substance/name/{substance}/json"
+
 
   response = requests.get(query)
   queryAnswer = json.loads(response.content)
@@ -205,15 +210,17 @@ def updatehphrases():
 @app.route("/testinventory")
 def testinventory():
   while len(inv) < 5:
-    randomnumber = randint(0,35)
-    newrandomchemid = hyginus.bigDatabase[randomnumber][0]
-    for chem in hyginus.MainDB:
-      if newrandomchemid == chem["chemid"] and chem["hphrases"] != []:
+    namedSubstancesLength = len(finallist.namedSubstances) - 1
+    randomnumber = randint(0,namedSubstancesLength)
+    newrandomchemid = finallist.namedSubstances[randomnumber]["chemid"]
+    for chem in finallist.namedSubstances:
+      if newrandomchemid == chem["chemid"] and chem["hazardPhrases"] != []:
         result = chem
         print(result)
-        result["class"] = ClassFinder(chem["hphrases"], "desc")
+        result["class"] = ClassFinder(chem["hazardPhrases"], "desc")
         result["id"] = "test_id_" + str(randint(0,10000))
-        result["qty"] = randint(0,1000)
+        maxqty = chem["tier3"] * 1.5
+        result["qty"] = randint(0,maxqty)
         result["indexpos"] = len(inv)+1
         inv.append(result)
-  return render_template("inventory.html", inventory=inv, chemlist=hyginus.chemlist, listedSubstances=hyginus.listedSubstances) 
+  return render_template("inventory.html", inventory=inv, chemlist=finallist.namedSubstances, listedSubstances=hphrases.listedsubstances)
