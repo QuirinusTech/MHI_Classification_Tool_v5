@@ -127,7 +127,11 @@ input, select, option{
 .main_content {
   flex: 1;
   padding: 15px;
+}
 
+.flexblock_70_30 {
+  display: flex;
+  flex-direction: row;
 }
 
 @media only screen and (min-width: 426px) {
@@ -722,10 +726,10 @@ tbody tr td{
   margin-top: 30px;
   margin-bottom: 30px;
 }
-
+/*
 .detailsView{
   margin-top: 20px;
-}
+}*/
 
 .detailsView_header{
   display: flex;
@@ -748,24 +752,49 @@ tbody tr td{
   flex-direction: column;
 }
 
-@media only screen and (min-width: 769px) {
+.inventory--item {
+  text-align: left;
+  border-bottom: 1px solid #EEEEEE;
+  padding-bottom: 15px;
+  padding-top: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.inventory--item--td-left {
+  flex: 4;
+}
+
+.inventory--item--td-centre {
+  flex: 1;
+}
+
+.inventory--item--td-right {
+  flex: 1;
+  justify-content: flex-end;
+  display: flex;
+}
+
+
+/**@media only screen and (min-width: 769px) {
   .detailsView_body{
     flex-direction: row;
   }
-}
+}*/
 
 .detailsView_body_column{
   width: 100%;
   margin-bottom: 20px;
 }
-
+/*
 @media only screen and (min-width: 769px) {
   .detailsView_body_column{
     width: 50%;
     max-width: 500px;
     margin-right: 50px;
   }
-}
+}*/
 
 .detailsView_body_column_header{
   display: flex;
@@ -789,6 +818,7 @@ tbody tr td{
 .detailsView_body_column_body_subheader{
   display: flex;
   flex-direction: row;  
+  justify-content: space-between;
 }
 
 .detailsView_body_column_body_subheader p{
@@ -797,26 +827,27 @@ tbody tr td{
   border-top: 1px solid #EEEEEE;
   padding: 0.5em 0 0.5em 0;
 }
-
+/*
 .detailsView_body_column_body_subheader p:nth-child(odd){
   flex: 1 1 50%;
-}
+}*/
 
 .detailsView_body_column_body_content{
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   margin-bottom: 10px;
+  justify-content: space-between;
 }
 
 .detailsView_body_column_body_content p{
   border-bottom: 1px solid #EEEEEE;
   padding-bottom: 0.5em;
 }
-
+/*
 .detailsView_body_column_body_content p:nth-child(odd){
   flex: 1 1 50%;
-}
+}*/
 .detailsView_body_column_body_footnote{
   margin-bottom: 10px;
 }
@@ -825,11 +856,62 @@ tbody tr td{
   margin-bottom: 0.5em
 }
 
+.detailsView_body_column_body_content > div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.results_div--left_column {
+  width: 70%;
+}
+
+.results_div--right_column {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+}
+
+.results_div--right_column--top_rating {
+  height: 30%;
+  justify-content: center;
+  align-content: center;
+  display: flex;
+  flex-direction: column;
+  border: 13px solid #007D3B;
+  border-radius: 25px;
+  padding: 10%;
+  margin: 10px;
+  justify-content: space-around;
+}
+
+.results_div--right_column--final_rating {
+  height: 30%;
+  justify-content: center;
+  align-content: center;
+  display: flex;
+  flex-direction: column;
+  border: 13px solid #007D3B;
+  border-radius: 25px;
+  padding: 10%;
+  margin: 10px;
+}
+
+.results_div--right_column--final_rating > h1 {
+  align-self: center;
+  padding: 10%;
+  margin: 10px;
+}
+
+.results_div--right_column--final_rating > h1 {
+  font-size: 10rem;
+}
+
 /* pop up */
-#substance_1_autocomplete_div{
+#substance_autocomplete_div{
   position: relative;
 }
-#substance_1_autocomplete_div > ul {
+#substance_autocomplete_div > ul {
   list-style: none;
   width: fit-content;
   position: absolute;
@@ -841,7 +923,7 @@ tbody tr td{
   z-index: 99;
 }
 
-#substance_1_autocomplete_div > ul > li {
+#substance_autocomplete_div > ul > li {
   background: #ffffff;
   width: 100%;
   height: 42px;
@@ -854,11 +936,11 @@ tbody tr td{
   margin-bottom: 2px;
 }
 
-#substance_1_autocomplete_div > ul > li p{
+#substance_autocomplete_div > ul > li p{
   pointer-events: none;
 }
 
-#substance_1_autocomplete_div > ul > li:hover {
+#substance_autocomplete_div > ul > li:hover {
  background-color: #d9d9d9;
 }
 

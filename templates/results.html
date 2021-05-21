@@ -1,46 +1,56 @@
 {% extends "layout.html" %}
 
 {% block body %}
-<script>currentpage="results"</script>
+<script>
+  currentpage = "results"
+</script>
 <div class="header">
   <h1>Results</h1>
 </div>
 <div class='main_content'>
-  <div id="results_div" class="results block block--text block--wide">
-    <div id="final_tier_row" class="results_header">
-      <h2>Establishment tier: {{ results.finaltier }}</h2>
+  <div class="flexblock_70_30">
+    <div class="results_div--left_column">
+      <div id="results_div" class="results block block--text block--wide">
+        <div id="detailed_view_div">
+          {% include 'detailed.html' %}
+        </div>
+        <div class="results_recommended">
+          <h3>Recommended Action</h3>
+          {% include 'recommendation.html' %}
+          <br />
+        </div>
+        <div class="button_bar">
+          <button class="button button--primary" onclick="NewStart()">Start Over</button>
+          <button class="button button--primary" onclick="Redirect('/inventory')">Edit Inventory</button>
+          <br />
+        </div>
+        <div class="results_cta">
+          <p>Do the sales pitch here, after taking them through the journey in the end the real point is to get them to
+            click on this anchor link - <a onclick="Redirect('/contact')">Contact Us</a></p>
+        </div>
+        <small>
+          Note - any classification provided is for information purposes only and should not be interpreted as a formal
+          classification study.
+        </small>
+      </div>
     </div>
-    <div class="results_overview">
-      <h3>Overview</h3>
-      <p>
-        Individual Tier: {{ results.indtier }} 
-      </p>
-      <p>
-      <br/>
-      Cumulative Tier: {{ results.cumultier }} </p>
-      </p>
-      <br>
-      <p>Click <a onclick="show('detailed_view_div')">here</a> for a detailed analysis.</p>
+    <div class="results_div--right_column">
+      <h1 class="ratings">Ratings</h1>
+      <div class="results_div--right_column--top_rating">
+
+        <div>
+          <h2>Individual:</h2>
+          <h1>{{results.indtier}}</h1>
+        </div>
+        <div>
+          <h2>Cumulative:</h2>
+          <h1>{{results.cumultier}}</h1>
+        </div>
+      </div>
+      <div class="results_div--right_column--final_rating">
+        <h2>Final Installation:</h2>
+        <h1>{{results.finaltier}}</h1>
+      </div>
     </div>
-    <div id="detailed_view_div" style="display: none;">
-      {% include 'detailed.html' %}
-    </div>
-    <div class="results_recommended">
-      <h3>Recommended Action</h3>
-      {% include 'recommendation.html' %}
-      <br/>
-    </div>
-    <div class="button_bar">
-      <button class="button button--primary" onclick="NewStart()">Start Over</button>
-      <button class="button button--primary" onclick="Redirect('/inventory')">Edit Inventory</button>
-      <br/>
-    </div>
-    <div class="results_cta">
-      <p>Do the sales pitch here, after taking them through the journey in the end the real point is to get them to click on this anchor link - <a onclick="Redirect('/contact')">Contact Us</a></p>      
-    </div>    
-    <small>
-      Note - any classification provided is for information purposes only and should not be interpreted as a formal classification study.
-    </small>
   </div>
-</div>
-{% endblock %}
+  {% endblock %}

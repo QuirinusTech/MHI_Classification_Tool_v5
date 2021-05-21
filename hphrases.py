@@ -178,7 +178,6 @@ def ClassFinder(hphraselist, field):
     using an array of hphrases, finds the first match from the array in the hphrases group where the hphrase is found.
     return value is determined by the field argument, which can be either 'desc' (description) or 'chemid' (an id used to find other info on this substance in the database)
   """
-
   possiblegroups = []
   for hphrase in hphraselist:
     for group in hgroups:
@@ -225,14 +224,14 @@ def RuleFinder(item):
     item must have the following fields: type, chemid, hphrases
   """
 
-  if item['type'] == "named":
+  if item['chemtype'] == "named":
     for hphrase in item["hphrases"]:
       for group in hgroups:
         if hphrase in group["hphrases"]:
           for rule in rules.keys():
             if group["chemid"] in rules[rule]:
               return rule
-  elif item['type'] == "listed":
+  elif item['chemtype'] == "listed":
     for rule in rules.keys():
-      if item["chemid"] in rules[rule]:
+      if int(item["chemid"]) in rules[rule]:
         return rule
