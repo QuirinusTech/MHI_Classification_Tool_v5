@@ -4,13 +4,18 @@ function hideaddnew() {
   document.getElementById('addnewbox').style.display = 'none'
 }
 
+
 function UpdateSearchType(x) {
-  $("#galapagosMessage").hide()
+  $(".error").hide()
+  $(".error").removeClass("flash")
+  $("#addinfo_row").hide()
+
   clear()
   RemoveEmptyAcli()
-  console.log(x)
   if (typeof x === 'undefined') {
     x = $("#searchtype").val()
+  } else {
+    $("#searchtype").val(x)
   }
   x = parseInt(x)
   console.log(x)
@@ -20,19 +25,22 @@ function UpdateSearchType(x) {
       $("#userinputfield").html("CAS Number:")
       show("addnew--usertextinput")
       hide("addnew--classselect")
-      $("#searchtype").val(x)
+      $("#listedSubstancesInfoRow").hide()
       break;
     case 1:
       $("#userinputfield").html("Substance name:")
       show("addnew--usertextinput")
       hide("addnew--classselect")
-      $("#searchtype").val(x)
       break;
     case 2:
+      $("#userinputfield").html("UN Number:")
+      show("addnew--usertextinput")
+      hide("addnew--classselect")
+      break;
+    case 3:
       hide("addnew--usertextinput")
       show("addnew--classselect")
       $("#hiddenInputs--chemtype").val("listed")
-      $("#searchtype").val(x)
       break;
     default:
       console.log("case default")
@@ -45,7 +53,9 @@ function UpdateSearchType(x) {
 function AutusCumpletus() {
 
   RemoveEmptyAcli()
-
+  $(".error").hide()
+  $(".error").removeClass("flash")
+  $("#addinfo_row").hide()
 
   let text = $("#substance").val()
   text = text.replace(/[\s\,\-]+/g, '');
@@ -106,11 +116,13 @@ function AutusCumpletus() {
   // if no records are found
   if (!$(".acli").is(":visible") && text.length > 2) {
     show("NoRecords")
+    $("#NoRecords").addClass("norecords")
   }
 
 }
 
 function RemoveEmptyAcli() {
+  $("#NoRecords").removeClass("norecords")
   $(".acli").hide()
 }
 
@@ -124,6 +136,8 @@ function populate(x) {
   }
   $("#substance").val(text);
   $("#substance").addClass("flash")  
+
+  $("#hiddenInputs--Category").val($(tempvar).attr("chemclass"))
   
   if (x.slice(0,4) == "cas_") {
     $("#substance").attr("chemid", x.slice(4))
@@ -135,6 +149,26 @@ function populate(x) {
     $("#substance").attr("chemid", x)
     $("#hiddenInputs--chemid").val(x)
   }
+  if ($(tempvar).attr("flammable")=="True") {
+    $("#flammableLiquidWarning").show()
+    $("#flammableLiquidWarning").addClass("flash")
+  }
+
+  let title = $(tempvar).attr("title")
+  console.log(title)
+  let y = $("#hiddenInputs--chemid").val()
+  if (y == "390010208290") {
+    show('note7table')
+    $("#addinfo_row").hide()
+  } else if (title !== undefined) {
+    $("#addinfo_row").show()
+    $("#hiddenInputs--additionalInfo").html(title)
+  } else if (title === undefined) {
+    $("#addinfo_row").hide()
+  } else {
+    $("#addinfo_row").hide()
+  }
+
   $(".acli").hide()
   $("#qty").focus()
 }
@@ -144,9 +178,16 @@ function populateListed(x) {
   UpdateSearchType(1)
   $("#substance").attr("chemtype", "listed")
   $("#substance").attr("chemid", x["chemid"])
+  $("#listedSubstancesInfoRow").show()
   $("#hiddenInputs--chemid").val(x["chemid"])
   $("#hiddenInputs--chemtype").val("listed")
-  $("#hiddenInputs--hphrases").val(x["hazardPhrases"].toString())
+  $("#hiddenInputs--Category").val(x["category"])
+  let hphrasesstring = ""
+  x["hazardPhrases"].forEach(element => {
+    hphrasesstring = hphrasesstring + element + ", "
+  });
+  hphrasesstring = hphrasesstring.slice(0, -2)
+  $("#hiddenInputs--hphrases").val(hphrasesstring)
   $("#substance").val(x["recordTitle"])
   $("#substance").addClass("flash")
   $(".acli").hide()
@@ -178,7 +219,7 @@ function checkinputs() {
 
     case "1":
       // test substance
-      var letterNumberDashSpace = /^[0-9a-zA-Z\-\s\/\\\(\)]+$/;
+      var letterNumberDashSpace = /^[0-9a-zA-Z,\-\s\/\\\(\)]+$/;
       if (substance.length > 2 && new RegExp(letterNumberDashSpace).test(substance)) {
         substanceTest = true
       } else {
@@ -223,6 +264,7 @@ function checkinputs() {
 
 /** clears the input fields */
 function clear() {
+  $(".acli").hide()
   $("#substance").val("");
   $("#qty").val("")
   $("#class").val("")
@@ -234,10 +276,12 @@ function clear() {
 
 /** using the input fields, adds a substance to the inventory */
 function addtoinv() {
-
   if (checkinputs() === false) {
     alert("Please check that you've entered valid information into the fields above.")
   } else {
+    $(".error").hide()
+    $(".error").removeClass("flash")
+    $("#addinfo_row").hide()
     loading(1)
 
     var d = new Date()
@@ -245,7 +289,7 @@ function addtoinv() {
     
     var chemid, name;
     if ($("#searchtype").val() == "3") {
-      chemid = $("#class").val()
+      chemid = $("#category").val()
       name = chemid
     } else {
       chemid = $("#hiddenInputs--chemid").val()   
@@ -263,10 +307,11 @@ function addtoinv() {
       "chemid": chemid,
       "chemtype": chemtype,
       "qty": $("#qty").val(),
-      "hphrases": hphrases,
+      "hazardPhrases": hphrases,
       "name": name
     }
-
+    $("#listedSubstancesInfoRow").hide()
+    
     addtoinvPOST(newEntryObj)
   }
 }
@@ -390,9 +435,10 @@ async function updateh(searchtype,subst) {
         populateListed(data)
       } else {
         // couldn't find anything with the given info
-        UpdateSearchType(2)
+        UpdateSearchType(3)
         loading(0)
         $("#galapagosMessage").slideDown()
+        $("#galapagosMessage").addClass('flash')
       }
     });
 }

@@ -46,44 +46,75 @@
             {% for sub in results.usedListedSubstances.keys() %}
             <tr class="inventory--item">
               <td class="inventory--item--td-left">            
-                {% if sub == "A" %}
+                {% if sub == "H" %}
                 <table>
                   <tr>
                     <td>
-                      Group A 
+                      Group H: Toxic Substances
                     </td>
                   </tr>
+                  {% if results.usedListedSubstances[sub] > 0 %}
                   <tr>
                     <td>
-                      Toxic and Very Toxic
+                      Substances applicable to this classification:
+                    </td>
+                    <td>
+                      {% for substance in inv %}
+                        {% if substance.rule == sub %}
+                            {{substance.name}} ({{substance.qty}} t), 
+                        {% endif %}
+                      {% endfor %}
                     </td>
                   </tr>
+                {% endif %}
+
                 </table>
-                {% elif sub == "B" %}
+                {% elif sub == "P" %}
                 <table>
                   <tr>
                     <td>
-                      Group B
+                      Group P: Flammable and Explosive Substances
                     </td>
                   </tr>
+                  {% if results.usedListedSubstances[sub] > 0 %}
                   <tr>
                     <td>
-                      Oxidising, Explosive, Flammable, Highly Flammable and Extremely Flammable
+                      Substances applicable to this classification:
+                    </td>
+                    <td>
+                      {% for substance in inv %}
+                        {% if substance.rule == sub %}
+                            {{substance.name}} ({{substance.qty}} t), 
+                        {% endif %}
+                      {% endfor %}
                     </td>
                   </tr>
+                {% endif %}
+
                 </table>
-                {% elif sub == "C" %}
+                {% elif sub == "O" %}
                 <table>
                   <tr>
                     <td>
-                      Group C 
+                      Group O: Eco-Toxic Substances
                     </td>
                   </tr>
-                  <tr>
-                    <td>
-                      Toxic or Very Toxic to Aquatic Organisms
-                    </td>
-                  </tr>
+
+                    {% if results.usedListedSubstances[sub] > 0 %}
+                      <tr>
+                        <td>
+                          Substances applicable to this classification:
+                        </td>
+                        <td>
+                          {% for substance in inv %}
+                            {% if substance.rule == sub %}
+                                {{substance.name}} ({{substance.qty}} t), 
+                            {% endif %}
+                          {% endfor %}
+                        </td>
+                      </tr>
+                    {% endif %}
+
                 </table>
                 {% endif %}
               </td>

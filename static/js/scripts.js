@@ -15,6 +15,10 @@ function init (){
   // addtoinv() and clear() buttons
   var btnclear = document.getElementById("clear_btn")
   btnclear && btnclear.addEventListener("click", ()=>{clear()})
+  var addtoinv_btn = document.getElementById('addtoinv_btn')
+  addtoinv_btn && addtoinv_btn.addEventListener('click', ()=> {addtoinv()})
+  var hide_addnew_form_btn = document.getElementById("hide_addnew_form_btn")
+  hide_addnew_form_btn && hide_addnew_form_btn.addEventListener('click', ()=> {hideaddnew()})
 
   // remove loader
   loading(0)

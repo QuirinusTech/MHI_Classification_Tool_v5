@@ -14,6 +14,19 @@
         <div id="detailed_view_div">
           {% include 'detailed.html' %}
         </div>
+        {% if results['flag'] %}
+        <div id="not_assessed_div">
+          <p>The following items were not fully assessed for risk:</p>
+          <ol>
+          {% for item in inv %}
+            {% if item["flag"] %}
+            <li>{{item["name"]}}</li>
+            {% endif %}
+          {% endfor %}
+        </ol>
+        <p>Please contact iSHEcon directly for more information on this substance.</p>
+          </div>
+        {% endif %}
         <div class="results_recommended">
           <h3>Recommended Action</h3>
           {% include 'recommendation.html' %}

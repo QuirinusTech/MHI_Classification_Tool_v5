@@ -11,37 +11,37 @@ https://github.com/QuirinusTech/MHI_Classification_Tool_v5.git
 
 
 - My To-do list - 
-Docker File to prepare for deployment
+//Docker File to prepare for deployment
 
-replace onclick events with EventListeners
+//replace onclick events with EventListeners
 
 login page for authentication for test site
 
 //warning message on welcome screen: bold
 
-details for aggregate rule on results screen
+//details for aggregate rule on results screen
 
 //change tier 1-3 to low, medium, high
 
 //add UN numbers
 
-add confidentiality notice
-we're not tracking you, we have no personal info
-on welcome and results
+//add confidentiality notice
+//we're not tracking you, we have no personal info
+//on welcome and results
 
-results page cumulative rule set results to int, no decimal points
+//results page cumulative rule set results to int, no decimal points
 
 //font: calibri
 
 if no hphrase, contact us
 
-classification of individual substances rename
-cumulative rule - aggregate
+//classification of individual substances rename
+//cumulative rule - aggregate
 
-department of employment and labour
-ratings rename classification
+//department of employment and labour
+//ratings rename classification
 
-placeholders[0] in caps
+//placeholders[0] in caps
 
 //Recommendations
 //non-MHI

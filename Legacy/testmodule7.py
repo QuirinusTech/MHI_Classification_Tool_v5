@@ -1,6 +1,6 @@
 import requests
 from hyginus import stringsearch
-from finallist import finallist
+from finallist import namedSubstancesModule
 import time
 import json
 

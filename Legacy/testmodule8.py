@@ -1,4 +1,4 @@
-from finallist import finallist
+from finallist import namedSubstancesModule
 from finallist import newinfo
 
 for originalsub in finallist:

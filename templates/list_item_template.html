@@ -1,10 +1,10 @@
 <tr chemid="{{item.chemid}}" id="{{ item.id }}_tr" class="{{ item.id }}">
-  <td>{{ item.indexpos }}</td>
-  <td>{% if item["CAS"] %}{{ item.CAS}}{% else %}None{% endif %}</td>
+  <td>{{ indexpos }}</td>
+  <td>{% if item["CAS"] %}{{ item.CAS}}{% elif item["UN"] %}UN {{ item.UN }}{% else %}-{% endif %}</td>
   <td>{{ item.name }}</td>
   <td>{{ item.chemtype }}</td>
-  {% if item['class'] %}
-  <td>{{ item.class }}</td>
+  {% if item['category'] %}
+  <td>{{ item.category }}</td>
   {% else %}
   <td>-</td>
   {% endif %}
