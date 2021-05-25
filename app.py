@@ -1,12 +1,89 @@
-from flask import Flask, jsonify, request, redirect, render_template, url_for
+from flask import Flask, jsonify, request, redirect, render_template, url_for, flash
+from flask_login import LoginManager, UserMixin, current_user, login_user, login_required, logout_user
+from wtforms.validators import DataRequired
+from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.urls import url_parse
+from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from flask_wtf import FlaskForm
 import json
 import hyginus
 from namedSubstancesModule import namedSubstances
 import requests
 from listedSubstancesModule import MasterCategoryController, listedSubstances, flammableLiquidWarning, CategoryFinder, CheckIfFlammable
 from random import randint
+from users import dbUsers
 
 app = Flask(__name__)
+class LoginForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    remember_me = BooleanField('Remember Me')
+    submit = SubmitField('Sign In')
+
+app.secret_key = '6F74T2O4Z9YTCN1U5ASA78EO2ER56BE'
+
+login = LoginManager(app)
+login.login_view = 'login'
+
+class User(UserMixin):
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+    
+    def get_id(self):
+        return self.uid
+
+all_users = []
+currentuserlistname = []
+
+for x in dbUsers:
+    user = User()
+    user.email = x['email']
+    user.set_password(x['password'])
+    user.uid = x['id']
+    user.name = x['name']
+    user.uname = x['username']
+    currentuserlistname.append(x['username'])
+    all_users.append(user)
+
+@login.user_loader
+def load_user(arg1):
+    for user in all_users:
+        if user.uid == arg1:
+            return user
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('start'))
+    user = ""
+    form = LoginForm()
+    if form.validate_on_submit():
+        for x in all_users:
+            if x.uname == form.username.data:
+                user = x
+        if user is None or not user or not user.check_password(form.password.data):
+            errormessage = 'Invalid username or password'
+            flash(errormessage)
+            return redirect(url_for('login'))
+        login_user(user, remember=form.remember_me.data)
+        next_page = request.args.get('next')
+        if not next_page or url_parse(next_page).netloc != '':
+            next_page = url_for('welcome')
+        return redirect(next_page)
+    return render_template('login.html', form=form)
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    flash("You've been successfully logged out.")
+    return redirect(url_for('terminal'))
+
+@app.route('/terminal')
+def terminal():
+    return render_template('terminal.html')
 
 inv = []
 
@@ -18,6 +95,7 @@ def welcome():
   return render_template("welcome.html")
 
 @app.route('/inventory')
+@login_required
 def inventory():
   return render_template("inventory.html", flammableLiquidWarning=flammableLiquidWarning, inventory=inv, chemlist=namedSubstances, listedSubstances=listedSubstances)
 
@@ -88,6 +166,7 @@ def update():
     return f"An Error Occured: {e}. Please try again. If the error persists: please contact us directly."
 
 @app.route('/results')
+@login_required
 def results():
   if len(inv) > 0:
     results = hyginus.assessment(inv)
@@ -218,6 +297,7 @@ def updatehphrases():
     return jsonify(results)
 
 @app.route("/testinventory")
+@login_required
 def testinventory():
   while len(inv) < 5:
     usedchemnames = []

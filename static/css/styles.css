@@ -1378,3 +1378,39 @@ h1.Classifications {
 .invalid_input {
   border: 1px solid red;
 }
+
+
+
+
+/******************* LOGIN PAGE **********************/
+.grid_main {
+  position: absolute;
+  left: 20%;
+  top: 20%;
+  display: flex;
+  flex-direction: column;
+}
+
+.grid_main > form > div {
+  margin: 10px;
+}
+
+.grid_main > form > div > p {
+  margin: 10px;
+}
+
+.grid_main > button {
+  border: 2px solid #007D3B;
+  background-color: #b9ffda;
+  border-radius: 6px;
+  margin-top: 20px;
+  padding: 5px;
+}
+
+.grid_main > button:hover {
+  border: 2px solid #005025;
+  background-color: mediumaquamarine;
+  border-radius: 6px;
+  margin-top: 20px;
+  padding: 5px;
+}

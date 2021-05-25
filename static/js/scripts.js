@@ -46,6 +46,13 @@ function showAddNewHandler () {
   document.getElementById('addnewbox').style.display = 'flex'
 }
 
+/** activates loading screen and redirect.
+ * arg1=href (e.g. '/about')  */
+ function Redirect(arg) {
+  loading(1)
+  window.location.href = arg;
+}
+
 function loading(x, t=1500) {
   $("#loader_width_adjustable").attr("style", "width: 100%")
   if (x==1) {

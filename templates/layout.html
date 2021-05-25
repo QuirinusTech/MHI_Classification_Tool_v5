@@ -20,10 +20,18 @@
         <ul>
           <li><a id="navbar_welcome" href="{{ url_for('welcome')}}">Welcome</a></li>
           <li> <a id="navbar_help" href="{{ url_for('help') }}">How it is calculated</a></li>
+          {% if current_user.is_authenticated %}
           <li><a id="navbar_inventory" href="{{ url_for('inventory') }}">Inventory</a></li>          
           <li><a id="navbar_results" href="{{ url_for('results') }}">Results</a></li>
+          {% endif %}
           <li><a id="navbar_contact" href="{{ url_for('contact') }}">Contact</a></li>
           <li><a id="navbar_faq" href="{{ url_for('faq') }}">FAQ</a></li>
+          {% if current_user.is_authenticated %}
+          <li><a id="navbar_logout" href="{{ url_for('logout') }}" class="nav_menu_element">Logout</a></li>
+          {% endif %}
+          {% if current_user.is_anonymous %}
+          <li><a href="{{ url_for('login') }}" class="nav_menu_element">Log in</a></li>
+          {% endif %}
         </ul>  
         <div class="quirinuslogo">
           <img src="/static/img/QuirinusTech.png">
@@ -33,7 +41,10 @@
       <div id="main" class="main">
         {% block body %}
         {% endblock %}
+          {% block content %}
+          {% endblock %}
       </div>  
+
       <div class="loading" id="pre_loader">
         <p>loading... please wait</p>
         <div class="meter animate">

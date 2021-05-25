@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+
+<div class="grid_main">
+  <div id="messages_div">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <span style="color: red;">{{ message }}</span>
+    {% endif %}
+    {% endwith %}
+  </div>
+  <button class="forbiddenpage_button" onclick="Redirect('/login')">Return to Login screen</button>
+  <button class="forbiddenpage_button" onclick="Redirect('/contact')">Contact the administrator</button>
+</div>
+
+{% endblock %}
