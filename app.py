@@ -171,7 +171,7 @@ def results():
   if len(inv) > 0:
     results = hyginus.assessment(inv)
     for item in inv:
-      if item["flag"] == True:
+      if "flag" in item.keys() and item["flag"] == True:
         results['flag'] = True
 
     recommendation = results["finalTier"]
