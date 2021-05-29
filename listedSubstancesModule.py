@@ -1,4 +1,3 @@
-from re import sub
 import requests
 import json
 
@@ -203,7 +202,7 @@ listedSubstances = [
             {"classification": "", "category": 1}
         ],
 
-        "tooltip": "Substances or mixtures that reacts violently with water"
+        "tooltip": "Substances or mixtures that react violently with water"
     },
     {
         "chemid": 302,
@@ -304,31 +303,35 @@ def GetHazardCategories(arg):
         hcats.append(string["String"])
     return hcats
 
-#aggregaterule = {}
-#for group in hgroups:
-#  aggregaterule[group['chemid']] = 0
-
 def CategoryFinder(hphraselist, field):
-  
   """
     using an array of hphrases, finds the first match from the array in the hphrases group where the hphrase is found.
     return value is determined by the field argument, which can be either 'desc' (description) or 'chemid' (an id used to find other info on this substance in the database)
   """
+  if type(hphraselist) is list and hphraselist == []:
+    return False
+  if type(hphraselist) is str and hphraselist == "":
+    return False
   possiblegroups = []
   for hphrase in hphraselist:
-    for group in listedSubstances:
-      if hphrase in group["hazardPhrases"]:
-        possiblegroups.append(group["chemid"])
+    for listedSub in listedSubstances:
+      if hphrase in listedSub["hazardPhrases"]:
+        possiblegroups.append(int(listedSub["chemid"]))
 
-  #assuming that the lowest number is the most severe ///flag///
-  if field == "chemid":
-    #precedence rules
-    return min(possiblegroups)
+  print(possiblegroups)
+  if possiblegroups == []:
+    return False
+  else:
+    minime = min(possiblegroups)
+    #assuming that the lowest number is the most severe ///flag///
+    if field == "chemid":
+      #precedence rules
+      return minime
 
-  elif field == "desc":
-    for desc in listedSubstances:
-      if min(possiblegroups) == desc["chemid"]:
-        return desc["desc"]
+    elif field == "desc":
+      for listedSub in listedSubstances:
+        if minime == listedSub["chemid"]:
+          return listedSub["desc"]
 
 def NewHazardCategoryFinder(cid):
     """
@@ -341,29 +344,33 @@ def NewHazardCategoryFinder(cid):
 
 def RuleFinder(item):
   """
-    takes an item as an argument and returns the rule group in which a substance falls (a / b / c).
-    item must have the following fields: type, chemid, hphrases
-  """
+    takes an item as an argument and a single letter as the rule group in which a substance falls (H / P / O).
+    keys must contain chemtyp
+    named substances keys must contain: chemid & hphrases
+    listed substances keys must contain: chemid
 
-  if item['chemtype'] == "named":
-    for hphrase in item["hazardPhrases"]:
-      if hphrase in hGroupHPhrases:
-        return 'H'
-    for hphrase in item["hazardPhrases"]:
-      if hphrase in pGroupHPhrases:
-        return 'P'
-    for hphrase in item["hazardPhrases"]:  
-      for listedSub in listedSubstances:
-        if hphrase in listedSub["hazardPhrases"]:
-          for rule in rules.keys():
-            if listedSub["chemid"] in rules[rule]:
-              return rule
-  elif item['chemtype'] == "listed":
-    for rule in rules.keys():
-      if int(item["chemid"]) in rules[rule]:
-        return rule
-  else:
+  """
+  try:
+    if item['chemtype'] == "named":
+      for hphrase in item["hazardPhrases"]:
+        if hphrase in hGroupHPhrases:
+          return 'H'
+      for hphrase in item["hazardPhrases"]:
+        if hphrase in pGroupHPhrases:
+          return 'P'
+      for hphrase in item["hazardPhrases"]:  
+        for listedSub in listedSubstances:
+          if hphrase in listedSub["hazardPhrases"]:
+            for rule in rules.keys():
+              if listedSub["chemid"] in rules[rule]:
+                return rule
+    elif item['chemtype'] == "listed":
+      for rule in rules.keys():
+        if int(item["chemid"]) in rules[rule]:
+          return rule
+  except:
     return 0
+  return 0
 
 def GetCorrectTarget(keyword, dbHcats):
   
@@ -430,19 +437,22 @@ def ExtractHazardCategory(hcats):
         return listedSub["desc"]
     else:
       pass
-      #print\("Not checking " + listedSub["desc"])
+      print("Not checking " + listedSub["desc"])
 
 def MasterCategoryController(hazardphrases, cid):
   """
     Primary Controller for determining category.
-    chem.keys() must contain "hazardPhrases" and cid
+    return category['desc']
   """
-  if hazardphrases == None or hazardphrases == []:
+  if hazardphrases == None or hazardphrases == [] or hazardphrases == "":
     return NewHazardCategoryFinder(cid)
   else:
     category = CategoryFinder(hazardphrases, "desc")
-    for hphrase in hazardphrases:
-      if hphrase in hGroupHPhrases:
-        return NewHazardCategoryFinder(cid)
+    if category == False:
+      return False
     else:
-      return category
+      for hphrase in hazardphrases:
+        if hphrase in hGroupHPhrases:
+          return NewHazardCategoryFinder(cid)
+      else:
+        return category

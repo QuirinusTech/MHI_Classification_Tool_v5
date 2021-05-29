@@ -1,3 +1,5 @@
+from listedSubstancesModule import CheckIfFlammable
+
 namedSubstances = [{
     'chemid': 222,
     'CAS': '7664-41-7',
@@ -277,7 +279,7 @@ namedSubstances = [{
     'tier3': 200,
     'chemtype': 'named',
     'category': '',
-    "tooltip": "Liquid Petroleum Gas (LPG), butane, propane, pentane, dimethyl ether. Liquefied extremely flammable gases (including LPG) and natural gas (whether liquefied or not).",
+    "tooltip": "Extremely flammable gases and natural gas: \nThese include Liquid Petroleum Gas (LPG), butane, propane, pentane, dimethyl ether and natural gas (whether liquefied or not).",
 },
     {
     'chemid': 6326,
@@ -462,10 +464,10 @@ namedSubstances = [{
 },
     {
     'chemid': 59304100063,
-    'CAS': '',
-    'UN': '',
+    'CAS': '92-87-5',
+    'UN': '1885',
     'name': 'CARCINOGENS',
-    'hazardPhrases': '',
+    'hazardPhrases': 'H300',
     'tier1': 0.5,
     'tier2': 0.5,
     'tier3': 2,
@@ -474,30 +476,17 @@ namedSubstances = [{
     'tooltip': '4-Aminobiphenyl and/or its salts, Benzotrichloride, Benzidine and/or salts, Bis (chloromethyl) ether, Chloromethyl methyl ether, 1,2- Dibromoethane, Diethyl sulphate, Dimethyl sulphate, Dimethylcarbamoyl chloride, 1,2-Dibromo-3- chloropropane, 1,2- Dimethylhydrazine, Dimethylnitrosamine, Hexamethylphosphoric triamide, Hydrazine, 2- Naphthylamine and/or salts, 4-Nitrodiphenyl and 1,3-Propanesultone',
 },
     {
-    'chemid': 22120001075,
-    'CAS': '',
-    'UN': '1075',
-    'name': 'Petroleum  (GAS)',
-    'hazardPhrases': '',
-    'tier1': 250,
-    'tier2': 2500,
-    'tier3': 25000,
-    'chemtype': 'named',
-    'category': '',
-    "tooltip": "Diesel, petrol, paraffin, naphtha, kerosene, jet fuel, aviation fuel, light fuel oil. Petroleum products: gasolines , naphthas, kerosenes (including jet fuels), gas oils (including diesel fuels, home heating oils and gas oil blending streams) ",
-},
-    {
     'chemid': 22120001275,
     'CAS': '',
-    'UN': '1275',
-    'name': 'Petroleum Products (CRUDE)',
-    'hazardPhrases': '',
+    'UN': ['1075', '1275'],
+    'name': 'Petroleum Products',
+    'hazardPhrases': ['H220'],
     'tier1': 250,
     'tier2': 2500,
     'tier3': 25000,
     'chemtype': 'named',
     'category': '',
-    "tooltip": "Diesel, petrol, paraffin, naphtha, kerosene, jet fuel, aviation fuel, light fuel oil. Petroleum products: gasolines , naphthas, kerosenes (including jet fuels), gas oils (including diesel fuels, home heating oils and gas oil blending streams) ",
+    "tooltip": "Petroleum Products including diesel, petrol (gasoline), paraffin, naphtha, kerosene, jet fuel, aviation fuel, light fuel oil, gas oils abd home heating oils.",
 },
     {
     'chemid': 6356,
@@ -645,4 +634,5 @@ namedSubstances = [{
 }]
 
 
-  
+for sub in namedSubstances:
+  sub["flammable"] = CheckIfFlammable(sub["hazardPhrases"])

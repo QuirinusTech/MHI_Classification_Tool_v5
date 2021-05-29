@@ -46,7 +46,25 @@ function UpdateSearchType(x) {
       console.log("case default")
       break;
     }
+}
 
+function GetSearchTypeName() {
+  switch ($("#searchtype").val()) {
+    case "0":
+      return "CAS"
+      break;
+    case "1":
+      return "name"
+      break;
+    case "2":
+      return "UN"
+      break;
+    case "3":
+      return "category"
+      break;
+    default:
+      break;
+  }
 }
 
 // autocomplete suggestions for named substances
@@ -128,14 +146,24 @@ function RemoveEmptyAcli() {
 
 /** when clicking on a list item, populate the input field with the relevant info */
 function populate(x) {
+  
   let tempvar = $("#li_" + x)
   let text = $(tempvar).html()
+  while (text[0] === " ") {
+    text = text.slice(1)
+  }
+
   if ($(tempvar).attr("chemtype")=="named") {
     $("#hiddenInputs--chemtype").val("named")
     $("#substance").attr("chemtype", "named")
   }
   $("#substance").val(text);
   $("#substance").addClass("flash")  
+
+  console.log("tempvar = ")
+  console.log(tempvar)
+  console.log("text = " + text)
+
 
   $("#hiddenInputs--Category").val($(tempvar).attr("chemclass"))
   
@@ -197,6 +225,26 @@ function populateListed(x) {
   } else {
     $("#addtoinv_btn".focus())
   }
+}
+
+function ShowAddInfo() {
+  chemid = $("#category").val()
+  categories = Array.from($(".categoryType"))
+  let title = null
+
+  categories.forEach(category => {
+    if ($(category).attr('chemid') == chemid) {
+      title = $(category).attr("title")
+    }
+  })
+
+      let y = $("#hiddenInputs--chemid").val()
+      if (title !== undefined && title !== null) {
+        $("#addinfo_row").show()
+        $("#hiddenInputs--additionalInfo").html(title)
+      } else {
+        $("#addinfo_row").hide()
+      }
 }
 
 /** uses regex to validate the user input where x is the current tab */
@@ -302,13 +350,16 @@ function addtoinv() {
       hphrases = $("#hiddenInputs--hphrases").val()
     }
 
+    field = GetSearchTypeName()
+
     newEntryObj = {
       "id": substid,
       "chemid": chemid,
       "chemtype": chemtype,
       "qty": $("#qty").val(),
       "hazardPhrases": hphrases,
-      "name": name
+      "name": name,
+      "field": field
     }
     $("#listedSubstancesInfoRow").hide()
     
@@ -318,19 +369,9 @@ function addtoinv() {
 
 function ListedSubstanceSearch() {
   substanceFieldInputValue = $("#substance").val()
-  if (confirm("You're about to search the online database for \""+substanceFieldInputValue+"\".")) {
-
-    // check whether what was entered was a CAS or a name
-    var letterNumberDashSpace = /^[0-9a-zA-Z\-\s\/\\\(\)]+$/;
-    var validcasregex = /^[\d]{1,5}\-[\d]{1,5}\-[\d]{1,5}$/;
-
-    var testmevar = $("#substance").val()
-    if (new RegExp(letterNumberDashSpace).test(testmevar)) {
-      updateh("name",substanceFieldInputValue)
-    } else if (new RegExp(substanceFieldInputValue).test(validcasregex)) {
-      updateh("CAS",substanceFieldInputValue)
-    }
-}
+  popUp("Searching for \""+substanceFieldInputValue+"\".", "info")
+  field = GetSearchTypeName()
+  updateh(field, substanceFieldInputValue)
 }
 
 function toggleEditMode (e, x){
@@ -413,11 +454,18 @@ function addtoinvPOST(newEntryObj) {
       "newEntry": newEntry
     },
     function (data) {
-        $("#noinv_tr").remove()
-        $("#list_div > table").append(data)
-        inventoryexists = true
-        $("#calc_button").removeClass('disabled_button')
-        loading(0)
+        if (data.substr(0,6) == "Error:") {
+          heading = "An Error has occurred: "
+          string = data.substr(6)
+          popUp(string, data)
+          loading(0)
+        } else {
+          $("#noinv_tr").remove()
+          $("#list_div > table").append(data)
+          inventoryexists = true
+          $("#calc_button").removeClass('disabled_button')
+          loading(0)
+        }
       clear()
     });
 }

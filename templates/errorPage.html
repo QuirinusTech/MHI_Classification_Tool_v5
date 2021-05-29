@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<div class="main_content">
+{% if errorType == "assessfail" %}
+<h2>Inventory Assessment Failure</h2>
+<p>In the process of generating a classification for the inventory you submitted, we were unable to complete this assessment online.</p>
+
+{% else %}
+<h2>Server Error</h2>
+<p>An unexpected error has occured in the program.</p>
+{% endif %}
+<br>
+{% if e %}
+<h4>Error encountered</h4>
+<blockquote>{{ e }}</blockquote>
+{% endif %}
+<p>As error report has been generated and sent to our technical team so we can look into this.</p>
+<br>
+<p>Please feel free to either:</p>
+  <div class="error_page--button_bar">
+    <button class="button button--primary" onclick="NewStart()">Start over with a clean inventory</button>
+    <button class="button button--primary" onclick="Redirect('/inventory')">Edit the existing inventory</button>
+    <button class="button button--primary" onclick="Redirect('/contact')">Contact us for help</button>
+  </div>
+</div>
+
+
+
+
+{% endblock %}

@@ -8,8 +8,6 @@ https://github.com/QuirinusTech/MHI_Classification_Tool_v5.git
 1. h-phrase groupings
 2. Precedence rules (hphrases.py/189-220)
 
-
-
 - My To-do list - 
 //Docker File to prepare for deployment
 
@@ -33,7 +31,7 @@ login page for authentication for test site
 
 //font: calibri
 
-if no hphrase, contact us
+//if no hphrase, contact us
 
 //classification of individual substances rename
 //cumulative rule - aggregate

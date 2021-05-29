@@ -18,10 +18,8 @@
         <div id="not_assessed_div">
           <p>The following items were not fully assessed for risk:</p>
           <ol>
-          {% for item in inv %}
-            {% if item["flag"] %}
-            <li>{{item["name"]}}</li>
-            {% endif %}
+          {% for flaggedSubstance in results['flaggedSubstances'] %}
+            <li>{{flaggedSubstance}}</li>
           {% endfor %}
         </ol>
         <p>Please contact iSHEcon directly for more information on these substances.</p>
@@ -35,7 +33,7 @@
         <div class="button_bar">
           <button class="button button--primary" onclick="NewStart()">Start Over</button>
           <button class="button button--primary" onclick="Redirect('/inventory')">Edit Inventory</button>
-          <br />
+          <br />  
         </div>
         <div class="results_cta">
          <a onclick="Redirect('/contact')">Contact Us</a>
@@ -52,16 +50,16 @@
 
         <div>
           <h2>Individual:</h2>
-          <h1>{{results.indTier}}</h1>
+          <h1>{{results.indTier}}{% if results.indTier != "None" %} hazard establishment{% endif %}</h1>
         </div>
         <div>
           <h2>Aggregate:</h2>
-          <h1>{{results.aggregateTier}}</h1>
+          <h1>{{results.aggregateTier}}{% if results.aggregateTier != "None" %} hazard establishment{% endif %}</h1>
         </div>
       </div>
       <div class="results_div--right_column--final_Classification">
-        <h2>Final Installation:</h2>
-        <h1>{{results.finalTier}}</h1>
+        <h2>Final Establishment Classification:</h2>
+        <h1>{{results.finalTier}}{% if results.finalTier != "None" %} hazard establishment{% endif %}</h1>
       </div>
     </div>
   </div>

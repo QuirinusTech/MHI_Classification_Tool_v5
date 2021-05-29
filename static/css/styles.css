@@ -409,6 +409,18 @@ transform-origin: left;
   color: #fff;
 }
 
+.error_page--button_bar {
+  display: flex;
+  flex-direction: column;
+}
+
+.error_page--button_bar > button {
+  width: 100%;
+  margin: 15px 0px;
+  align-self: center;
+  max-width: 500px;
+}
+
 .button_bar{
   display: flex;
   flex-direction: column;
@@ -894,8 +906,8 @@ h1.Classifications {
   flex-direction: column;
 /*  border: 13px solid #007D3B; */
   border-radius: 25px;
-  padding: 10%;
-  margin: 10px;
+/*  padding: 10%;
+*/  margin: 20px 0px;
   justify-content: space-around;
 }
 
@@ -903,6 +915,7 @@ h1.Classifications {
   border: 4px solid green;
   border-radius: 20px;
   padding: 10px;
+  margin: 20px 0px;
 }
 
 .results_div--right_column--top_Classification > div > h1, .results_div--right_column--top_Classification > div > h2 {
@@ -918,17 +931,13 @@ h1.Classifications {
   flex-direction: column;
   border: 13px solid #007D3B;
   border-radius: 25px;
-  padding: 10%;
-  margin: 10px;
+/*  padding: 10%;
+*/  margin: 20px 0px;
 }
 
 .results_div--right_column--final_Classification > h1, .results_div--right_column--final_Classification > h2 {
   align-self: center;
   margin: 10px;
-}
-
-.results_div--right_column--final_Classification > h1 {
-  font-size: 3rem;
 }
 
 /* pop up */
@@ -979,7 +988,6 @@ h1.Classifications {
   margin-top: 20px;
   flex: 1;
   min-width: 200px;
-  color: maroon;
 }
 
 .invalid_input {
@@ -1139,6 +1147,17 @@ h1.Classifications {
   position: relative;
   font-size: small;
   color: black;
+}
+
+#popup {
+  position: absolute;
+  left: 50%;
+  bottom: 10%;
+  border: 1px solid green;
+  padding: 15px;
+  border-radius: 20px;
+  background-color: darkseagreen;
+  min-width: 300px;
 }
 
 /** stolen code */
