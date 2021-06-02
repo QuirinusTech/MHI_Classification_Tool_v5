@@ -1,9 +1,7 @@
 from listedSubstancesModule import CheckIfFlammable
-
 namedSubstances = [{
     'chemid': 222,
     'CAS': '7664-41-7',
-    'UN': '1005',
     'name': 'Ammonia anhydrous',
     'hazardPhrases': ['H221', 'H314', 'H331', 'H400', 'H280', 'H410', 'H411', 'H318', 'H220', 'H332', 'H334', 'H370', 'H372', 'H373', 'H341'],
     'tier1': 15,
@@ -27,7 +25,6 @@ namedSubstances = [{
     {
     'chemid': 22985,
     'CAS': '6484-52-2',
-    'UN': '',
     'name': 'Ammonium nitrate (as described in Note 4 ) ',
     'hazardPhrases': ['H272', 'H319', 'H372', 'H370', 'H320', 'H335', 'H371', 'H303', 'H315'],
     'tier1': 500,
@@ -39,7 +36,6 @@ namedSubstances = [{
     {
     'chemid': 22985,
     'CAS': '6484-52-2',
-    'UN': '',
     'name': 'Ammonium nitrate (as described in Note 5 )',
     'hazardPhrases': ['H272', 'H319', 'H372', 'H370', 'H320', 'H335', 'H371', 'H303', 'H315'],
     'tier1': 150,
@@ -51,7 +47,6 @@ namedSubstances = [{
     {
     'chemid': 22985,
     'CAS': '6484-52-2',
-    'UN': '',
     'name': 'Ammonium nitrate (as described in Note 6)',
     'hazardPhrases': ['H272', 'H319', 'H372', 'H370', 'H320', 'H335', 'H371', 'H303', 'H315'],
     'tier1': 4,
@@ -63,7 +58,6 @@ namedSubstances = [{
     {
     'chemid': 24434,
     'CAS': '7757-79-1',
-    'UN': '1486',
     'name': 'Potassium nitrate (as described in Note 7) ',
     'hazardPhrases': ['H272', 'H315', 'H319', 'H335', 'H361', 'H370', 'H372', 'H303', 'H371', 'H373'],
     'tier1': 2000,
@@ -75,7 +69,6 @@ namedSubstances = [{
     {
     'chemid': 24434,
     'CAS': '7757-79-1',
-    'UN': '1488',
     'name': 'Potassium nitrate (as described in Note 8) ',
     'hazardPhrases': ['H272', 'H315', 'H319', 'H335', 'H361', 'H370', 'H372', 'H303', 'H371', 'H373'],
     'tier1': 500,
@@ -87,7 +80,6 @@ namedSubstances = [{
     {
     'chemid': 14771,
     'CAS': '1303-28-2',
-    'UN': '1559',
     'name': 'Arsenic pentoxide, arsenic (V) acid and/or salts ',
     'hazardPhrases': ['H301', 'H331', 'H350', 'H400', 'H410', 'H300', 'H312', 'H314', 'H341', 'H373', 'H319', 'H361', 'H370', 'H372'],
     'tier1': 1,
@@ -99,7 +91,6 @@ namedSubstances = [{
     {
     'chemid': 14888,
     'CAS': '1327-53-3',
-    'UN': '1561',
     'name': 'Arsenic trioxide, arsenious (III) acid and/or salts ',
     'hazardPhrases': [],
     'tier1': 0.1,
@@ -111,7 +102,6 @@ namedSubstances = [{
     {
     'chemid': 24408,
     'CAS': '7726-95-6',
-    'UN': '1701',
     'name': 'Bromine (l)',
     'hazardPhrases': ['H314', 'H330', 'H400', 'H318', 'H290', 'H370', 'H372', 'H301'],
     'tier1': 5,
@@ -123,7 +113,6 @@ namedSubstances = [{
     {
     'chemid': 24408,
     'CAS': '7726-95-6',
-    'UN': '1744',
     'name': 'Bromine (a)',
     'hazardPhrases': ['H314', 'H330', 'H400', 'H318', 'H290', 'H370', 'H372', 'H301'],
     'tier1': 5,
@@ -135,7 +124,6 @@ namedSubstances = [{
     {
     'chemid': 24526,
     'CAS': '7782-50-5',
-    'UN': '1017',
     'name': 'Chlorine',
     'hazardPhrases': ['H270', 'H315', 'H319', 'H331', 'H335', 'H400', 'H280', 'H330', 'H410', 'H314', 'H318', 'H370', 'H372', 'H373'],
     'tier1': 5,
@@ -147,7 +135,6 @@ namedSubstances = [{
     {
     'chemid': 14805,
     'CAS': '1313-99-1',
-    'UN': '3089',
     'name': 'Nickel monoxide, Nickel dioxide',
     'hazardPhrases': ['H317', 'H334', 'H350', 'H360', 'H372', 'H401', 'H411', 'H413'],
     'tier1': 1,
@@ -159,8 +146,7 @@ namedSubstances = [{
 },
     {
     'chemid': 14805,
-    'CAS': '',
-    'UN': '',
+    'CAS': '-',
     'name': 'Nickel compounds',
     'hazardPhrases': ['H317', 'H334', 'H350', 'H360', 'H372', 'H401', 'H411', 'H413'],
     'tier1': 1,
@@ -173,7 +159,6 @@ namedSubstances = [{
     {
     'chemid': 28094,
     'CAS': '16812-54-7',
-    'UN': '',
     'name': 'Nickel sulphide',
     'hazardPhrases': ['H317', 'H332', 'H334', 'H341', 'H350', 'H372', 'H400', 'H410'],
     'tier1': 1,
@@ -186,7 +171,6 @@ namedSubstances = [{
     {
     'chemid': 9033,
     'CAS': '151-56-4',
-    'UN': '1185',
     'name': 'Ethyleneimine',
     'hazardPhrases': ['H225', 'H300', 'H310', 'H314', 'H330', 'H340', 'H350', 'H411', 'H318', 'H302', 'H317', 'H319', 'H315', 'H351', 'H361', 'H370', 'H372', 'H335'],
     'tier1': 5,
@@ -198,7 +182,6 @@ namedSubstances = [{
     {
     'chemid': 24524,
     'CAS': '7782-41-4',
-    'UN': '1045',
     'name': 'Fluorine',
     'hazardPhrases': ['H270', 'H314', 'H330', 'H280', 'H310', 'H318', 'H315', 'H319', 'H370', 'H372', 'H361'],
     'tier1': 5,
@@ -210,7 +193,6 @@ namedSubstances = [{
     {
     'chemid': 712,
     'CAS': '50-00-0',
-    'UN': '1198',
     'name': 'Formaldehyde',
     'hazardPhrases': ['H301', 'H311', 'H314', 'H317', 'H331', 'H341', 'H350', 'H228', 'H302', 'H312', 'H315', 'H318', 'H319', 'H332', 'H334', 'H335', 'H351', 'H330', 'H220', 'H280', 'H360', 'H372', 'H401', 'H227', 'H370', 'H402', 'H412'],
     'tier1': 2.5,
@@ -223,7 +205,6 @@ namedSubstances = [{
     {
     'chemid': 783,
     'CAS': '1333-74-0',
-    'UN': '1049',
     'name': 'Hydrogen',
     'hazardPhrases': ['H220', 'H280', 'H281'],
     'tier1': 2.5,
@@ -235,7 +216,6 @@ namedSubstances = [{
     {
     'chemid': 313,
     'CAS': '7647-01-0',
-    'UN': '1050',
     'name': 'Hydrogen chloride (liquefied gas)',
     'hazardPhrases': ['H314', 'H331', 'H280', 'H290', 'H318', 'H335', 'H301', 'H330', 'H334', 'H370', 'H372'],
     'tier1': 5,
@@ -247,7 +227,6 @@ namedSubstances = [{
     {
     'chemid': 14917,
     'CAS': '7664-39-3',
-    'UN': '1052',
     'name': 'Hydrogen fluoride',
     'hazardPhrases': ['H300', 'H310', 'H314', 'H330', 'H280', 'H318', 'H331', 'H370', 'H372', 'H402', 'H317', 'H341'],
     'tier1': 2.5,
@@ -258,7 +237,7 @@ namedSubstances = [{
 },
     {
     'chemid': 9048405386,
-    'CAS': '',
+    'CAS': '-',
     'UN': '-',
     'name': 'Lead alkyls',
     'hazardPhrases': '',
@@ -270,8 +249,7 @@ namedSubstances = [{
 },
     {
     'chemid': 5950,
-    'CAS': '',
-    'UN': '1075',
+    'CAS': '-',
     'name': 'Extremely flammable gases and natural gas',
     'hazardPhrases': ['H220'],
     'tier1': 20,
@@ -284,7 +262,6 @@ namedSubstances = [{
     {
     'chemid': 6326,
     'CAS': '74-86-2',
-    'UN': '1001',
     'name': 'Acetylene',
     'hazardPhrases': ['H220', 'H230', 'H280', 'H336'],
     'tier1': 2.5,
@@ -296,7 +273,6 @@ namedSubstances = [{
     {
     'chemid': 6354,
     'CAS': '75-21-8',
-    'UN': '3089',
     'name': 'Ethylene oxide',
     'hazardPhrases': ['H220', 'H315', 'H319', 'H331', 'H335', 'H340', 'H350', 'H317', 'H318', 'H411', 'H412', 'H230', 'H280', 'H301', 'H302', 'H314', 'H336', 'H360', 'H372', 'H370', 'H373'],
     'tier1': 2.5,
@@ -308,7 +284,6 @@ namedSubstances = [{
     {
     'chemid': 6378,
     'CAS': '75-56-9',
-    'UN': '1280',
     'name': 'Propylene oxide',
     'hazardPhrases': ['H224', 'H302', 'H311', 'H319', 'H331', 'H335', 'H340', 'H350', 'H312', 'H315', 'H332', 'H314', 'H317', 'H318', 'H336', 'H341', 'H351', 'H361', 'H330'],
     'tier1': 2.5,
@@ -320,7 +295,6 @@ namedSubstances = [{
     {
     'chemid': 887,
     'CAS': '67-56-1',
-    'UN': '1230',
     'name': 'Methanol',
     'hazardPhrases': ['H225', 'H301', 'H311', 'H331', 'H370', 'H302', 'H319', 'H336', 'H360', 'H372', 'H303', 'H335'],
     'tier1': 50,
@@ -332,7 +306,6 @@ namedSubstances = [{
     {
     'chemid': 7567,
     'CAS': '101-61-1',
-    'UN': '3077',
     'name': '4, 4-Methylenebis (2-chloraniline) and/or salts, in powder form',
     'hazardPhrases': ['H350', 'H400', 'H410'],
     'tier1': 0.01,
@@ -344,7 +317,6 @@ namedSubstances = [{
     {
     'chemid': 12228,
     'CAS': '624-83-9',
-    'UN': '2480',
     'name': 'Methyl isocyanate',
     'hazardPhrases': ['H225', 'H301', 'H311', 'H315', 'H317', 'H318', 'H330', 'H334', 'H335', 'H361', 'H314', 'H341', 'H372', 'H360', 'H370', 'H310'],
     'tier1': 0.15,
@@ -368,7 +340,6 @@ namedSubstances = [{
     {
     'chemid': 11443,
     'CAS': '584-84-9',
-    'UN': '2078',
     'name': 'Toluene di-isocyanate',
     'hazardPhrases': ['H315', 'H317', 'H318', 'H319', 'H330', 'H334', 'H335', 'H351', 'H412', 'H332', 'H371', 'H372'],
     'tier1': 1,
@@ -380,7 +351,6 @@ namedSubstances = [{
     {
     'chemid': 6371,
     'CAS': '75-44-5',
-    'UN': '1076',
     'name': 'Carbonyl dichloride (phosgene)',
     'hazardPhrases': ['H314', 'H330', 'H280', 'H318', 'H315', 'H319', 'H370', 'H372'],
     'tier1': 0.3,
@@ -392,7 +362,6 @@ namedSubstances = [{
     {
     'chemid': 5359596,
     'CAS': '7440-38-2',
-    'UN': '2188',
     'name': 'Arsenic trihydride (arsine)',
     'hazardPhrases': ['H301', 'H331', 'H400', 'H410', 'H315', 'H318', 'H350', 'H341', 'H373', 'H302', 'H319', 'H361', 'H370', 'H372', 'H360'],
     'tier1': 0.2,
@@ -404,7 +373,6 @@ namedSubstances = [{
     {
     'chemid': 24404,
     'CAS': '7803-51-2',
-    'UN': '2199',
     'name': 'Phosphorus trihydride (phosphine)',
     'hazardPhrases': ['H220', 'H314', 'H330', 'H400', 'H280', 'H318', 'H370'],
     'tier1': 0.2,
@@ -416,7 +384,6 @@ namedSubstances = [{
     {
     'chemid': 25353,
     'CAS': '10545-99-0',
-    'UN': '1828',
     'name': 'Sulphur dichloride',
     'hazardPhrases': ['H314', 'H335', 'H400', 'H318', 'H371', 'H373'],
     'tier1': 1,
@@ -428,7 +395,6 @@ namedSubstances = [{
     {
     'chemid': 1119,
     'CAS': '7446-09-5',
-    'UN': '1079',
     'name': 'Sulphur dioxide',
     'hazardPhrases': ['H314', 'H331', 'H280', 'H318', 'H319', 'H370', 'H372'],
     'tier1': 2.5,
@@ -440,7 +406,6 @@ namedSubstances = [{
     {
     'chemid': 24682,
     'CAS': '7446-11-9',
-    'UN': '1829',
     'name': 'Sulphur trioxide',
     'hazardPhrases': ['H314', 'H318', 'H330', 'H335', 'H351', 'H411'],
     'tier1': 7.5,
@@ -451,8 +416,7 @@ namedSubstances = [{
 },
     {
     'chemid': 390010208290,
-    'CAS': '',
-    'UN': '',
+    'CAS': '-',
     'name': 'Polychlorodibenzofurans and polychlorodibenzodioxins (including TCDD)',
     'hazardPhrases': '',
     'tier1': 0.001,
@@ -465,7 +429,6 @@ namedSubstances = [{
     {
     'chemid': 59304100063,
     'CAS': '92-87-5',
-    'UN': '1885',
     'name': 'CARCINOGENS',
     'hazardPhrases': 'H300',
     'tier1': 0.5,
@@ -477,7 +440,7 @@ namedSubstances = [{
 },
     {
     'chemid': 22120001275,
-    'CAS': '',
+    'CAS': '-',
     'UN': ['1075', '1275'],
     'name': 'Petroleum Products',
     'hazardPhrases': ['H220'],
@@ -491,7 +454,6 @@ namedSubstances = [{
     {
     'chemid': 6356,
     'CAS': '7637-07-2',
-    'UN': '1008',
     'name': 'Boron trifluoride',
     'hazardPhrases': ['H314', 'H330', 'H280', 'H318', 'H335', 'H373', 'H371', 'H372', 'H336'],
     'tier1': 5,
@@ -503,7 +465,6 @@ namedSubstances = [{
     {
     'chemid': 402,
     'CAS': '7783-06-4',
-    'UN': '1053',
     'name': 'Hydrogen sulphide',
     'hazardPhrases': ['H220', 'H330', 'H400', 'H280', 'H319', 'H370'],
     'tier1': 5,
@@ -515,7 +476,6 @@ namedSubstances = [{
     {
     'chemid': 8082,
     'CAS': '110-89-4',
-    'UN': '2401',
     'name': 'Piperidine',
     'hazardPhrases': ['H225', 'H311', 'H314', 'H331', 'H302', 'H318', 'H361', 'H370'],
     'tier1': 20,
@@ -539,7 +499,6 @@ namedSubstances = [{
     {
     'chemid': 53973190001,
     'CAS': '5397-31-9',
-    'UN': '',
     'name': '3-(2-Ethylhexyloxy) propylamine',
     'hazardPhrases': ['H302', 'H311', 'H314'],
     'tier1': 20,
@@ -551,7 +510,6 @@ namedSubstances = [{
     {
     'chemid': 7852,
     'CAS': '107-10-8',
-    'UN': '1277',
     'name': 'Propylamine',
     'hazardPhrases': ['H225', 'H290', 'H302', 'H311', 'H331', 'H314', 'H318', 'H335', 'H412', 'H410', 'H312'],
     'tier1': 200,
@@ -563,7 +521,6 @@ namedSubstances = [{
     {
     'chemid': 15458,
     'CAS': '1663-39-4',
-    'UN': '',
     'name': 'Tert-butyl acrylate',
     'hazardPhrases': ['H225', 'H302', 'H312', 'H315', 'H317', 'H332', 'H335', 'H411', 'H331', 'H370', 'H320', 'H373'],
     'tier1': 100,
@@ -575,7 +532,6 @@ namedSubstances = [{
     {
     'chemid': 27909,
     'CAS': '16529-56-9',
-    'UN': '',
     'name': '2-Methyl-3-butenenitrile',
     'hazardPhrases': ['H225', 'H302', 'H332'],
     'tier1': 200,
@@ -587,7 +543,6 @@ namedSubstances = [{
     {
     'chemid': 7852,
     'CAS': '107-10-8',
-    'UN': '1277',
     'name': 'Tetrahydro-3,5-dimethyl-1,3,5-thiadiazine-2-thione (Dazomet)',
     'hazardPhrases': ['H225', 'H290', 'H302', 'H311', 'H331', 'H314', 'H318', 'H335', 'H412', 'H410'],
     'tier1': 50,
@@ -599,7 +554,6 @@ namedSubstances = [{
     {
     'chemid': 7294,
     'CAS': '96-33-3',
-    'UN': '1919',
     'name': 'Methyl acrylate',
     'hazardPhrases': ['H225', 'H302', 'H312', 'H315', 'H317', 'H319', 'H332', 'H335', 'H331', 'H401', 'H412', 'H301', 'H314', 'H318', 'H341', 'H370', 'H372', 'H373'],
     'tier1': 200,
@@ -611,7 +565,6 @@ namedSubstances = [{
     {
     'chemid': 7970,
     'CAS': '108-99-6',
-    'UN': '2313',
     'name': '3-Methylpyridine',
     'hazardPhrases': ['H226', 'H302', 'H311', 'H331', 'H314', 'H318', 'H319', 'H332', 'H335', 'H336', 'H351', 'H372', 'H402', 'H411', 'H370'],
     'tier1': 200,
@@ -623,7 +576,6 @@ namedSubstances = [{
     {
     'chemid': 8006,
     'CAS': '109-70-6',
-    'UN': '2688',
     'name': '1-Bromo-3-chloropropane',
     'hazardPhrases': ['H226', 'H302', 'H315', 'H319', 'H331', 'H332', 'H335', 'H341', 'H412', 'H351', 'H371', 'H373'],
     'tier1': 200,
@@ -632,7 +584,5 @@ namedSubstances = [{
     'chemtype': 'named',
     'category': '',
 }]
-
-
 for sub in namedSubstances:
   sub["flammable"] = CheckIfFlammable(sub["hazardPhrases"])

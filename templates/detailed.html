@@ -59,11 +59,15 @@
                       Substances applicable to this classification:
                     </td>
                     <td>
-                      {% for substance in inv %}
+                      <ul class="applicable_substances">
+                        {% for substance in inv %}
+                      
                         {% if substance.rule == sub %}
-                            {{substance.name}} ({{substance.qty}} t), 
-                        {% endif %}
+                        <li>{{substance.name}} ({{substance.qty}} t)</li> 
+                      {% endif %}
+                      
                       {% endfor %}
+                      </ul>
                     </td>
                   </tr>
                 {% endif %}
@@ -82,11 +86,15 @@
                       Substances applicable to this classification:
                     </td>
                     <td>
-                      {% for substance in inv %}
+                      
+                      <ul class="applicable_substances">
+                        {% for substance in inv %}
                         {% if substance.rule == sub %}
-                            {{substance.name}} ({{substance.qty}} t), 
-                        {% endif %}
+                        <li>{{substance.name}} ({{substance.qty}} t)</li> 
+                      {% endif %}
                       {% endfor %}
+                      </ul>
+                      
                     </td>
                   </tr>
                 {% endif %}
@@ -106,11 +114,15 @@
                           Substances applicable to this classification:
                         </td>
                         <td>
-                          {% for substance in inv %}
-                            {% if substance.rule == sub %}
-                                {{substance.name}} ({{substance.qty}} t), 
-                            {% endif %}
-                          {% endfor %}
+                          
+<ul class="applicable_substances">
+  {% for substance in inv %}
+  {% if substance.rule == sub %}
+  <li>{{substance.name}} ({{substance.qty}} t)</li> 
+{% endif %}
+{% endfor %}
+</ul>
+                          
                         </td>
                       </tr>
                     {% endif %}

@@ -15,7 +15,7 @@
           {% include 'detailed.html' %}
         </div>
         {% if results['flag'] %}
-        <div id="not_assessed_div">
+        <div id="not_assessed_div" class="red_border">
           <p>The following items were not fully assessed for risk:</p>
           <ol>
           {% for flaggedSubstance in results['flaggedSubstances'] %}

@@ -50,7 +50,7 @@
 
             <!-- named substances by CAS -->
             {% for item in chemlist %}
-            {% if item.CAS %}
+            {% if item.CAS != "-" %}
             <li
             class="acli acli_0"
             style="display: none;"
@@ -58,47 +58,31 @@
             id="li_cas_{{ item.chemid }}"
             chemclass="{{item.category}}"
             chemtype="{{item.chemtype}}"
+            data-toggle="tooltip"
             {% if item.tooltip %}
-              data-toggle="tooltip"
-              title="{{item.tooltip}}"
+              title="{{item.name}} - {{item.tooltip}}"
+            {% else %}
+              title="{{item.name}}"
             {% endif %}
             onclick="populate('cas_{{ item.chemid }}')">{{ item.CAS }}</li>
             {% endif %}
             {% endfor %}
 
             <!-- named substances by UN Number -->
-            {% for item in chemlist %}
-              {% if item.UN %}
-                {% if item.UN is string %}
+            {% for item in unNumbers %}
                 <li class="acli acli_2"
                 flammable='{{item.flammable}}'
                 style="display: none;"
                 id="li_UN_{{ item.chemid }}"
                 chemclass="{{item.category}}"
                 chemtype="{{item.chemtype}}"
+                data-toggle="tooltip"
                 {% if item.tooltip %}
-                  data-toggle="tooltip"
-                  title="{{item.tooltip}}"
+                  title="{{item.name}} - {{item.tooltip}}"
+                {% else %}
+                  title="{{item.name}}"
                 {% endif %}
                 onclick="populate('UN_{{ item.chemid }}')">{{ item.UN }}</li>
-                {% endif %}
-                {% if item.UN is iterable and item.UN is not string and item.UN is not mapping %}
-                  {% for un in item.UN %}
-                  <li
-                    class="acli acli_2"
-                    flammable='{{item.flammable}}'
-                    style="display: none;"
-                    id="li_UN_{{ item.chemid }}_{{ loop.index }}"
-                    chemclass="{{item.category}}"
-                    chemtype="{{item.chemtype}}"
-                    {% if item.tooltip %}
-                      data-toggle="tooltip"
-                      title="{{item.tooltip}}"
-                    {% endif %}
-                    onclick="populate('UN_{{ item.chemid }}_{{ loop.index }}')">{{ un }}</li>
-                  {% endfor %}
-                {% endif %}
-              {% endif %}
             {% endfor %}
             <li id="NoRecords" class="acli" style="display: none;" onclick="ListedSubstanceSearch()">No records found. Click here to search online database.</li>
             <li id="threeCharsMin" class="acli" style="display: none;">Type at least 3 characters to begin searching.</li>

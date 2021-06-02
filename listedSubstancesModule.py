@@ -345,7 +345,7 @@ def NewHazardCategoryFinder(cid):
 def RuleFinder(item):
   """
     takes an item as an argument and a single letter as the rule group in which a substance falls (H / P / O).
-    keys must contain chemtyp
+    keys must contain chemtype
     named substances keys must contain: chemid & hphrases
     listed substances keys must contain: chemid
 
@@ -365,9 +365,14 @@ def RuleFinder(item):
               if listedSub["chemid"] in rules[rule]:
                 return rule
     elif item['chemtype'] == "listed":
-      for rule in rules.keys():
-        if int(item["chemid"]) in rules[rule]:
-          return rule
+      letter = item['category'][0]
+      riskGroups = ["H", "P", "O"]
+      if letter in riskGroups:
+        return letter 
+      else:
+        for rule in rules.keys():
+          if item["chemid"] in rules[rule]:
+            return rule
   except:
     return 0
   return 0

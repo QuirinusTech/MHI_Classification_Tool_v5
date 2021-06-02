@@ -1,3 +1,4 @@
+from Legacy.legacyUnNumbersModule import UnNumber
 from flask import Flask, jsonify, request, redirect, render_template, url_for, flash, session
 from flask_login import LoginManager, UserMixin, current_user, login_user, login_required, logout_user
 from wtforms.validators import DataRequired
@@ -9,12 +10,13 @@ import json
 import hyginus
 from namedSubstancesModule import namedSubstances
 import requests
-from listedSubstancesModule import MasterCategoryController, listedSubstances, flammableLiquidWarning
+from listedSubstancesModule import MasterCategoryController, listedSubstances, flammableLiquidWarning, RuleFinder
 from random import randint
 from users import dbUsers
 from mercury import ReportError
 from werkzeug.exceptions import HTTPException
 import traceback
+from UNNumbers import unNumbers
 
 app = Flask(__name__)
 class LoginForm(FlaskForm):
@@ -135,7 +137,7 @@ def inventory():
   inv = GetInv()
   print('after')
   print(inventories)
-  return render_template("inventory.html", flammableLiquidWarning=flammableLiquidWarning, inventory=inv, chemlist=namedSubstances, listedSubstances=listedSubstances)
+  return render_template("inventory.html", flammableLiquidWarning=flammableLiquidWarning, inventory=inv, chemlist=namedSubstances, listedSubstances=listedSubstances, unNumbers=unNumbers)
 
 @app.route('/addtoinv', methods=["Post"])
 def addtoinv():
@@ -173,6 +175,10 @@ def results():
   if len(inv) > 0:
     try:
       results = hyginus.assessment(inv)
+      for item in inv:
+        rule = RuleFinder(item)
+        if rule != 0:
+          item["rule"] = rule
       for listedSubKey in results['usedListedSubstances'].keys():
         if type(results['usedListedSubstances'][listedSubKey]) is float:
           results['usedListedSubstances'][listedSubKey] = round(results['usedListedSubstances'][listedSubKey], 2)
@@ -358,6 +364,7 @@ def testinventory():
           result["qty"] = randint(0,maxqty)
           newFloat = randint(0,10) / randint(1,10)
           result["qty"] = result["qty"] + newFloat
+          result["qty"] = round(result["qty"],2)
           inv.append(result)        
   return render_template("inventory.html", inventory=inv, chemlist=namedSubstances, listedSubstances=listedSubstances, flammableLiquidWarning=flammableLiquidWarning)
 

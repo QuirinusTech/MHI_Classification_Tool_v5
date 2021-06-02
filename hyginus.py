@@ -5,6 +5,7 @@ import json
 import requests
 from mercury import ReportError
 import traceback
+from UNNumbers import unNumbers
 
 def stringsearch(z,t):
   """
@@ -32,14 +33,19 @@ def stringsearch(z,t):
       print("Response: ", match.group(2))
       return match.group(2)
   elif t == "fault": #PUG errors
-     match = re.search(r"(PUG[REST|VIEW].)([NotFound|Timeout])", z)
-     print("Match value: ", match)
-     if match is None:
-       print("stringsearch", t, "No faults found")
-       return "OK"
-     else:
-       print("fault found: ", match.group(2))
-       return match.group(2)
+    possiblefaults = ["No SID found", "PUGREST.NotFound", "PUGVIEW.Notfound", "PUGREST.TImeout", "PUGVIEW.Timeout"]
+    for possiblefault in possiblefaults:
+      if possiblefault in z:
+        print("stringsearch", t, possiblefault)
+        return possiblefault
+    match = re.search(r"(PUG[REST|VIEW].)([NotFound|Timeout])", z)
+    print("Match value: ", match)
+    if match is None:
+      print("stringsearch", t, "No faults found")
+      return "OK"
+    else:
+      print("fault found: ", match.group(2))
+      return match.group(2)
   elif t == "RT": #Record Title
     match = re.search(r"(RecordTitle.\: [\'|\"])([A-Za-z\s*]+)([\'|\"])", z)
     if match is None:
@@ -127,7 +133,6 @@ def AggregateAssessment(inv):
             qx = float(item["qty"]) / float(substance[currenttier])
             rule = RuleFinder(item)
             if rule != 0:
-              substance["rule"] = rule
               usedListedSubstances[rule] = float(usedListedSubstances[rule]) + qx
             else:
               flag = True
@@ -166,29 +171,29 @@ def deftier(item):
   """
 
   try:
+    keys = item.keys()
     qty = float(item["qty"])
-    if item['chemtype']=="named":
+    if "tier1" in keys and "tier2" in keys and "tier2" in keys:
+      threshholditem = item
+    elif item['chemtype']=="named":
       for substance in namedSubstances:
         if int(item["chemid"]) == int(substance["chemid"]):
-          if qty > substance["tier3"]:
-            return 3
-          elif qty > substance["tier2"]:
-            return 2
-          elif qty > substance["tier1"]:
-            return 1
-          else:
-            return 0
+          threshholditem = substance
     elif item["chemtype"]=="listed":
       for substance in listedSubstances:
         if int(item["chemid"]) == int(substance["chemid"]) or substance['desc'] == item['category']:
-          if qty > substance["tier3"]:
-            return 3
-          elif qty > substance["tier2"]:
-            return 2
-          elif qty > substance["tier1"]:
-            return 1
-          else:
-            return 0
+          threshholditem = substance
+    
+    print("threshholditem", threshholditem)
+    i = 3
+    while i > 0:
+      tierstring = "tier" + str(i)
+      print("tierstring", tierstring)
+      if qty > float(threshholditem[tierstring]):
+        return i
+      else:
+        i = i-1
+    return 0
   except Exception as e:
     errorstring = str(traceback.print_exc())
     errorstring = errorstring + str(e) + str(item)
@@ -260,7 +265,18 @@ def Process(newEntry):
     Function used for processing new additions to inventory
   """
   print("newEntry", newEntry)
+
   try:
+    if "field" in newEntry.keys():
+      field = newEntry["field"]
+    #added by UN number
+    if field == "UN":
+      for unnumbersub in unNumbers:
+        if newEntry["name"] == unnumbersub["UN"]:
+          for key in unnumbersub.keys():
+            newEntry[key] = unnumbersub[key]
+          return newEntry
+    
     #named substance
     if newEntry["chemtype"] == "named":
       #based on the current active dropdown on the addnew page, search for this substance in the namedSubstances DB by that field
@@ -316,16 +332,23 @@ def Process(newEntry):
     return newEntry
 
 def manualget(entry):
+  """
+    entry = substance
+    returns object with hazardPhrases and cid
+  """
   entry["searchtype"] = "name"
   entrykeys = entry.keys()
   if "chemid" in entrykeys and entry['chemid'] < 1000000:
+    print("searching with cid: ", entry['chemid'])
     entry["searchtype"] = "chemid"
     tryThisFirst = Call2(entry['chemid'])
     if tryThisFirst != False:
       return tryThisFirst
   elif "CAS" in entrykeys and entry["CAS"] != "":
     entry["searchtype"] = "CAS"
+    print("searching with CAS: ", entry["CAS"])
   elif "UN" in entrykeys and entry["UN"] != "":
+    print("searching with UN: ", entry["UN"])
     entry["searchtype"] = "UN"
 
   # check if substance not named substances database
@@ -338,27 +361,31 @@ def manualget(entry):
     query = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/substance/xref/rn/{cas}/json"
 
   #search by UN number
-  elif entry["UN"] == "UN":
+  elif entry["searchtype"] == "UN":
     print('Searching by UN Number')
-    un = entry["field"]
+    un = entry["UN"]
     query = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/substance/name/UN%20{un}/json"
 
   # search by substance name
   else:
     print('Searching by substance name')
-    substance = entry["field"]
+    if "field" in entry.keys():
+      substance = entry["field"]
+    else:  
+      substance = entry["name"]
     query = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/substance/name/{substance}/json"
 
+  print(query)
   response = requests.get(query)
   queryAnswer = json.loads(response.content)
   print("Response 1 received")
   print(queryAnswer)
   check1 = stringsearch(json.dumps(queryAnswer),"fault")
   #parse the response
-  if check1 == "NotFound":
+  if check1 != "OK":
     #call 1b
-    print('No results found with CAS. Searching by substance name')
-    substance = entry["field"]
+    print('No results found with first searchtype. Searching by substance name')
+    substance = entry["name"]
     query = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/substance/name/{substance}/json"
     response = requests.get(query)
     queryAnswer = json.loads(response.content)
@@ -399,3 +426,15 @@ def Call2(cid):
       return False
   elif check2 == "NotFound":
     return False
+
+def GetCAS(cid):
+  """
+    takes cid as arg, returns CAS number
+  """
+  print("Searching for CAS with cid ", cid)
+  query = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/{cid}/JSON?heading=synonyms"
+  print("query: ", query)
+  response = requests.get(query)
+  queryAnswer = json.loads(response.content)
+  cas = stringsearch(json.dumps(queryAnswer),"CAS")
+  return cas
