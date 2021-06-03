@@ -331,6 +331,15 @@ def Process(newEntry):
     errorstring = errorstring + str(e) + str(newEntry)
     ReportError(errorstring)
   finally:
+    if "CAS" not in newEntry.keys():
+      try:
+        attemptCAS = GetCAS(newEntry['chemid'])
+        if attemptCAS != None:
+          newEntry['CAS'] = attemptCAS
+        else:
+          newEntry['CAS'] = "-"  
+      except:
+        newEntry['CAS'] = "-"
     return newEntry
 
 def manualget(entry):
