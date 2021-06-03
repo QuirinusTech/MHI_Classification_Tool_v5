@@ -1,5 +1,32 @@
-{% if results.finaltier > 0 %}
-<p>Danger danger</p>
-{% else %}
-<p>Chillax bruh</p>
+
+{% if recommendation > 0 %}
+<p>Based on the given information, this calculator has determined that your installation's hazard level is {{ results.finalTier }}.</p> <!-- this variable is for the WORD and it is correct. DO NOT modify! -->
+<p>You will need to ensure that your facility has the following:</p>
+<ol>
+
+  {% if recommendation > 2 %}
+    <li>A Safety Report</li>
+  {% endif %}
+
+  {% if recommendation > 1 %}
+    <li>MIPP (Major Incident Prevention Policy)</li>
+
+  {% endif %}
+
+  {% if recommendation > 0 %}
+    <li>A formal risk assessment</li>
+    <li>An up-to-date Emergency Plan</li>
+  {% endif %}
+</ol>
+
+<p>Please contact us for a formal assessment.</p>
 {% endif %}
+{% if recommendation == 0 %}
+<p>This calculator doesn't think you're an MHI.</p>
+<p>Should you require a formal assessment, however, please contact us to set up an investigation</p>
+{% endif %}
+
+<br>
+<h5>Note:</h5>
+<p>All information submitted on this site will be kept confidential and will only be sent to iSHEcon if you submit a contact request.</p>
+<p>For more information on how we process data, please visit our <a href="{{url_for('faq')}}" target="_blank">FAQ</a> page.</p>

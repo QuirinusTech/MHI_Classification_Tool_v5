@@ -15,6 +15,10 @@ function init (){
   // addtoinv() and clear() buttons
   var btnclear = document.getElementById("clear_btn")
   btnclear && btnclear.addEventListener("click", ()=>{clear()})
+  var addtoinv_btn = document.getElementById('addtoinv_btn')
+  addtoinv_btn && addtoinv_btn.addEventListener('click', ()=> {addtoinv()})
+  var hide_addnew_form_btn = document.getElementById("hide_addnew_form_btn")
+  hide_addnew_form_btn && hide_addnew_form_btn.addEventListener('click', ()=> {hideaddnew()})
 
   // remove loader
   loading(0)
@@ -42,10 +46,31 @@ function showAddNewHandler () {
   document.getElementById('addnewbox').style.display = 'flex'
 }
 
+/** activates loading screen and redirect.
+ * arg1=href (e.g. '/about')  */
+ function Redirect(arg) {
+  loading(1)
+  window.location.href = arg;
+}
+
+function popUp(string, type="Info") {
+  if (string === 0) {
+    $("#popup").slideUp()
+  } else {
+    $("#popup--heading").html(type)
+    $("#popup--body").html(string)
+    $("#popup").slideDown();
+    
+    setTimeout(()=> { $("#popup").slideUp(); }, 3000);
+  }
+  
+}
+
 function loading(x, t=1500) {
   $("#loader_width_adjustable").attr("style", "width: 100%")
   if (x==1) {
     $("#main").hide()
+    popUp("Accessing Database. Please wait.")
     $("#pre_loader").show()
     $(".meter > span").each(function() {
       $(this)
@@ -57,6 +82,7 @@ function loading(x, t=1500) {
     });
   } else {
     $("#pre_loader").hide()
+    popUp(0)
     $("#main").show()
   }
 }
@@ -125,6 +151,9 @@ function hide(x) {
 /** assess the risk associated with the current inventory */
 function Process() {
   if (inventoryexists===true) {
+    setTimeout(() => {
+      popUp("We're still processing your results. Please wait.","Calculating")
+    }, 3000);
     $(".current_page").removeClass('current_page')
     $("#navbar_process").addClass("current_page")
     hide("list_div")
@@ -142,8 +171,15 @@ function NewStart() {
   loading(1,500)
   $.post("/clearinv", {"clearinv": true}, function (data) {
     if (data == "Cleared") {
-      Redirect('/')
+      Redirect('/inventory')
     }
   })
+}
+
+
+
+function errorPrint(errorreport) {
+  $.post("/errorReport", errorreport);
+  console.log("Administrator notified.")
 }
 

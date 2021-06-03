@@ -1,185 +1,145 @@
 <div class="detailsView">
-  <div class="detailsView_header">
-    <h3>Detailed View</h3>
-    <button onclick="hide('detailed_view_div')" class="button_icon fs-25">&times;</button>
-  </div>
+
+  <!-- Individual Classifications-->
   <div class="detailsView_body">
     <div class="detailsView_body_column">
-      <div class="detailsView_body_column_header">
-        <h4>
-          Individual Rating
-        </h4>
-        <p>
-          {{ results.indtier }}
-        </p>
-      </div>
       <div class="detailsView_body_column_body">
-        <div class="detailsView_body_column_body_subheader">
-          <p>Substance</p>
-          <p>Tier</p>
-        </div>
+
         <div class="detailsView_body_column_body_content">
-          {% for item in inv %}
-            <p>{{ item.name}}</p>
-            <p>{{ item.tier}}</p>
-          {% endfor %}
+          <h2>Individual Classification</h2>
+          <table class="table--inventory--results">
+            <tr class="inventory--item">
+              <th class="inventory--item--td-left">Substance</th>
+              <th class="inventory--item--td-centre">Quantity (Tonnes)</th>
+              <th class="inventory--item--td-right">Tier</th>
+            </tr>
+            {% for item in inv %}
+            <tr class="inventory--item">
+              <td class="inventory--item--td-left">{{ item.name}}</td>
+              <td class="inventory--item--td-centre">{{ item.qty}}</td>
+              <td class="inventory--item--td-right">{{ item.tier}}</td>
+            </tr>
+            {% endfor %}
+          </table>
         </div>
         <div id="ind_tier_explain" class="detailsView_body_column_body_footnote">
           <h5>Some subheading explaining what this is</h5>
-          <p>Individual tier rating explanation message goes here.</p>
+          <p>Individual tier Classification explanation message goes here.</p>
         </div>
       </div>
     </div>
-    {% if results.usedlistedsubs|length  > 0 %}
+
+    <!-- Aggregate Classifications -->
     <div class="detailsView_body_column">
-      <div class="detailsView_body_column_header">
-        <h4>
-          Cumulative Rating
-        </h4>
-        <p>
-          {{ results.cumultier }}
-        </p>
-      </div>
       <div class="detailsView_body_column_body">
-        <div class="detailsView_body_column_body_subheader">
-          <p>Substance</p>
-          <p>Tier</p>
+        <div class="detailsView_body_column_body_content">
+          <h2>Aggregate Rule</h2>
+          <table class="table--inventory--results">
+            <tr class="inventory--item">
+              <th class="inventory--item--td-left">
+                Substance Group
+              </th>
+              <th class="inventory--item--td-right">
+                Total
+              </th>
+            </tr>
+            {% for sub in results.usedListedSubstances.keys() %}
+            <tr class="inventory--item">
+              <td class="inventory--item--td-left">            
+                {% if sub == "H" %}
+                <table>
+                  <tr>
+                    <td>
+                      Group H: Toxic Substances
+                    </td>
+                  </tr>
+                  {% if results.usedListedSubstances[sub] > 0 %}
+                  <tr>
+                    <td>
+                      Substances applicable to this classification:
+                    </td>
+                    <td>
+                      <ul class="applicable_substances">
+                        {% for substance in inv %}
+                      
+                        {% if substance.rule == sub %}
+                        <li>{{substance.name}} ({{substance.qty}} t)</li> 
+                      {% endif %}
+                      
+                      {% endfor %}
+                      </ul>
+                    </td>
+                  </tr>
+                {% endif %}
+
+                </table>
+                {% elif sub == "P" %}
+                <table>
+                  <tr>
+                    <td>
+                      Group P: Flammable and Explosive Substances
+                    </td>
+                  </tr>
+                  {% if results.usedListedSubstances[sub] > 0 %}
+                  <tr>
+                    <td>
+                      Substances applicable to this classification:
+                    </td>
+                    <td>
+                      
+                      <ul class="applicable_substances">
+                        {% for substance in inv %}
+                        {% if substance.rule == sub %}
+                        <li>{{substance.name}} ({{substance.qty}} t)</li> 
+                      {% endif %}
+                      {% endfor %}
+                      </ul>
+                      
+                    </td>
+                  </tr>
+                {% endif %}
+
+                </table>
+                {% elif sub == "O" %}
+                <table>
+                  <tr>
+                    <td>
+                      Group O: Eco-Toxic Substances
+                    </td>
+                  </tr>
+
+                    {% if results.usedListedSubstances[sub] > 0 %}
+                      <tr>
+                        <td>
+                          Substances applicable to this classification:
+                        </td>
+                        <td>
+                          
+<ul class="applicable_substances">
+  {% for substance in inv %}
+  {% if substance.rule == sub %}
+  <li>{{substance.name}} ({{substance.qty}} t)</li> 
+{% endif %}
+{% endfor %}
+</ul>
+                          
+                        </td>
+                      </tr>
+                    {% endif %}
+
+                </table>
+                {% endif %}
+              </td>
+              <td class="inventory--item--td-right">{{ results.usedListedSubstances[sub] * 100 }}%</td>
+            </tr>
+            {% endfor %}
+          </table>
         </div>
-        <div class="detailsView_body_column_body_content">  
-          {% if results.usedlistedsubs %}
-          {% for sub in results.usedlistedsubs.keys() %}
-              {% if sub == "A" %}
-              <p>Group A (Toxic and Very Toxic)</p>
-              <p>{{ results.usedlistedsubs[sub] * 100 }}%</p>
-              {% endif %}
-              {% if sub == "B" %}
-              <p>Group B (Oxidising, Explosive, Flammable, Highly Flammable and Extremely Flammable)</p>
-              <p>{{ results.usedlistedsubs[sub] * 100 }}%</p>
-              {% endif %}
-              {% if sub == "C" %}
-              <p>Group C (Toxic or Very Toxic to Aquatic Organisms)</p>
-              <p>{{ results.usedlistedsubs[sub] * 100 }}%</p>
-              {% endif %}
-          {% endfor %}
-          {% else %}
-            <p>No Cumulative Rating was calculated, as the rating provided by the individual rating supercedes the cumulative rating.</p>
-          {% endif %}
-        </div>
-        <div id="cumul_tier_explain" class="detailsView_body_column_body_footnote">
-          <h5>Some subheading explaining what this is</h5>
-          <p>Cumulative tier rating explanation message goes here..</p>
+        <div id="aggregate_tier_explain" class="detailsView_body_column_body_footnote">
+          <h5>Aggregate Tier note:</h5>
+          <p>The aggregate tier calculation for the given inventory exceeded the <strong>{{ results.aggregateTier }}</strong> thresholds</p>
         </div>
       </div>
     </div>
-    {% endif %}
   </div>
-
-
-
-
-
-
-<!-- 
-
-  <div>
-    <table>
-      <thead>
-        <tr>
-          <th>
-            <h4>
-              Individual Rating
-            </h4>
-          </th>
-          <th>
-            {{ results.indtier }}
-          </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>
-          <p>Substance</p>
-        </td>
-        <td>
-          <p>Tier</p>
-        </td>
-      </tr>
-      {% for item in inv %}
-      <tr>
-        <td>
-          {{ item.name}}
-        </td>
-        <td>
-          {{ item.tier}}
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-    </table>
-    <div id="ind_tier_explain">
-      <p>Individual tier rating explanation message goes here.</p>
-    </div>
-  </div>
-
-
-
-
-
-
-
-
-
-
-  <div class="flexdc mar10px">
-    <h3>
-      Cumulative Rating
-    </h3>
-    <span>
-      {{ results.cumultier }}
-    </span>
-    <table>
-      <tr>
-        <th>
-          Substance
-        </th>
-        <th>
-          Tier
-        </th>
-      </tr>
-      <tr>
-        <td colspan="2">
-          The following  group classification ratings are in terms of point 5, subsection A 2 of the MHI Regulations.
-        </td>
-      </tr>
-      {% if results.usedlistedsubs %}
-      {% for sub in results.usedlistedsubs.keys() %}
-      <tr id="{{sub}}_tr">
-        <td>
-          {% if sub == "A" %}
-          Group A <button class="info_button" data-type="tooltip" title="Toxic and Very Toxic">Hover for more info</button>
-          {% endif %}
-          {% if sub == "B" %}
-          Group B <button class="info_button" data-type="tooltip" title="Oxidising, Esplosive, Flammable, Highly Flammable and Extremely Flammable">Hover for more info</button>
-          {% endif %}
-          {% if sub == "C" %}
-          Group C <button class="info_button" data-type="tooltip" title="Toxic or Very Toxic to Aquatic Organisms">Hover for more info</button>
-          {% endif %}
-        </td>
-        <td>
-          {{ results.usedlistedsubs[sub] * 100 }}%
-        </td>
-      </tr>
-      {% endfor %}
-      {% else %}
-      <tr>
-        <td colspan="2">
-          No Cumulative Rating was calculated, as the rating provided by the individual rating supercedes the cumulative rating.
-        </td>
-      </tr>
-      {% endif %}
-    </table>
-    <div id="cumul_tier_explain">
-      <p>Cumulative tier rating explanation message goes here.</p>
-    </div>
-  </div> -->
 </div>

@@ -1,0 +1,2 @@
+select#searchtype
+width: decrease from 30% to 25%

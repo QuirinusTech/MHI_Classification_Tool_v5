@@ -7,6 +7,7 @@
 </script>
   <div class="header">
     <h1>Inventory</h1>
+    
   </div>
   <div class='main_content'>
     <div class="block block--wide" id="">
@@ -15,10 +16,10 @@
           <thead>
             <tr>
               <th><h4>#</h4></th>
-              <td><h4>CAS</h4></td>
+              <td><h4>CAS / UN</h4></td>
               <th><h4>Substance</h4></th>
               <th><h4>Type</h4></th>
-              <th><h4>Class</h4></th>
+              <th><h4>Category</h4></th>
               <th><h4>Qty <br><span>(tonnes)</span></h4></th>
               <th></th>
             </tr>
@@ -32,11 +33,11 @@
           {% for item in inventory %}
           <tr>
             <td>{{ loop.index }}</td>
-            <td>{% if item["CAS"] %}{{ item.CAS}}{% else %}None{% endif %}</td>
+            <td>{% if item["UN"] %}UN {{ item.UN }}{% elif item["CAS"] != "-" %}{{ item.CAS}}{% else %}-{% endif %}</td>
             <td>{{ item.name }}</td>
-            <td>{{ item.type }}</td>
-            {% if item['class'] %}
-            <td>{{ item.class }}</td>
+            <td>{{ item.chemtype }}</td>
+            {% if item['category'] %}
+            <td>{{ item.category }}</td>
             {% else %}
             <td>-</td>
             {% endif %}

@@ -1,6 +1,11 @@
 import re
+from listedSubstancesModule import listedSubstances, RuleFinder, MasterCategoryController, RuleFinder, listedSubstances, CategoryFinder
+from namedSubstancesModule import namedSubstances
 import json
-import hphrases
+import requests
+from mercury import ReportError
+import traceback
+from UNNumbers import unNumbers
 
 def stringsearch(z,t):
   """
@@ -28,14 +33,19 @@ def stringsearch(z,t):
       print("Response: ", match.group(2))
       return match.group(2)
   elif t == "fault": #PUG errors
-     match = re.search(r"(PUG[REST|VIEW].)([NotFound|Timeout])", z)
-     print("Match value: ", match)
-     if match is None:
-       print("stringsearch", t, "No faults found")
-       return "OK"
-     else:
-       print("fault found: ", match.group(2))
-       return match.group(2)
+    possiblefaults = ["No SID found", "PUGREST.NotFound", "PUGVIEW.Notfound", "PUGREST.TImeout", "PUGVIEW.Timeout"]
+    for possiblefault in possiblefaults:
+      if possiblefault in z:
+        print("stringsearch", t, possiblefault)
+        return possiblefault
+    match = re.search(r"(PUG[REST|VIEW].)([NotFound|Timeout])", z)
+    print("Match value: ", match)
+    if match is None:
+      print("stringsearch", t, "No faults found")
+      return "OK"
+    else:
+      print("fault found: ", match.group(2))
+      return match.group(2)
   elif t == "RT": #Record Title
     match = re.search(r"(RecordTitle.\: [\'|\"])([A-Za-z\s*]+)([\'|\"])", z)
     if match is None:
@@ -44,144 +54,112 @@ def stringsearch(z,t):
     else:
       print("Response: ", match.group(2))
       return match.group(2)
-
+  elif t == "UN":
+    match = re.search(r"([\'|\"]UN[\s]?)(\d{4})([\'|\"],)", z)
+    if match is None:
+      print("stringsearch", t, "Response: None")
+      return None
+    else:
+      print("UN Number: ", match.group(2))
+      return match.group(2)
+  elif t == "CAS":
+    match = re.search(r"([0-9]{2,7}-[0-9]{2}-[0-9])", z)
+    if match is None:
+      print("stringsearch", t, "Response: None")
+      return None
+    else:
+      print("CAS Number: ", match.group(1))
+      return match.group(1)
   else:
     pass
 
-def checkCAS(arg1):
-  result = re.search(r"[\d]{1,5}-[\d]{1,5}-[\d]{1,5}", arg1)
-  return result
-
-def getnums(x):
-  """
-    Extracts numbers from a string (x)
-  """
-  listresults = re.search(r"[0-9]+", x)
-  return listresults[0]
-
-
-# 0id, 1CAS, 2substance, 3tier1, 4tier2, 5tier3, 6type, 7class, 8tooltip, 9h-phrases
-bigDatabase = [
-[101, "", "Carcinogens", 0.05, 0.5, 2, "named", "", "Carcinogens at concentration above 5%: 4-Aminobiphenyl, Benzotrichloride, Benzidine, Chloromethyl ether, Chloromethyl methyl ether, 1,2-Dibromoethane, Diethyl sulphate, Dimethyl sulphate, Dimethylcarbamoyl Chloride, 1,2-Dibromo-3-chloropropane, 1,2-Dimethylhydrazine, Dimethylnitrosamine, Hexamethylphosphoric triamide, Hydrazine, 2-Naphthylamine, 2-Naphthylamine salts, 4-Nitrodiphenyl, 1,3-Propanesultone","",["H302", "H350", "H400", "H410"]],
-[6326, "74-86-2", "Acetylene", 0.5, 5, 50, "named", "", "", ["H220"]],
-[222, "7664-41-7", "Ammonia anhydrous", 5, 50, 200, "named", "", "", ["H221", "H314", "H331", "H400"]],
-[229851, "6484-52-2", "Ammonium nitrate (Composites)", 500, 5000, 10000, "named", "", "Ammonium Nitrate-based fertiliser composites with less than 25% Nitrogen content as a result of Ammonium Nitrate and with no more than 0.4% total combustible or organic materials (or which satisfy the detonation resistance test).",["H272"]],
-[229852, "6484-52-2", "Ammonium nitrate (Fertiliser grade)", 125, 1250, 5000, "named", "", "Ammonium Nitrate-based Fertiliser with more than 24,5% Nitrogen as a result of Ammonium Nitrate or Ammonium Sulphate composites with more than 16% Nitrogen as a result of Ammonium Nitrate.",["H272"]],
-[229853, "6484-52-2", "Ammonium nitrate (Technical grade)", 35, 350, 2500, "named", "", "Ammonium Nitrate and preparations of ammonium nitrate in with more than 24,5% Nitrogen as a result of Ammonium Nitrate or aqueous ammonium nitrate solutions of which 80% or more is Ammonium Nitrate.",["H272"]],
-[229854, "6484-52-2", "Ammonium nitrate (10/50 Off-Specs)", 1, 10, 50, "named", "", "Ammonium Nitrate \"off-specs\" material and fertilisers not satisfying the detonation resistance test or degraded and/or contaminated Ammonium Nitrate compounds.",["H272"]],
-[234, "7778-39-4", "Arsenic (V) acid and/or salts", 0.1, 1, 2, "named", "", "", ["H301","H312","H314","H318","H331","H350","H361","H400","H410"]],
-[14771, "1303-28-2", "Arsenic pentoxide", 0.1, 1, 2, "named", "", "",["H301","H331","H350","H400","H410"]],
-[518605, "1327-53-3", "Arsenic trioxide", 0.01, 0.1, 0.1, "named", "", "Tetraarsenic oxide / ",["H300","H314","H350","H400", "H410"]],
-[76591, "3141-12-6", "Arsenous (III) acid and/or salts", 0.01, 0.1, 0.1, "named", "", "Triethyl arsenite / Arsenous acid / triethyl ester",["H226","H301","H301","H331","H400","H410"]],
-[24408, "7726-95-6", "Bromine", 2, 20, 100, "named", "", "",["H314","H330","H400"]],
-[6371, "75-44-5", "Carbonyl dichloride", 0.03, 0.3, 0.75, "named", "", "Phosgene",["H314","H330"]],
-[23969, "7784-42-1", "Arsenic trihydride", 0.02, 0.2, 1, "named", "", "Arsine / Hydrogen arsenide",["H220","H330","H373","H400","H410"]],
-[24526, "7782-50-5", "Chlorine", 1, 10, 25, "named", "", "Chloride, Bertholite",["H270","H315","H319","H331","H335","H400"]],
-[6354, "75-21-8", "Ethylene oxide", 0.5, 5, 50, "named", "", "",["H220","H315","H319","H331","H335","H340","H350"]],
-[9033, "151-56-4", "Ethyleneimine", 1, 10, 20, "named", "", "Aziridine, Polyethyleneimine",["H225","H300","H310","H314","H330","H340","H350","H411"]],
-[24524, "7782-41-4", "Fluorine", 1, 10, 20, "named", "", "",["H270","H314","H330"]],
-[712, "50-00-0", "Formaldehyde", 0.5, 5, 50, "named", "", "Formalin",["H301","H311","H314","H317","H331","H341","H350"]],
-[783, "1333-74-0", "Hydrogen", 0.5, 5, 50, "named", "", "",["H220"]],
-[313, "7647-01-0", "Hydrogen chloride", 2.5, 25, 250, "named", "", "Hydrochloric Acid (liquefied gas)",["H314", "H331"]],
-[14917, "7664-39-3", "Hydrogen fluoride", 0.5, 5, 20, "named", "", "",["H300","H310","H314","H330"]],
-[21, "", "Lead alkyls", 0.5, 5, 50, "named", "", "", []],
-[22, "", "LPG", 5, 50, 200, "named", "", "Liquefied extremely flammable gases (including LPG) and natural gas (liquefied or otherwise).",[]],
-[887, "67-56-1", "Methanol", 50, 500, 5000, "named", "", "Carbinol",["H225","H301","H311","H331","H370"]],
-[12228, "624-83-9", "Methyl isocyanate", 0.015, 0.15, 0.15, "named", "", "Methyl carbonimide",["H225","H301","H311","H315","H317","H318","H330","H334","H335","H361"]],
-[7543, '101-14-4', '4,4-Methylenebis', 0.001, 0.01, 0.01, 'named', '', '2-Chloraniline and/or salts (Powder form)',["H302","H350","H400","H410"]],
-[25, "", "Nickel compounds", 0.1, 1, 1, "named", "", "Nickel compounds in inhalable powder form: Nickel monoxide, Nickel dioxide, Nickel sulphide, tri-Nickel disulphide, di-Nickel trioxide.",[]],
-[977, "7782-44-7", "Oxygen", 20, 200, 2000, "named", "", "",["H270"]],
-[6334, "6334", "Petroleum products", 250, 2500, 25000, "named", "", "gasolines ; naphthas; kerosenes (including jet fuels); gas oils (including diesel fuels; home heating oils and gas oil blending streams)",["H220"]],
-[24404, "7803-51-2", "Phosphorus trihydride", 0.02, 0.2, 1, "named", "", "Phosphine",["H220","H314","H330","H400"]],
-[15625, "1746-01-6", "Polychlorodibenzofurans / polychlorodibenzodioxins (including TCDD)", 1, 0.001, 0.001, "named", "", "Please see the Note 7 table on the FAQ page for more info about this substances composition.",["H300", "H319", "H400", "H410"]],
-[244341, "", "Potassium nitrate (granular)", 500, 5, 10, "named", "", "Potassium nitrate (5 000/10 000): composite potassium nitrate-based fertilisers composed of potassium nitrate in prilled/granular form.",[]],
-[244342, "", "Potassium nitrate (crystalline)", 125, 1, 5, "named", "", "Potassium nitrate (1 250/5 000): composite potassium nitrate-based fertilisers composed of potassium nitrate in crystalline form.",[]],
-[6378, "75-56-9", "Propylene oxide", 0.5, 5, 50, "named", "", "Methyloxirane",["H224","H302","H311","H319","H331","H335","H340","H350"]],
-[25353, "10545-99-0", "Sulphur dichloride", 0.1, 1, 1, "named", "", "",["H314","H335","H400"]],
-[1119, "7446-09-5", "Sulphur dioxide", 0.5, 5, 20, "named", "", "Sulfurous anhydride, Sulfurous oxide",["H314","H331"]],
-[24682, "7446-11-9", "Sulphur trioxide", 1.5, 15, 75, "named", "", "12210-38-7",["H314","H318","H330","H335","H351","H411"]],
-[21584847, "", "Toluene di-isocyanate", 1, 10, 100, "named", "", "",["H315","H317","H319","H330","H334","H351"]]
-]
-
-listedSubstances = [
-  {'chemid': 201, 'tier1': 0.5, 'tier2': 5, 'tier3': 20, 'class': 'Very toxic ', 'tooltip': 'very toxic'},
-  {'chemid': 202, 'tier1': 5, 'tier2': 50, 'tier3': 200, 'class': 'Toxic', 'tooltip': 'TOXIC (R23 as per Note 4)'},
-  {'chemid': 203, 'tier1': 5, 'tier2': 50, 'tier3': 200, 'class': 'Oxidising', 'tooltip': 'OXIDISING'},
-  {'chemid': 204, 'tier1': 500, 'tier2': 5000, 'tier3': 50000, 'class': 'Flammable', 'tooltip': 'flammable liquids - substances and preparations having a flash point of 23°C - 60°C (danger group III as per SANS 10228), supporing combustion'},
-  {'chemid': 205, 'tier1': 5, 'tier2': 50, 'tier3': 200, 'class': 'Highly Flammable (a)', 'tooltip': 'substances and preparations which may become hot and finally catch fire in contact with air at ambient temperature without any input of energy. Substances and preparations which have a flashpoint lower than 60;&degC and which remain liquid under pressure, where particular processing conditions, such as high pressure or high temperature may cause major-incident hazards. Substances and preparations having a flash point lower than 23;&degC and which are not extremely flammable (danger group II SANS 10228)'},
-  {'chemid': 206, 'tier1': 500, 'tier2': 5000, 'tier3': 50000, 'class': 'Highly Flammable (b)', 'tooltip': 'Flash point below 0;&degC. Boiling point at normal pressure  < 35;&degC. Flammable when in contact with air at ambient temp and pressure, which are in a gaseous or supercritical state and flammable or highly flammable substances which are maintained at a temperature above their boiling point.'},
-  {'chemid': 207, 'tier1': 1, 'tier2': 10, 'tier3': 50, 'class': 'Extremely Flammable', 'tooltip': 'liquid substances and preparations which have a flash point lower than 0°C and the boiling point (or; in the case of a boiling range; th'},
-  {'chemid': 208, 'tier1': 10, 'tier2': 100, 'tier3': 200, 'class': 'Hazardous (Environment) (a)', 'tooltip': 'HAZARDOUS FOR THE ENVIRONMENT risk phrases: (a) Very toxic to aquatic organisms'},
-  {'chemid': 209, 'tier1': 20, 'tier2': 200, 'tier3': 500, 'class': 'Hazardous (Environment) (b)', 'tooltip': 'HAZARDOUS FOR THE ENVIRONMENT risk phrases: (b) Toxic to aquatic organisms: may cause long term adverse effects in the aquatic environme'},
-  {'chemid': 210, 'tier1': 10, 'tier2': 100, 'tier3': 200, 'class': 'Violent Reaction', 'tooltip': 'ANY CLASSIFICATION not covered by those given above in combination with risk phrases: (a) Reacts violently with water'},
-  {'chemid': 211, 'tier1': 5, 'tier2': 50, 'tier3': 200, 'class': 'Gas Release', 'tooltip': 'ANY CLASSIFICATION not covered by those given above in combination with risk phrases: (b) In contact with water; liberates toxic gas'}
-  ]
-
-#pure list of chemicals
-chemlist = []
-MainDB = []
-
-for chem in bigDatabase:
-  MainDB.append({"chemid": chem[0], "CAS": chem[1], "name": chem[2], "tier1": chem[3], "tier2": chem[4], "tier3": chem[5], "type": chem[6], "class": chem[7], "tooltip": chem[8], "hphrases": chem[9]})
-
-for chem in MainDB:
-  chemlist.append({"chemid": chem["chemid"], "CAS": chem["CAS"], "name": chem["name"], "type": chem["type"], "class": chem["class"], "tooltip": chem["tooltip"], "hphrases": chem["hphrases"]})
-print("chemlist loaded!")
-
-def findattribs(param1):
-
-  """
-    Small function for finding attributes of a listed substance based on the chemid (param1)
-  """
-
-  print("findattribs", param1)
-  for chem in chemlist:
-    if param1 == chem["chemid"]:
-      return chem
-
 def assessment(inv):
-
   """
     Full inventory (inv) assessment assessment.
     Determined individual tier
-    if individual tier = 0, also determines cumulative tier
+    if individual tier = 0, also determines aggregate tier
 
     returns an dict of results
   """
+  #set up final variable
+  results = {"indTier" : 0, "aggregateTier": 0, "finalTier": 0}
+  individualFlags = []
+  try:
+    #individual tiers
+    for item in inv:
+      item["tier"] = deftier(item)
+      if item["tier"] == None or item["tier"] == False:
+        individualFlags.append(item['name'])
+      else:
+        if item["tier"] > results["indTier"]:
+          results["indTier"] = item["tier"]
+    if results["indTier"] > 0:
+      results["finalTier"] = results["indTier"]
 
-  results = {"indtier" : 0, "cumultier": 0, "finaltier": 0}
-  for item in inv:
-    #individual
-    item["tier"] = deftier(item)
-    if item["tier"] > results["indtier"]:
-      results["indtier"] = item["tier"]
-  if results["indtier"] > 0:
-    results["finaltier"] = results["indtier"]
-  elif results["indtier"] == 0:
-    #no individual substances exceed the threshold, calculate the cumulative
-    usedlistedsubs = {"A": 0, "B": 0, "C": 0}
-    if item['type']=="named":
-      for substance in MainDB:
-        if int(item["chemid"]) == int(substance["chemid"]):
-          qx = int(item["qty"]) / int(substance["tier3"])
-          rule = hphrases.RuleFinder(item)
-          usedlistedsubs[rule] = usedlistedsubs[rule] + qx
-    elif item["type"]=="listed":
-      for substance in listedSubstances:
-        if int(item["chemid"]) == int(substance["chemid"]):
-          qx = int(item["qty"]) / int(substance["tier3"])
-          rule = hphrases.RuleFinder(item)
-          usedlistedsubs[rule] = usedlistedsubs[rule] + qx
-    #update the overall/final tier based on the findings of the cumulative tier rule
-    for sub in usedlistedsubs.keys():
-      if usedlistedsubs[sub] >= 1:
-        results["cumultier"] = 3
-        results["finaltier"] = 3
-    results["usedlistedsubs"] = usedlistedsubs
-  print(results)
-  return results
+    #calculate the aggregate rules
+    aggregateFindings = AggregateAssessment(inv)
+    for aggKey in aggregateFindings.keys():
+      results[aggKey] = aggregateFindings[aggKey]
+
+    if results["aggregateTier"] > results["finalTier"]:
+      results["finalTier"] = results["aggregateTier"]
+    if len(individualFlags) > 0:
+      results["flag"] = True
+      for item in individualFlags:
+        results["flaggedSubstances"].append(item)
+    return results
+  except Exception as e:
+    errorstring = str(traceback.print_exc())
+    errorstring = errorstring + str(e) + str(inv)
+    ReportError(errorstring)
 
 
+def AggregateAssessment(inv):
+  usedListedSubstances = {"H": 0, "P": 0, "O": 0}
+  aggregateTier = 3
+  done = False
+  flaggedSubstances = []
+  flag = False
+
+  while done == False:
+    usedListedSubstances["H"] = 0
+    usedListedSubstances["P"] = 0
+    usedListedSubstances["O"] = 0
+    for item in inv:
+      if item['chemtype']=="named":
+        for substance in namedSubstances:
+          if int(item["chemid"]) == int(substance["chemid"]):
+            currenttier = "tier" + str(aggregateTier)
+            qx = float(item["qty"]) / float(substance[currenttier])
+            rule = RuleFinder(item)
+            if rule != 0:
+              usedListedSubstances[rule] = float(usedListedSubstances[rule]) + qx
+            else:
+              flag = True
+              flaggedSubstances.append(item["name"])
+      elif item['chemtype']=="listed":
+        for substance in listedSubstances:
+          if int(item["chemid"]) == int(substance["chemid"]) or item['category'] == substance['desc']:
+            currenttier = "tier" + str(aggregateTier)
+            qx = float(item["qty"]) / float(substance[currenttier])
+            rule = RuleFinder(item)
+            if rule != 0:
+              substance["rule"] = rule
+              usedListedSubstances[rule] = float(usedListedSubstances[rule]) + qx
+            else:
+              flag = True
+              flaggedSubstances.append(item["name"]) 
+    for sub in usedListedSubstances.keys():
+      if usedListedSubstances[sub] >= 1: 
+        done = True
+    if aggregateTier > 0 and done == False:
+      aggregateTier = aggregateTier-1
+    if aggregateTier == 0:
+      done = True
+
+  #update the overall/final tier based on the findings of the aggregate tier rule
+  aggregateFindings = {"aggregateTier": aggregateTier, "usedListedSubstances": usedListedSubstances, "flag": flag, "flaggedSubstances": flaggedSubstances}
+  return aggregateFindings
 
 def deftier(item):
 
@@ -192,31 +170,271 @@ def deftier(item):
     qty, type, chemid 
   """
 
-  qty = int(item["qty"])
-  if item['type']=="named":
-    for substance in MainDB:
-      if int(item["chemid"]) == int(substance["chemid"]):
-        if qty > substance["tier3"]:
-          return 3
-        elif qty > substance["tier2"]:
-          return 2
-        elif qty > substance["tier1"]:
-          return 1
-        else:
-          return 0
-  elif item["type"]=="listed":
-    for substance in listedSubstances:
-      if int(item["chemid"]) == int(substance["chemid"]):
-        if qty > substance["tier3"]:
-          return 3
-        elif qty > substance["tier2"]:
-          return 2
-        elif qty > substance["tier1"]:
-          return 1
-        else:
-          return 0
+  try:
+    keys = item.keys()
+    qty = float(item["qty"])
+    if "tier1" in keys and "tier2" in keys and "tier2" in keys:
+      threshholditem = item
+    elif item['chemtype']=="named":
+      for substance in namedSubstances:
+        if int(item["chemid"]) == int(substance["chemid"]):
+          threshholditem = substance
+    elif item["chemtype"]=="listed":
+      for substance in listedSubstances:
+        if int(item["chemid"]) == int(substance["chemid"]) or substance['desc'] == item['category']:
+          threshholditem = substance
+    
+    print("threshholditem", threshholditem)
+    i = 3
+    while i > 0:
+      tierstring = "tier" + str(i)
+      print("tierstring", tierstring)
+      if qty > float(threshholditem[tierstring]):
+        return i
+      else:
+        i = i-1
+    return 0
+  except Exception as e:
+    errorstring = str(traceback.print_exc())
+    errorstring = errorstring + str(e) + str(item)
+    ReportError(errorstring)
+    return 0
 
-def listedtier(item):
-  for substance in listedSubstances:
-    if int(item["chemid"]) == substance["chemid"]:
-      return int(item["qty"]) / int(substance["tier1"])
+
+
+def convertNumberToWord(arg):
+  """
+    Converts all tier numbers to words 0=none,1=low,2=medium,3=high.
+    arg can be int, string, list, list of dict's or dict.
+    int/string will return string.
+    list will return list of strings.
+    dicts will return dict with all values that are ints between 0 and 3 converted to words
+  """
+
+  #actual converter
+  NumberToWord = {
+    3: "High",
+    2: "Medium",
+    1: "Low",
+    0: "None"
+  }
+  #number as integer
+  try:
+    if type(arg) is int and arg in NumberToWord.keys():
+      return str(NumberToWord[arg])
+    #number as string/float
+    elif type(arg) is str or type(arg) is float and int(arg) in NumberToWord.keys():
+      return str(NumberToWord[int(arg)])
+    #object with tier values. Attempt to parse numbers 1-3 as strings to int
+    elif type(arg) is dict:
+      for keyname in arg.keys():
+        if arg[keyname] in NumberToWord.keys():
+          arg[keyname] = NumberToWord[arg[keyname]]
+        elif int(arg[keyname]) in NumberToWord.keys():
+          arg[keyname] = NumberToWord[int(arg[keyname])]
+    #list of objects with tier values. attempt to parse numbers 1-3 as strings to int
+    elif type(arg) is list and type(arg[0]) is dict:
+      for chem in arg:
+        for keyname in chem.keys():
+          if chem[keyname] in NumberToWord.keys():
+            chem[keyname] = NumberToWord[chem[keyname]]
+          elif int(chem[keyname]) in NumberToWord.keys():
+            chem[keyname] = NumberToWord[int(chem[keyname])]
+    #list of numbers or list of numbers as strings/floats
+    elif type(arg) is list and type(arg[0]) is not dict:
+      for chem in arg:
+        if type(chem) is not int:
+          integer = int(chem)
+          string = NumberToWord[integer]
+          chem = string
+        elif chem in NumberToWord.keys():
+          chem = NumberToWord[chem]
+    return arg
+  except:
+    return arg
+
+def RemoveDuplicates(arr):
+  newarr = []
+  for item in arr:
+    if item not in newarr:
+      newarr.append(item)
+  return newarr
+
+def Process(newEntry):
+  """
+    Function used for processing new additions to inventory
+  """
+  print("newEntry", newEntry)
+
+  try:
+    if "field" in newEntry.keys():
+      field = newEntry["field"]
+    #added by UN number
+    if field == "UN":
+      for unnumbersub in unNumbers:
+        if newEntry["name"] == unnumbersub["UN"]:
+          for key in unnumbersub.keys():
+            newEntry[key] = unnumbersub[key]
+          return newEntry
+    
+    #named substance
+    if newEntry["chemtype"] == "named":
+      #based on the current active dropdown on the addnew page, search for this substance in the namedSubstances DB by that field
+      if "field" in newEntry.keys():
+        field = newEntry["field"]
+      for chem in namedSubstances:
+        if newEntry[field] == chem[field] or int(newEntry["chemid"]) == int(chem["chemid"]) or newEntry["name"] == chem["name"]:
+          #assign all the values of the substance from the DB
+          for chemkey in chem.keys():
+            newEntry[chemkey] = chem[chemkey]
+          #attempt to update the hphrases if there are none in the DB
+          try:
+            if newEntry["hazardPhrases"] == "" or len(newEntry["hazardPhrases"]) < 1:
+              manualgetresults = manualget(chem)
+              newEntry["category"] = MasterCategoryController(manualgetresults["hazardPhrases"], manualgetresults["chemid"])
+            else:
+              newEntry["category"] = MasterCategoryController(chem["hazardPhrases"], chem["chemid"])
+            if newEntry["category"] == False:
+              newEntry["flag"] = True
+              newEntry["category"] = "Undetermined"
+          except:
+            newEntry["flag"] = True
+            newEntry["category"] = "Undetermined"
+          break
+    
+    #listed substance
+    else:
+      #substance was added by category, create a name
+      if newEntry["name"] == newEntry["chemid"] or newEntry['field'] == "category":
+        for listedSubstance in listedSubstances:
+          if int(newEntry["chemid"]) == int(listedSubstance["chemid"]):
+            newEntry["category"] = listedSubstance["desc"]
+            newEntry["name"] = f"Group {listedSubstance['desc'][0]} substance"
+      else:
+        #parse the hphrases from a string to an array, in case they were pulled manually from external DB
+        if len(newEntry["hazardPhrases"]) > 0 and newEntry["hazardPhrases"] != "" and newEntry["hazardPhrases"] != []:
+          if type(newEntry["hazardPhrases"]) is not list:
+            hphrasestr = json.dumps(newEntry["hazardPhrases"])
+            hPhraseArray = stringsearch(hphrasestr,"H")
+            newEntry["hazardPhrases"] = hPhraseArray
+        
+        #The class wasn't manually selected; update the category
+        if int(newEntry["chemid"]) > 304:
+          newEntry["category"] = MasterCategoryController(hPhraseArray, newEntry["chemid"])
+        else:
+          newEntry["category"] = CategoryFinder(hPhraseArray,"desc")
+          newEntry["chemid"] = CategoryFinder(hPhraseArray,"chemid")
+  except Exception as e:
+    errorstring = str(traceback.print_exc())
+    errorstring = errorstring + str(e) + str(newEntry)
+    ReportError(errorstring)
+  finally:
+    return newEntry
+
+def manualget(entry):
+  """
+    entry = substance
+    returns object with hazardPhrases and cid
+  """
+  entry["searchtype"] = "name"
+  entrykeys = entry.keys()
+  if "chemid" in entrykeys and entry['chemid'] < 1000000:
+    print("searching with cid: ", entry['chemid'])
+    entry["searchtype"] = "chemid"
+    tryThisFirst = Call2(entry['chemid'])
+    if tryThisFirst != False:
+      return tryThisFirst
+  elif "CAS" in entrykeys and entry["CAS"] != "":
+    entry["searchtype"] = "CAS"
+    print("searching with CAS: ", entry["CAS"])
+  elif "UN" in entrykeys and entry["UN"] != "":
+    print("searching with UN: ", entry["UN"])
+    entry["searchtype"] = "UN"
+
+  # check if substance not named substances database
+  #CALL 1
+
+  # search by CAS
+  if entry["searchtype"] == "CAS":
+    print('Searching by CAS')
+    cas = entry["CAS"]
+    query = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/substance/xref/rn/{cas}/json"
+
+  #search by UN number
+  elif entry["searchtype"] == "UN":
+    print('Searching by UN Number')
+    un = entry["UN"]
+    query = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/substance/name/UN%20{un}/json"
+
+  # search by substance name
+  else:
+    print('Searching by substance name')
+    if "field" in entry.keys():
+      substance = entry["field"]
+    else:  
+      substance = entry["name"]
+    query = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/substance/name/{substance}/json"
+
+  print(query)
+  response = requests.get(query)
+  queryAnswer = json.loads(response.content)
+  print("Response 1 received")
+  print(queryAnswer)
+  check1 = stringsearch(json.dumps(queryAnswer),"fault")
+  #parse the response
+  if check1 != "OK":
+    #call 1b
+    print('No results found with first searchtype. Searching by substance name')
+    substance = entry["name"]
+    query = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/substance/name/{substance}/json"
+    response = requests.get(query)
+    queryAnswer = json.loads(response.content)
+    print("Response 1b received")
+    print(queryAnswer)
+    check1b = stringsearch(json.dumps(queryAnswer),"fault")
+    if check1b == "NotFound":
+      return False
+    elif check1b == "OK":
+      cid = stringsearch(json.dumps(queryAnswer), "cid")
+      print("CID found: ", cid)
+  
+  elif check1 == "OK":
+    cid = stringsearch(json.dumps(queryAnswer), "cid")
+    print("CID found: ", cid)
+
+  tryThisNow = Call2(cid)
+  return tryThisNow
+  
+
+def Call2(cid):
+  #call 2
+  query2 = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/{cid}/JSON?heading=GHS classification"
+  print("query2: ", query2)
+  response2 = requests.get(query2)
+  queryAnswer2 = json.loads(response2.content)
+  print("response2 received")
+  check2 = stringsearch(json.dumps(queryAnswer2),"fault")
+ 
+  if check2 == "OK":
+    hazardPhrases = stringsearch(json.dumps(queryAnswer2), "H")
+    recordTitle = stringsearch(json.dumps(queryAnswer2), "RT")
+    if recordTitle != "None" and hazardPhrases != []:
+      findings = {"hazardPhrases": hazardPhrases, "chemid": cid}
+      print(findings)
+      return findings
+    else:
+      return False
+  elif check2 == "NotFound":
+    return False
+
+def GetCAS(cid):
+  """
+    takes cid as arg, returns CAS number
+  """
+  print("Searching for CAS with cid ", cid)
+  query = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/{cid}/JSON?heading=synonyms"
+  print("query: ", query)
+  response = requests.get(query)
+  queryAnswer = json.loads(response.content)
+  cas = stringsearch(json.dumps(queryAnswer),"CAS")
+  return cas

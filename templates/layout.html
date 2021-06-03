@@ -4,8 +4,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="/static/js/scripts.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-<script>inventoryexists=false</script>
+<script>
+  inventoryexists=false
+
+  window.addEventListener('error', e => {
+    const {message, filename, lineno, colno, error } = e
+    let errorreport = {
+        'message': message,
+        'filename': filename,
+        'lineno': lineno,
+        'colno': colno,
+        'error': error.stack 
+    }
+    errorPrint(errorreport)
+})
+
+</script>
 <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
 <link rel="stylesheet" type="text/css" href="/static/css/layout_styles.css">
 </head>
@@ -20,10 +36,18 @@
         <ul>
           <li><a id="navbar_welcome" href="{{ url_for('welcome')}}">Welcome</a></li>
           <li> <a id="navbar_help" href="{{ url_for('help') }}">How it is calculated</a></li>
+          {% if current_user.is_authenticated %}
           <li><a id="navbar_inventory" href="{{ url_for('inventory') }}">Inventory</a></li>          
           <li><a id="navbar_results" href="{{ url_for('results') }}">Results</a></li>
+          <li><a href="{{ url_for('testinventory') }}">Test Inventory</a></li>
+          <li><a onclick="NewStart()">Clear inventory</a></li>
+          <li><a id="navbar_logout" href="{{ url_for('logout') }}" class="nav_menu_element">Logout</a></li>
+          {% endif %}
           <li><a id="navbar_contact" href="{{ url_for('contact') }}">Contact</a></li>
           <li><a id="navbar_faq" href="{{ url_for('faq') }}">FAQ</a></li>
+          {% if current_user.is_anonymous %}
+          <li><a href="{{ url_for('login') }}" class="nav_menu_element">Log in</a></li>
+          {% endif %}
         </ul>  
         <div class="quirinuslogo">
           <img src="/static/img/QuirinusTech.png">
@@ -33,13 +57,20 @@
       <div id="main" class="main">
         {% block body %}
         {% endblock %}
+        {% block content %}
+        {% endblock %}
       </div>  
+
       <div class="loading" id="pre_loader">
-        <p>loading...</p>
+        <p>loading... please wait</p>
         <div class="meter animate">
           <span id="loader_width_adjustable" style="width: 100%"><span></span></span>
         </div>
         <p class="status_message" id="status_message"></p>
+      </div>
+      <div id="popup" style="display: none;">
+        <h4 id="popup--heading">Heading</h4>
+        <p id="popup--body">Body of text goes here.</p>
       </div>
   </div>
 </body>
