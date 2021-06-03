@@ -1,1 +1,0 @@
-{'name': 'Ammonia anhydrous', 'UN': '1005', 'tier1': 15, 'tier2': 50, 'tier3': 200, 'chemid': 'NotFound', 'hazardPhrases': []}
