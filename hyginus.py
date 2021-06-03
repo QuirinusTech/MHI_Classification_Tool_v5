@@ -157,6 +157,8 @@ def AggregateAssessment(inv):
     if aggregateTier == 0:
       done = True
 
+  for key in usedListedSubstances.keys():
+    usedListedSubstances[key] = usedListedSubstances[key] * 100
   #update the overall/final tier based on the findings of the aggregate tier rule
   aggregateFindings = {"aggregateTier": aggregateTier, "usedListedSubstances": usedListedSubstances, "flag": flag, "flaggedSubstances": flaggedSubstances}
   return aggregateFindings
@@ -329,6 +331,15 @@ def Process(newEntry):
     errorstring = errorstring + str(e) + str(newEntry)
     ReportError(errorstring)
   finally:
+    if "CAS" not in newEntry.keys():
+      try:
+        attemptCAS = GetCAS(newEntry['chemid'])
+        if attemptCAS != None:
+          newEntry['CAS'] = attemptCAS
+        else:
+          newEntry['CAS'] = "-"  
+      except:
+        newEntry['CAS'] = "-"
     return newEntry
 
 def manualget(entry):
@@ -344,12 +355,13 @@ def manualget(entry):
     tryThisFirst = Call2(entry['chemid'])
     if tryThisFirst != False:
       return tryThisFirst
-  elif "CAS" in entrykeys and entry["CAS"] != "":
-    entry["searchtype"] = "CAS"
-    print("searching with CAS: ", entry["CAS"])
-  elif "UN" in entrykeys and entry["UN"] != "":
+  if "UN" in entrykeys and entry["UN"] != "":
     print("searching with UN: ", entry["UN"])
     entry["searchtype"] = "UN"
+  if "CAS" in entrykeys and entry["CAS"] != "":
+    entry["searchtype"] = "CAS"
+    print("searching with CAS: ", entry["CAS"])
+  
 
   # check if substance not named substances database
   #CALL 1
@@ -385,8 +397,14 @@ def manualget(entry):
   if check1 != "OK":
     #call 1b
     print('No results found with first searchtype. Searching by substance name')
-    substance = entry["name"]
-    query = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/substance/name/{substance}/json"
+    if entry["searchtype"] != "name":
+      substance = entry["name"]
+      query = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/substance/name/{substance}/json"
+    else:
+      print('trying with CAS')
+      cas = entry["CAS"]
+      query = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/substance/xref/rn/{cas}/json"
+
     response = requests.get(query)
     queryAnswer = json.loads(response.content)
     print("Response 1b received")
