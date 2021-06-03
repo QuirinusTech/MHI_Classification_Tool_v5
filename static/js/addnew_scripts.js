@@ -312,6 +312,7 @@ function checkinputs() {
 
 /** clears the input fields */
 function clear() {
+  $("#listedSubstancesInfoRow").hide()
   $(".acli").hide()
   $("#substance").val("");
   $("#qty").val("")
@@ -325,7 +326,7 @@ function clear() {
 /** using the input fields, adds a substance to the inventory */
 function addtoinv() {
   if (checkinputs() === false) {
-    alert("Please check that you've entered valid information into the fields above.")
+    popUp("Please check that you've entered valid information into the fields above.", "Error")
   } else {
     $(".error").hide()
     $(".error").removeClass("flash")

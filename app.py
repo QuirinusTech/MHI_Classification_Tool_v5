@@ -1,4 +1,4 @@
-from Legacy.legacyUnNumbersModule import UnNumber
+from re import search
 from flask import Flask, jsonify, request, redirect, render_template, url_for, flash, session
 from flask_login import LoginManager, UserMixin, current_user, login_user, login_required, logout_user
 from wtforms.validators import DataRequired
@@ -247,33 +247,30 @@ def updatehphrases():
   print(entry)
   # check if substance not named substances database
   searchtype = entry["searchtype"]
-  for chem in namedSubstances:
-    if entry["field"] == chem[searchtype]:
-      category = MasterCategoryController(chem["hazardPhrases"],chem["chemid"])
-      findings = {"found": True, "foundresult": "named", "category": category, "retry": False, "recordTitle": chem["name"], "CAS": chem["CAS"], "hazardPhrases": chem["hazardPhrases"], "UN": chem["UN"], "chemtype": "named"}
-      print('Substance found in database under "named substances": ', findings)
-      return json.dumps(findings)
-
-  # no results from checking existing database
-  print("Substance not in named substances database. Continue external calls.")
+  if searchtype != "UN":
+    for chem in namedSubstances:
+      if searchtype in chem.keys() and entry["field"] == chem[searchtype]:
+        category = MasterCategoryController(chem["hazardPhrases"],chem["chemid"])
+        findings = {"found": True, "foundresult": "named", "category": category, "retry": False, "recordTitle": chem["name"], "CAS": chem["CAS"], "hazardPhrases": chem["hazardPhrases"], "UN": chem["UN"], "chemtype": "named"}
+        print('Substance found in database under "named substances": ', findings)
+        return json.dumps(findings)
 
   #CALL 1
-
-  # search by CAS
-  if entry["searchtype"] == "CAS":
-    print('Searching by CAS')
-    cas = entry["field"]
-    query = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/substance/xref/rn/{cas}/json"
-
   #search by UN number
-  elif entry["searchtype"] == "UN":
+  elif searchtype == "UN":
     print('Searching by UN Number')
     un = entry["field"]
     query = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/substance/name/UN%20{un}/json"
 
+  # search by CAS
+  elif searchtype == "CAS":
+    print('Searching by CAS')
+    cas = entry["field"]
+    query = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/substance/xref/rn/{cas}/json"
+
   # search by substance name
   else:
-    print('Invalid CAS. Searching by substance name')
+    print('Searching by substance name')
     substance = entry["field"]
     query = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/substance/name/{substance}/json"
 
@@ -284,26 +281,9 @@ def updatehphrases():
   print(queryAnswer)
   check1 = hyginus.stringsearch(json.dumps(queryAnswer),"fault")
   #parse the response
-  if check1 == "NotFound":
-    if entry["field"] is None or entry["field"] == "":
+  if check1 != "OK":
       result = {"found" : False}
       return json.dumps(result)
-    else:
-      #call 1b
-      print('No results found with CAS. Searching by substance name')
-      substance = entry["field"]
-      query = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/substance/name/{substance}/json"
-      response = requests.get(query)
-      queryAnswer = json.loads(response.content)
-      print("Response 1b received")
-      print(queryAnswer)
-      check1b = hyginus.stringsearch(json.dumps(queryAnswer),"fault")
-      if check1b == "NotFound":
-        result = {"found" : False}
-        return json.dumps(result)
-      elif check1b == "OK":
-        cid = hyginus.stringsearch(json.dumps(queryAnswer), "cid")
-        print("CID found: ", cid)
   
   elif check1 == "OK":
     cid = hyginus.stringsearch(json.dumps(queryAnswer), "cid")
@@ -323,6 +303,8 @@ def updatehphrases():
     if recordTitle != "None" and hazardPhrases != [] and cid != 'NotFound':
       category = MasterCategoryController(hazardPhrases, cid)
       findings = {"found": True, "foundresult": "final", "recordTitle": recordTitle, "hazardPhrases": hazardPhrases, "chemid": cid, "category": category, "chemtype": "listed"}
+      if searchtype not in findings.keys():
+        findings[searchtype] = entry['field']
       print(findings)
       return jsonify(findings)
     else:
